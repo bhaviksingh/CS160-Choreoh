@@ -1,0 +1,47 @@
+C:\Users\Brennan\Coding\Visual C#\tester\tester\obj\x86\Debug\ResolveAssemblyReference.cache
+C:\Users\Brennan\Coding\Visual C#\tester\tester\obj\x86\Debug\HoverButton.baml
+C:\Users\Brennan\Coding\Visual C#\tester\tester\obj\x86\Debug\RadialMenu.baml
+C:\Users\Brennan\Coding\Visual C#\tester\tester\obj\x86\Debug\HandCursor.g.cs
+C:\Users\Brennan\Coding\Visual C#\tester\tester\obj\x86\Debug\HoverButton.g.cs
+C:\Users\Brennan\Coding\Visual C#\tester\tester\obj\x86\Debug\MainWindow.g.cs
+C:\Users\Brennan\Coding\Visual C#\tester\tester\obj\x86\Debug\RadialMenu.g.cs
+C:\Users\Brennan\Coding\Visual C#\tester\tester\obj\x86\Debug\App.g.cs
+C:\Users\Brennan\Coding\Visual C#\tester\tester\obj\x86\Debug\GeneratedInternalTypeHelper.g.cs
+C:\Users\Brennan\Coding\Visual C#\tester\tester\obj\x86\Debug\tester_MarkupCompile.cache
+C:\Users\Brennan\Coding\Visual C#\tester\tester\obj\x86\Debug\tester_MarkupCompile.lref
+C:\Users\Brennan\Coding\Visual C#\tester\tester\bin\Debug\tester.exe
+C:\Users\Brennan\Coding\Visual C#\tester\tester\bin\Debug\tester.pdb
+C:\Users\Brennan\Coding\Visual C#\tester\tester\bin\Debug\Coding4Fun.Kinect.Wpf.dll
+C:\Users\Brennan\Coding\Visual C#\tester\tester\bin\Debug\Microsoft.Expression.Drawing.dll
+C:\Users\Brennan\Coding\Visual C#\tester\tester\bin\Debug\Coding4Fun.Kinect.Wpf.pdb
+C:\Users\Brennan\Coding\Visual C#\tester\tester\obj\x86\Debug\HandCursor.baml
+C:\Users\Brennan\Coding\Visual C#\tester\tester\obj\x86\Debug\MainWindow.baml
+C:\Users\Brennan\Coding\Visual C#\tester\tester\obj\x86\Debug\tester.g.resources
+C:\Users\Brennan\Coding\Visual C#\tester\tester\obj\x86\Debug\tester.Properties.Resources.resources
+C:\Users\Brennan\Coding\Visual C#\tester\tester\obj\x86\Debug\GenerateResource.read.1.tlog
+C:\Users\Brennan\Coding\Visual C#\tester\tester\obj\x86\Debug\GenerateResource.write.1.tlog
+C:\Users\Brennan\Coding\Visual C#\tester\tester\obj\x86\Debug\tester.exe
+C:\Users\Brennan\Coding\Visual C#\tester\tester\obj\x86\Debug\tester.pdb
+C:\Users\Bhavik Singh\Documents\Visual Studio 2010\Projects\Choreoh\tester\bin\Debug\tester.exe
+C:\Users\Bhavik Singh\Documents\Visual Studio 2010\Projects\Choreoh\tester\bin\Debug\tester.pdb
+C:\Users\Bhavik Singh\Documents\Visual Studio 2010\Projects\Choreoh\tester\bin\Debug\Microsoft.Expression.Drawing.dll
+C:\Users\Bhavik Singh\Documents\Visual Studio 2010\Projects\Choreoh\tester\bin\Debug\Coding4Fun.Kinect.Wpf.pdb
+C:\Users\Bhavik Singh\Documents\Visual Studio 2010\Projects\Choreoh\tester\obj\x86\Debug\ResolveAssemblyReference.cache
+C:\Users\Bhavik Singh\Documents\Visual Studio 2010\Projects\Choreoh\tester\obj\x86\Debug\HoverButton.baml
+C:\Users\Bhavik Singh\Documents\Visual Studio 2010\Projects\Choreoh\tester\obj\x86\Debug\HandCursor.g.cs
+C:\Users\Bhavik Singh\Documents\Visual Studio 2010\Projects\Choreoh\tester\obj\x86\Debug\HoverButton.g.cs
+C:\Users\Bhavik Singh\Documents\Visual Studio 2010\Projects\Choreoh\tester\obj\x86\Debug\MainWindow.g.cs
+C:\Users\Bhavik Singh\Documents\Visual Studio 2010\Projects\Choreoh\tester\obj\x86\Debug\RadialMenu.g.cs
+C:\Users\Bhavik Singh\Documents\Visual Studio 2010\Projects\Choreoh\tester\obj\x86\Debug\App.g.cs
+C:\Users\Bhavik Singh\Documents\Visual Studio 2010\Projects\Choreoh\tester\obj\x86\Debug\GeneratedInternalTypeHelper.g.cs
+C:\Users\Bhavik Singh\Documents\Visual Studio 2010\Projects\Choreoh\tester\obj\x86\Debug\tester_MarkupCompile.cache
+C:\Users\Bhavik Singh\Documents\Visual Studio 2010\Projects\Choreoh\tester\obj\x86\Debug\tester_MarkupCompile.lref
+C:\Users\Bhavik Singh\Documents\Visual Studio 2010\Projects\Choreoh\tester\obj\x86\Debug\HandCursor.baml
+C:\Users\Bhavik Singh\Documents\Visual Studio 2010\Projects\Choreoh\tester\obj\x86\Debug\MainWindow.baml
+C:\Users\Bhavik Singh\Documents\Visual Studio 2010\Projects\Choreoh\tester\obj\x86\Debug\RadialMenu.baml
+C:\Users\Bhavik Singh\Documents\Visual Studio 2010\Projects\Choreoh\tester\obj\x86\Debug\tester.g.resources
+C:\Users\Bhavik Singh\Documents\Visual Studio 2010\Projects\Choreoh\tester\obj\x86\Debug\tester.Properties.Resources.resources
+C:\Users\Bhavik Singh\Documents\Visual Studio 2010\Projects\Choreoh\tester\obj\x86\Debug\GenerateResource.read.1.tlog
+C:\Users\Bhavik Singh\Documents\Visual Studio 2010\Projects\Choreoh\tester\obj\x86\Debug\GenerateResource.write.1.tlog
+C:\Users\Bhavik Singh\Documents\Visual Studio 2010\Projects\Choreoh\tester\obj\x86\Debug\tester.exe
+C:\Users\Bhavik Singh\Documents\Visual Studio 2010\Projects\Choreoh\tester\obj\x86\Debug\tester.pdb

@@ -1,0 +1,51 @@
+﻿<Window x:Class="Choreoh.MainWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:local="clr-namespace:Choreoh"
+        Title="Choreoh!" Height="806" Width="1038" Background="Red" xmlns:my="clr-namespace:Microsoft.Samples.Kinect.WpfViewers;assembly=Microsoft.Samples.Kinect.WpfViewers" Loaded="Window_Loaded">
+    <Window.Resources>
+        <Style x:Key="UITextElement" TargetType="Border">
+            <Setter Property="Background" Value="White"/>
+            <Setter Property="CornerRadius" Value="4,4,4,4"/>
+            <Setter Property="BorderBrush" Value="LightGray"/>
+            <Setter Property="BorderThickness" Value="1,1,1,1"/>
+            <Setter Property="Visibility" Value="Visible"/>
+        </Style>
+        <Style x:Key="UITextElement_hidden" TargetType="Border">
+            <Setter Property="Visibility" Value="Collapsed"/>
+        </Style> 
+        <Style x:Key="UIText" TargetType="Label">
+            <Setter Property="FontFamily" Value="..\img\ui\#Nevis"/>
+            <Setter Property="FontSize" Value="19"/>
+        </Style>
+    </Window.Resources>
+    
+    <Canvas  Height="768" HorizontalAlignment="Left" Name="mainCanvas" VerticalAlignment="Top" Width="1024" Background="#FFEEEEEE" >
+     
+        <Border Style="{StaticResource UITextElement}" Name="playbackMode" Canvas.Left="372" Canvas.Top="-5" Width="268" Height="50">
+        <Canvas Width="256">
+            <Label  Foreground="#FF1A9D1A" Canvas.Left="50" Canvas.Top="9" Style="{StaticResource UIText}" >PLAYBACK MODE</Label>
+                <Image Canvas.Left="6" Canvas.Top="8" Height="34" Name="playbackModeImage" Stretch="Fill" Width="24" Source="img/ui/playbutton.png" />
+            </Canvas>
+        </Border>
+        <Border Style="{StaticResource UITextElement}" Name="recordMode" Canvas.Left="372" Canvas.Top="69" Width="268" Height="50" BorderBrush="#FFDEDEDE">
+            <Canvas Width="256">
+                <Label  Foreground="#FF812A2F" Canvas.Left="50" Canvas.Top="9" Style="{StaticResource UIText}">RECORDING MODE</Label>
+                <Image Canvas.Left="6" Canvas.Top="8" Height="34" Name="recordModeImage" Stretch="Fill" Width="30" Source="img/ui/recordbutton.png" />
+            </Canvas>
+        </Border>
+        <Border Style="{StaticResource UITextElement}" Name="songLabel" Canvas.Right="0" Canvas.Top="-5" Width="180" Height="50">
+        <Canvas Width="180">
+            <Label Foreground="#FF5F5F5F" Canvas.Left="10" Canvas.Top="9" Style="{StaticResource UIText}">"Billy Jean" - MJ</Label>
+        </Canvas>
+        </Border>
+        <local:HoverButton x:Name="btn1" Text="" Height="100" Width="100" Canvas.Top="277" Click="btn1_Clicked"  Canvas.Left="100"  HorizontalTextAlignment="Right" VerticalTextAlignment="Bottom" CornerRadius="5" RenderTransformOrigin="0.5,0.5"/>
+        <TextBlock Name="gestureText" Canvas.Top="0" Canvas.Left="0" Foreground="White" Text=""/>
+        <local:RadialMenu x:Name="radialMenu" Visibility="Hidden" TopText="Top" LeftText="Leftn" RightText="Right" BottomText="Cancel" bottomClick="bottom_Click" Canvas.Left="0" Canvas.Top="50" />
+        <local:HandCursor x:Name="hand" Canvas.Top="79" Canvas.Left="256" GestureEvent="hand_GestureEvent"/>
+        
+        <my:KinectSensorChooser Canvas.Left="384" Canvas.Top="201" Name="kinectSensorChooser1" Width="328" DataContext="{Binding ElementName=kinectSensorChooser, Path=Kinect}" />
+        <TextBox Canvas.Left="336" Canvas.Top="425" Height="59"  Width="285" Name="debug" />
+    </Canvas>
+
+</Window>
