@@ -55,7 +55,17 @@
             <my:KinectSkeletonViewer Canvas.Left="0" Name="recordingSkeletonViewer" Width="420" Height="320" Kinect="{Binding ElementName=kinectSensorChooser1, Path=Kinect}" Panel.ZIndex="100"></my:KinectSkeletonViewer>
          </Canvas>
         <TextBox Canvas.Left="12" Canvas.Top="697" Height="59"  Width="986" Name="debug" FontSize="20" />
-       
+
+        <Canvas Height="768" Width="1024" Name="homeCanvas"  VerticalAlignment="Top" HorizontalAlignment="Left" Background="#EEEEEE" Visibility="Collapsed">
+            <TextBlock Canvas.Left="3" Canvas.Top="24" Text="Choreoh!"  Height="70" Name="label1" Width="1024" TextAlignment="Center" FontFamily="..\img\ui\#Nevis" FontSize="50" Foreground="DarkGray"/>
+            <TextBlock Canvas.Left="0" Canvas.Top="24" Text="Choreoh!"  Height="70" Name="label2" Width="1024" TextAlignment="Center" FontFamily="..\img\ui\#Nevis" FontSize="50" />
+            <local:HoverButton Canvas.Left="88" Canvas.Top="132" Height="250" x:Name="song1" Width="250" BackgroundColor="#FF1F73B7" Text="Dont stop till you get enough &#10; - MJ" VerticalTextAlignment="Top" HorizontalTextAlignment="Left" HorizontalAlignment="Left" CornerRadius="2"/>
+            <local:HoverButton Canvas.Left="372" Canvas.Top="132" Height="250" x:Name="song2" Width="250" BackgroundColor="#FF1F73B7" Text="Beat it &#10; - MJ"  VerticalTextAlignment="Top" HorizontalTextAlignment="Left" HorizontalAlignment="Left" CornerRadius="2" />
+            <local:HoverButton Canvas.Left="659" Canvas.Top="132" Height="250" x:Name="song3" Width="250" BackgroundColor="#FF1F73B7" Text="Friday &#10; - Rebecca Black"  VerticalTextAlignment="Top" HorizontalTextAlignment="Left" HorizontalAlignment="Left" CornerRadius="2"/>
+            <local:HoverButton Canvas.Left="88" Canvas.Top="412" Height="250" x:Name="song4" Width="250" BackgroundColor="#FF1F73B7" Text="Hot Interface &#10; - 160 cent" VerticalTextAlignment="Top" HorizontalTextAlignment="Left" HorizontalAlignment="Left" CornerRadius="2"/>
+            <local:HoverButton Canvas.Left="372" Canvas.Top="412" Height="250" x:Name="song5" Width="250" BackgroundColor="#FF1F73B7" Text="Wonderwall &#10; - Oasis"  VerticalTextAlignment="Top" HorizontalTextAlignment="Left" HorizontalAlignment="Left" CornerRadius="2"/>
+        </Canvas>
+
         <local:HandCursor x:Name="hand" Canvas.Top="79" Canvas.Left="256" GestureEvent="hand_GestureEvent" />
     </Canvas>
 
