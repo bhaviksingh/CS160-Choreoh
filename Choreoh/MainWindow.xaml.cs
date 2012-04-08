@@ -102,33 +102,24 @@ namespace Choreoh
 
         private void waveform_Clicked(object sender, EventArgs e)
         {
-
-            debug.Text += "bclick";
             if (sender.ToString() == "Choreoh.HoverButton")
             {
+                Debug.WriteLine("Waveform Button clicked");
+                HoverButton waveButton = (HoverButton)sender;
 
-                HoverButton temp = (HoverButton)sender;
-                debug.Text += "hover button" + temp.Name;
-                if (temp.Name == "backButton")
-                {
-                    debug.Text = "go back homeeeee";
-                }
-                else
-                {
-                    debug.Text = debug.Text + "radial menu";
-                    Point handPosition = hand.TransformToAncestor(mainCanvas).Transform(new Point(0, 0));
-                    menuY = handPosition.Y;
-                    menuY = menuY + hand.ActualHeight / 2;
-                    menuX = handPosition.X;
-                    menuX = menuX + hand.ActualWidth / 2;
-                    Canvas.SetLeft(radialMenu, menuX - radialMenu.ActualWidth / 2);
-                    Canvas.SetTop(radialMenu, menuY - radialMenu.ActualHeight / 2);
-                    hand.menuOpened = true;
-                    hand.SetRadialMenu(handPosition.X, handPosition.Y, radialMenu);
-                    radialMenu.Visibility = Visibility.Visible;
-                }
+                Point handPosition = hand.TransformToAncestor(mainCanvas).Transform(new Point(0, 0));
+                menuY = handPosition.Y;
+                menuY = menuY + hand.ActualHeight / 2;
+                menuX = handPosition.X;
+                menuX = menuX + hand.ActualWidth / 2;
+                Canvas.SetLeft(radialMenu, menuX - radialMenu.ActualWidth / 2);
+                Canvas.SetTop(radialMenu, menuY - radialMenu.ActualHeight / 2);
 
+                hand.menuOpened = true;
+                hand.SetRadialMenu(handPosition.X, handPosition.Y, radialMenu);
+                hand.
 
+                radialMenu.Visibility = Visibility.Visible;
             }
             else
             {
