@@ -8,6 +8,6 @@
 // </auto-generated>
 //------------------------------------------------------------------------------
 
-[assembly: System.Windows.Resources.AssemblyAssociatedContentFileAttribute("beatit-waveform.png")]
+[assembly: System.Windows.Resources.AssemblyAssociatedContentFileAttribute("stopslider.png")]
 
 
