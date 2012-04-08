@@ -22,6 +22,7 @@ namespace Choreoh
         private double timeInc;
         private Image startSlider;
         private Image stopSlider;
+        private double offset;
         /**
          * Takes in the width of a waveform image, the length of a song in seconds, a properly formatted string for an image, and the Canvas this all needs to be drawn in.
          * 
@@ -103,7 +104,7 @@ namespace Choreoh
             waveformCanvas.Children.Add(stopSlider);
             Canvas.SetLeft(stopSlider, 0);
             Canvas.SetTop(stopSlider, -80);
-
+            offset = 0.0;
         }
 
         public void selectStart(double start)
@@ -170,7 +171,7 @@ namespace Choreoh
                 {
                     //textBlock1.Text = "" + waveformOnEdge(canvas);
                     Canvas.SetLeft(canvas, Canvas.GetLeft(canvas) + inc);
-
+                    offset -= inc;
                 }
                 else
                 {
@@ -195,5 +196,11 @@ namespace Choreoh
         {
             return waveformCanvas;
         }
+
+        public double getOffset()
+        {
+            return offset;
+        }
+
     }
 }
