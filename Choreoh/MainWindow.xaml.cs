@@ -90,7 +90,50 @@ namespace Choreoh
             showRecordingCanvas();
 
             newSegment = routine.addDanceSegment(0);
+            Canvas wfcanvas = new Canvas();
+            wfcanvas.Width = 1800;
+            wfcanvas.Height = 160;
+            Canvas.SetTop(wfcanvas, 0);
+            Canvas.SetLeft(wfcanvas, 0);
+            waveButton.hoverCanvas.Children.Add(wfcanvas);
+            waveButton.enableExpandAnimation = false;
             waveform = new Waveform(1800, 259, wfcanvas);
+        }
+
+        private void waveform_Clicked(object sender, EventArgs e)
+        {
+
+            debug.Text += "bclick";
+            if (sender.ToString() == "Choreoh.HoverButton")
+            {
+
+                HoverButton temp = (HoverButton)sender;
+                debug.Text += "hover button" + temp.Name;
+                if (temp.Name == "backButton")
+                {
+                    debug.Text = "go back homeeeee";
+                }
+                else
+                {
+                    debug.Text = debug.Text + "radial menu";
+                    Point handPosition = hand.TransformToAncestor(mainCanvas).Transform(new Point(0, 0));
+                    menuY = handPosition.Y;
+                    menuY = menuY + hand.ActualHeight / 2;
+                    menuX = handPosition.X;
+                    menuX = menuX + hand.ActualWidth / 2;
+                    Canvas.SetLeft(radialMenu, menuX - radialMenu.ActualWidth / 2);
+                    Canvas.SetTop(radialMenu, menuY - radialMenu.ActualHeight / 2);
+                    hand.menuOpened = true;
+                    hand.SetRadialMenu(handPosition.X, handPosition.Y, radialMenu);
+                    radialMenu.Visibility = Visibility.Visible;
+                }
+
+
+            }
+            else
+            {
+                debug.Text = "I have made a huge mistake";
+            }
         }
 
         void newSensor_AllFramesReady(object sender, AllFramesReadyEventArgs e)
@@ -133,7 +176,8 @@ namespace Choreoh
             hand.SetPosition(handJoint);
             backButton.Check(hand);
 
-            radialCreator.Check(hand);         
+            radialCreator.Check(hand);
+            waveButton.Check(hand);
         }
 
        
@@ -230,7 +274,7 @@ namespace Choreoh
             newSensor.SkeletonStream.Enable(parameters);
             newSensor.AllFramesReady += new EventHandler<AllFramesReadyEventArgs>(newSensor_AllFramesReady);
             // DELETE THIS TEMPRECORD
-            newSensor.AllFramesReady += new EventHandler<AllFramesReadyEventArgs>(tempRecord);
+            // newSensor.AllFramesReady += new EventHandler<AllFramesReadyEventArgs>(tempRecord);
 
             newSensor.ColorStream.Enable(ColorImageFormat.RgbResolution640x480Fps30);
             newSensor.DepthStream.Enable(DepthImageFormat.Resolution640x480Fps30);
@@ -309,7 +353,7 @@ namespace Choreoh
 
         private void hideRecordingCanvas()
         {
-            recordingCanvas.Visibility = Visibility.Hidden;
+            recordingCanvas.Visibility = Visibility.Collapsed;
         }
 
         public void StartRecording(DanceSegment s)

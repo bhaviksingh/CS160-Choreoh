@@ -40,9 +40,10 @@
             <Label Foreground="#FF5F5F5F" Canvas.Left="10" Canvas.Top="9" Style="{StaticResource UIText}">"Billy Jean" - MJ</Label>
         </Canvas>
         </Border>
-        <Canvas Width="1800" Height="160" Canvas.Top="400" Canvas.Left="0" Name="wfcanvas" />
         <local:HoverButton x:Name="backButton" Text="BACK" Canvas.Top="-4" Width="180" Height="50" Click="button_Clicked"  Canvas.Left="-6"  HorizontalTextAlignment="Center" VerticalTextAlignment="Center" CornerRadius="2" RenderTransformOrigin="0.5,0.5" BackgroundColor="#FF414141" TextColor="#EEEEEE" TextSize="19"/>
         <local:HoverButton x:Name="radialCreator" Text="radialmenu" Canvas.Top="182" Width="180" Height="50" Click="button_Clicked"  Canvas.Left="88"  HorizontalTextAlignment="Center" VerticalTextAlignment="Center" CornerRadius="2" RenderTransformOrigin="0.5,0.5" BackgroundColor="#FF414141" TextColor="#EEEEEE" TextSize="19"/>
+   
+        <local:HoverButton x:Name="waveButton" Canvas.Top="400" Width="1800" Height="160" Click="waveform_Clicked"  Canvas.Left="0" />
 
 
         <TextBlock Name="gestureText" Canvas.Top="0" Canvas.Left="0" Foreground="White" Text=""/>
@@ -65,7 +66,7 @@
             <local:HoverButton Canvas.Left="372" Canvas.Top="412" Height="250" x:Name="song5" Width="250" BackgroundColor="#FF1F73B7" Text="Wonderwall &#10; - Oasis"  VerticalTextAlignment="Top" HorizontalTextAlignment="Left" HorizontalAlignment="Left" CornerRadius="2"/>
         </Canvas>
 
-        <local:HandCursor x:Name="hand" Canvas.Top="79" Canvas.Left="256" GestureEvent="hand_GestureEvent" />
+        <local:HandCursor x:Name="hand" Canvas.Top="79" Canvas.Left="256" GestureEvent="hand_GestureEvent" Panel.ZIndex="999" />
     </Canvas>
 
 </Window>

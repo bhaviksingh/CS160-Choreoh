@@ -26,8 +26,10 @@ namespace Choreoh
 
         //animation related
         private bool isHovering = false;
+        public bool canExpand = true;
         private ButtonAnimate expandAnimation;
         public static bool canClick = true;
+        public bool enableExpandAnimation = true;
         private static System.Timers.Timer canClickTimer = new System.Timers.Timer()
         {
             Interval = 2000,
@@ -166,7 +168,10 @@ namespace Choreoh
                 isHovering = true;
                 this.Effect = shadowEffect;
                 expandAnimation.CompleteChanged += new EventHandler(expandAnimation_Completed);
-                expandAnimation.expand(this);
+                if (enableExpandAnimation)
+                {
+                    expandAnimation.expand(this);
+                }
             }
         }
 
@@ -193,7 +198,10 @@ namespace Choreoh
                 isHovering = false;
                 this.Effect = null;
                 expandAnimation.CompleteChanged -= new EventHandler(expandAnimation_Completed);
-                expandAnimation.contract(this);
+                if (enableExpandAnimation)
+                {
+                    expandAnimation.contract(this);
+                }
 
             }
         }
