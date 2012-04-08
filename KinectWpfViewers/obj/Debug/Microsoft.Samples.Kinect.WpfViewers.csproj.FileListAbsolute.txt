@@ -24,3 +24,29 @@ C:\Users\Ken\Documents\Visual Studio 2010\Projects\Choreoh\KinectWpfViewers\obj\
 C:\Users\Ken\Documents\Visual Studio 2010\Projects\Choreoh\KinectWpfViewers\obj\Debug\GenerateResource.write.1.tlog
 C:\Users\Ken\Documents\Visual Studio 2010\Projects\Choreoh\KinectWpfViewers\obj\Debug\Microsoft.Samples.Kinect.WpfViewers.dll
 C:\Users\Ken\Documents\Visual Studio 2010\Projects\Choreoh\KinectWpfViewers\obj\Debug\Microsoft.Samples.Kinect.WpfViewers.pdb
+C:\Users\Samuel\Documents\WaveformStuff\Choreoh\KinectWpfViewers\bin\Debug\Microsoft.Samples.Kinect.WpfViewers.dll
+C:\Users\Samuel\Documents\WaveformStuff\Choreoh\KinectWpfViewers\bin\Debug\Microsoft.Samples.Kinect.WpfViewers.pdb
+C:\Users\Samuel\Documents\WaveformStuff\Choreoh\KinectWpfViewers\obj\Debug\ResolveAssemblyReference.cache
+C:\Users\Samuel\Documents\WaveformStuff\Choreoh\KinectWpfViewers\obj\Debug\KinectSettings.baml
+C:\Users\Samuel\Documents\WaveformStuff\Choreoh\KinectWpfViewers\obj\Debug\KinectSensorChooser.g.cs
+C:\Users\Samuel\Documents\WaveformStuff\Choreoh\KinectWpfViewers\obj\Debug\KinectAudioViewer.g.cs
+C:\Users\Samuel\Documents\WaveformStuff\Choreoh\KinectWpfViewers\obj\Debug\KinectDepthViewer.g.cs
+C:\Users\Samuel\Documents\WaveformStuff\Choreoh\KinectWpfViewers\obj\Debug\KinectColorViewer.g.cs
+C:\Users\Samuel\Documents\WaveformStuff\Choreoh\KinectWpfViewers\obj\Debug\KinectDiagnosticViewer.g.cs
+C:\Users\Samuel\Documents\WaveformStuff\Choreoh\KinectWpfViewers\obj\Debug\KinectSettings.g.cs
+C:\Users\Samuel\Documents\WaveformStuff\Choreoh\KinectWpfViewers\obj\Debug\KinectSkeletonViewer.g.cs
+C:\Users\Samuel\Documents\WaveformStuff\Choreoh\KinectWpfViewers\obj\Debug\GeneratedInternalTypeHelper.g.cs
+C:\Users\Samuel\Documents\WaveformStuff\Choreoh\KinectWpfViewers\obj\Debug\Microsoft.Samples.Kinect.WpfViewers_MarkupCompile.cache
+C:\Users\Samuel\Documents\WaveformStuff\Choreoh\KinectWpfViewers\obj\Debug\Microsoft.Samples.Kinect.WpfViewers_MarkupCompile.lref
+C:\Users\Samuel\Documents\WaveformStuff\Choreoh\KinectWpfViewers\obj\Debug\KinectSensorChooser.baml
+C:\Users\Samuel\Documents\WaveformStuff\Choreoh\KinectWpfViewers\obj\Debug\KinectAudioViewer.baml
+C:\Users\Samuel\Documents\WaveformStuff\Choreoh\KinectWpfViewers\obj\Debug\KinectDepthViewer.baml
+C:\Users\Samuel\Documents\WaveformStuff\Choreoh\KinectWpfViewers\obj\Debug\KinectColorViewer.baml
+C:\Users\Samuel\Documents\WaveformStuff\Choreoh\KinectWpfViewers\obj\Debug\KinectDiagnosticViewer.baml
+C:\Users\Samuel\Documents\WaveformStuff\Choreoh\KinectWpfViewers\obj\Debug\KinectSkeletonViewer.baml
+C:\Users\Samuel\Documents\WaveformStuff\Choreoh\KinectWpfViewers\obj\Debug\Microsoft.Samples.Kinect.WpfViewers.g.resources
+C:\Users\Samuel\Documents\WaveformStuff\Choreoh\KinectWpfViewers\obj\Debug\Microsoft.Samples.Kinect.WpfViewers.Properties.Resources.resources
+C:\Users\Samuel\Documents\WaveformStuff\Choreoh\KinectWpfViewers\obj\Debug\GenerateResource.read.1.tlog
+C:\Users\Samuel\Documents\WaveformStuff\Choreoh\KinectWpfViewers\obj\Debug\GenerateResource.write.1.tlog
+C:\Users\Samuel\Documents\WaveformStuff\Choreoh\KinectWpfViewers\obj\Debug\Microsoft.Samples.Kinect.WpfViewers.dll
+C:\Users\Samuel\Documents\WaveformStuff\Choreoh\KinectWpfViewers\obj\Debug\Microsoft.Samples.Kinect.WpfViewers.pdb

@@ -32,12 +32,14 @@ namespace Choreoh
         private KinectSensor sensor;
         private DanceSegment segmentToRecordTo;
         private DanceRoutine routine;
+        private Waveform waveform;
 
         public MainWindow()
         {
             InitializeComponent();
         }
 
+        
         /*
          * delete these testing vars when done
          * */
@@ -66,6 +68,7 @@ namespace Choreoh
             showRecordingCanvas();
 
             newSegment = routine.addDanceSegment(0);
+            waveform = new Waveform(1800, 259, wfcanvas);
         }
 
         void newSensor_AllFramesReady(object sender, AllFramesReadyEventArgs e)

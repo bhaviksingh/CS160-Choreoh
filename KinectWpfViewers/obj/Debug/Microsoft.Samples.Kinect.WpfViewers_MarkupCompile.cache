@@ -4,7 +4,7 @@
 library
 C#
 .cs
-C:\Users\Ken\Documents\Visual Studio 2010\Projects\Choreoh\KinectWpfViewers\obj\Debug\
+C:\Users\Samuel\Documents\WaveformStuff\Choreoh\KinectWpfViewers\obj\Debug\
 Microsoft.Samples.Kinect.WpfViewers
 none
 false
@@ -13,7 +13,7 @@ DEBUG;TRACE
 7-1694449150
 
 13-826363229
-131892758216
+132034344849
 KinectSensorChooser.xaml;KinectAudioViewer.xaml;KinectDepthViewer.xaml;KinectColorViewer.xaml;KinectDiagnosticViewer.xaml;KinectSettings.xaml;KinectSkeletonViewer.xaml;
 
 False

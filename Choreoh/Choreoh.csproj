@@ -74,6 +74,7 @@
     <Compile Include="RadialMenu.xaml.cs">
       <DependentUpon>RadialMenu.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Waveform.cs" />
     <Page Include="HandCursor.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
@@ -147,6 +148,11 @@
     <Resource Include="Images\RadialRight.png" />
     <Resource Include="Images\RadialSelect.png" />
     <Resource Include="Images\RadialTop.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="img\waveform\beatit-waveform.png" />
+    <Resource Include="img\waveform\startslider.png" />
+    <Resource Include="img\waveform\stopslider.png" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
