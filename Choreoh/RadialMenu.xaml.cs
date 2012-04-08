@@ -41,6 +41,11 @@ namespace Choreoh
 
         }
 
+        public int getDiameter()
+        {
+            return 319;
+        }
+
 
         #region Properties
         public static readonly DependencyProperty TopTextProperty = DependencyProperty.Register(
