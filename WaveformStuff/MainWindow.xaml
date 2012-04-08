@@ -6,9 +6,12 @@
         <!--<Canvas Canvas.Left="0" Canvas.Top="400" Height="160" Name="waveformCanvas" Width="1800">
             <Image Canvas.Left="0" Canvas.Top="0" Height="{Binding ElementName=waveformCanvas, Path=Height}" Name="waveformImage" Stretch="Fill" Width= "{Binding ElementName=waveformCanvas, Path=Width}" />
         </Canvas>-->
-        <Button Canvas.Left="268" Canvas.Top="134" Content="Button" Height="23" Name="button1" Width="75" Click="button1_Click" />
-        <TextBox Canvas.Left="376" Canvas.Top="133" Height="30" Name="pixelShift" Width="90" />
-        <Button Canvas.Left="472" Canvas.Top="132" Content="Button" Height="23" Name="button2" Width="75" Click="button2_Click" />
-        <TextBox Canvas.Left="556" Canvas.Top="135" Height="26" Name="pixelLoop" Width="116" />
+        <Button Canvas.Left="86" Canvas.Top="128" Content="Button" Height="23" Name="button1" Width="75" Click="button1_Click" />
+        <TextBox Canvas.Left="232" Canvas.Top="121" Height="30" Name="pixelShift" Width="90" />
+        <Button Canvas.Left="346" Canvas.Top="120" Content="Button" Height="23" Name="button2" Width="75" Click="button2_Click" />
+        <TextBox Canvas.Left="500" Canvas.Top="122" Height="26" Name="segStart" Width="116" />
+        <TextBox Canvas.Left="622" Canvas.Top="121" Height="26" Name="segLength" Width="116" />
+        <Button Canvas.Left="744" Canvas.Top="122" Content="Button" Height="24" Name="selectButton" Width="78" Click="selectButton_Click" />
+        <TextBlock Canvas.Left="366" Canvas.Top="11" Height="86" Name="textBlock1" Text="TextBlock" Width="194" />
     </Canvas>
 </Window>
