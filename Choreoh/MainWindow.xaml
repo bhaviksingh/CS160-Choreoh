@@ -41,7 +41,7 @@
         </Border>
         <local:HoverButton x:Name="btn1" Text="" Height="100" Width="100" Canvas.Top="277" Click="btn1_Clicked"  Canvas.Left="100"  HorizontalTextAlignment="Right" VerticalTextAlignment="Bottom" CornerRadius="5" RenderTransformOrigin="0.5,0.5"/>
         <TextBlock Name="gestureText" Canvas.Top="0" Canvas.Left="0" Foreground="White" Text=""/>
-        <local:RadialMenu x:Name="radialMenu" Visibility="Visible" TopText="Top" LeftText="Leftn" RightText="Right" BottomText="Cancel" bottomClick="bottom_Click" Canvas.Left="0" Canvas.Top="50" />
+        <local:RadialMenu x:Name="radialMenu" Visibility="Visible" TopText="Make Selection" LeftText="Add Comment" RightText="Play From Here" BottomText="Cancel" bottomClick="bottom_Click" Canvas.Left="0" Canvas.Top="50" />
         <local:HandCursor x:Name="hand" Canvas.Top="79" Canvas.Left="256" GestureEvent="hand_GestureEvent"/>
         
         <my:KinectSensorChooser Canvas.Left="384" Canvas.Top="201" Name="kinectSensorChooser1" Width="328" DataContext="{Binding ElementName=kinectSensorChooser, Path=Kinect}" />

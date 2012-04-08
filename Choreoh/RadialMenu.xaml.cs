@@ -13,6 +13,7 @@ using System.Windows.Navigation;
 using System.Windows.Shapes;
 using Microsoft.Kinect;
 using Coding4Fun.Kinect.Wpf;
+using System.Windows.Media.Effects;
 
 namespace Choreoh
 {
@@ -31,6 +32,7 @@ namespace Choreoh
         {
             InitializeComponent();
             radialAnimate = new RadialAnimate();
+            this.Effect = shadowEffect;
         }
 
         #region Properties
@@ -64,6 +66,15 @@ namespace Choreoh
 
         }
         #endregion
+
+        DropShadowEffect shadowEffect = new DropShadowEffect
+        {
+            Color = new Color { A = 255, R = 0, G = 0, B = 0 },
+            Direction = 0,
+            ShadowDepth = 0,
+            Opacity = .4,
+            BlurRadius = 20
+        };
 
         public delegate void ClickHandler(object sender, EventArgs e);
         public event ClickHandler leftClick;
