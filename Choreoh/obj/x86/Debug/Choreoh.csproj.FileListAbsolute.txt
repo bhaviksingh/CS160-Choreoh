@@ -1,31 +1,3 @@
-C:\Users\Ken\Documents\Visual Studio 2010\Projects\Choreoh\Choreoh\bin\Debug\Choreoh.exe
-C:\Users\Ken\Documents\Visual Studio 2010\Projects\Choreoh\Choreoh\bin\Debug\Choreoh.pdb
-C:\Users\Ken\Documents\Visual Studio 2010\Projects\Choreoh\Choreoh\bin\Debug\Coding4Fun.Kinect.Wpf.dll
-C:\Users\Ken\Documents\Visual Studio 2010\Projects\Choreoh\Choreoh\bin\Debug\Microsoft.Samples.Kinect.WpfViewers.dll
-C:\Users\Ken\Documents\Visual Studio 2010\Projects\Choreoh\Choreoh\bin\Debug\Microsoft.Expression.Drawing.dll
-C:\Users\Ken\Documents\Visual Studio 2010\Projects\Choreoh\Choreoh\bin\Debug\Microsoft.Samples.Kinect.WpfViewers.pdb
-C:\Users\Ken\Documents\Visual Studio 2010\Projects\Choreoh\Choreoh\bin\Debug\Coding4Fun.Kinect.Wpf.pdb
-C:\Users\Ken\Documents\Visual Studio 2010\Projects\Choreoh\Choreoh\obj\x86\Debug\ResolveAssemblyReference.cache
-C:\Users\Ken\Documents\Visual Studio 2010\Projects\Choreoh\Choreoh\obj\x86\Debug\HandCursor.baml
-C:\Users\Ken\Documents\Visual Studio 2010\Projects\Choreoh\Choreoh\obj\x86\Debug\HoverButton.baml
-C:\Users\Ken\Documents\Visual Studio 2010\Projects\Choreoh\Choreoh\obj\x86\Debug\RadialMenu.baml
-C:\Users\Ken\Documents\Visual Studio 2010\Projects\Choreoh\Choreoh\obj\x86\Debug\HandCursor.g.cs
-C:\Users\Ken\Documents\Visual Studio 2010\Projects\Choreoh\Choreoh\obj\x86\Debug\HoverButton.g.cs
-C:\Users\Ken\Documents\Visual Studio 2010\Projects\Choreoh\Choreoh\obj\x86\Debug\MainWindow.g.cs
-C:\Users\Ken\Documents\Visual Studio 2010\Projects\Choreoh\Choreoh\obj\x86\Debug\RadialMenu.g.cs
-C:\Users\Ken\Documents\Visual Studio 2010\Projects\Choreoh\Choreoh\obj\x86\Debug\App.g.cs
-C:\Users\Ken\Documents\Visual Studio 2010\Projects\Choreoh\Choreoh\obj\x86\Debug\GeneratedInternalTypeHelper.g.cs
-C:\Users\Ken\Documents\Visual Studio 2010\Projects\Choreoh\Choreoh\obj\x86\Debug\Choreoh_MarkupCompile.cache
-C:\Users\Ken\Documents\Visual Studio 2010\Projects\Choreoh\Choreoh\obj\x86\Debug\Choreoh_MarkupCompile.lref
-C:\Users\Ken\Documents\Visual Studio 2010\Projects\Choreoh\Choreoh\obj\x86\Debug\MainWindow.baml
-C:\Users\Ken\Documents\Visual Studio 2010\Projects\Choreoh\Choreoh\obj\x86\Debug\Choreoh.g.resources
-C:\Users\Ken\Documents\Visual Studio 2010\Projects\Choreoh\Choreoh\obj\x86\Debug\Choreoh.Properties.Resources.resources
-C:\Users\Ken\Documents\Visual Studio 2010\Projects\Choreoh\Choreoh\obj\x86\Debug\GenerateResource.read.1.tlog
-C:\Users\Ken\Documents\Visual Studio 2010\Projects\Choreoh\Choreoh\obj\x86\Debug\GenerateResource.write.1.tlog
-C:\Users\Ken\Documents\Visual Studio 2010\Projects\Choreoh\Choreoh\obj\x86\Debug\Choreoh.exe
-C:\Users\Ken\Documents\Visual Studio 2010\Projects\Choreoh\Choreoh\obj\x86\Debug\Choreoh.pdb
-C:\Users\Samuel\Documents\WaveformStuff\Choreoh\Choreoh\obj\x86\Debug\Choreoh.exe
-C:\Users\Samuel\Documents\WaveformStuff\Choreoh\Choreoh\obj\x86\Debug\Choreoh.pdb
 C:\Users\Samuel\Documents\WaveformStuff\Choreoh\Choreoh\bin\Debug\Choreoh.exe
 C:\Users\Samuel\Documents\WaveformStuff\Choreoh\Choreoh\bin\Debug\Choreoh.pdb
 C:\Users\Samuel\Documents\WaveformStuff\Choreoh\Choreoh\bin\Debug\Coding4Fun.Kinect.Wpf.dll
@@ -50,3 +22,5 @@ C:\Users\Samuel\Documents\WaveformStuff\Choreoh\Choreoh\obj\x86\Debug\Choreoh.g.
 C:\Users\Samuel\Documents\WaveformStuff\Choreoh\Choreoh\obj\x86\Debug\Choreoh.Properties.Resources.resources
 C:\Users\Samuel\Documents\WaveformStuff\Choreoh\Choreoh\obj\x86\Debug\GenerateResource.read.1.tlog
 C:\Users\Samuel\Documents\WaveformStuff\Choreoh\Choreoh\obj\x86\Debug\GenerateResource.write.1.tlog
+C:\Users\Samuel\Documents\WaveformStuff\Choreoh\Choreoh\obj\x86\Debug\Choreoh.exe
+C:\Users\Samuel\Documents\WaveformStuff\Choreoh\Choreoh\obj\x86\Debug\Choreoh.pdb

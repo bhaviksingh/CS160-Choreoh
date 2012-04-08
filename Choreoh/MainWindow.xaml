@@ -23,7 +23,8 @@
     </Window.Resources>
     
     <Canvas  Height="768" HorizontalAlignment="Left" Name="mainCanvas" VerticalAlignment="Top" Width="1024" Background="#FFEEEEEE" >
-     
+        <local:RadialMenu x:Name="radialMenu" Visibility="Visible" TopText="Top" LeftText="Leftn" RightText="Right" BottomText="Cancel" bottomClick="bottom_Click" Canvas.Left="126" Canvas.Top="20" />
+
         <Border Style="{StaticResource UITextElement}" Name="playbackMode" Canvas.Left="372" Canvas.Top="-5" Width="268" Height="50">
         <Canvas Width="256">
             <Label  Foreground="#FF1A9D1A" Canvas.Left="50" Canvas.Top="9" Style="{StaticResource UIText}" >PLAYBACK MODE</Label>
@@ -47,9 +48,6 @@
 
 
         <TextBlock Name="gestureText" Canvas.Top="0" Canvas.Left="0" Foreground="White" Text=""/>
-
-        <local:RadialMenu x:Name="radialMenu" Visibility="Hidden" TopText="Top" LeftText="Leftn" RightText="Right" BottomText="Cancel" bottomClick="bottom_Click" Canvas.Left="751" Canvas.Top="218" />
-
         <my:KinectSensorChooser Canvas.Left="384" Canvas.Top="201" Name="kinectSensorChooser1" Width="328" DataContext="{Binding ElementName=kinectSensorChooser, Path=Kinect}" />
 
         <Canvas Name="recordingCanvas" Canvas.Top="50" Canvas.Left="306" Height="320" Width="420" Panel.ZIndex="100" Visibility="Hidden" Background="Red">
