@@ -42,6 +42,7 @@
     <Reference Include="Microsoft.Kinect, Version=1.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL" />
     <Reference Include="System" />
     <Reference Include="System.Data" />
+    <Reference Include="System.Drawing" />
     <Reference Include="System.Xml" />
     <Reference Include="Microsoft.CSharp" />
     <Reference Include="System.Core" />
@@ -60,6 +61,8 @@
       <SubType>Designer</SubType>
     </ApplicationDefinition>
     <Compile Include="ButtonAnimate.cs" />
+    <Compile Include="DanceRoutine.cs" />
+    <Compile Include="DanceSegment.cs" />
     <Compile Include="Global.cs" />
     <Compile Include="HandCursor.xaml.cs">
       <DependentUpon>HandCursor.xaml</DependentUpon>
