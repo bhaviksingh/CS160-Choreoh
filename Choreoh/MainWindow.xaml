@@ -42,10 +42,10 @@
         </Border>
         <local:HoverButton x:Name="backButton" Text="BACK" Canvas.Top="-4" Width="180" Height="50" Click="button_Clicked"  Canvas.Left="-6"  HorizontalTextAlignment="Center" VerticalTextAlignment="Center" CornerRadius="2" RenderTransformOrigin="0.5,0.5" BackgroundColor="#FF414141" TextColor="#EEEEEE" TextSize="19"/>
         <local:HoverButton x:Name="radialCreator" Text="radialmenu" Canvas.Top="182" Width="180" Height="50" Click="button_Clicked"  Canvas.Left="88"  HorizontalTextAlignment="Center" VerticalTextAlignment="Center" CornerRadius="2" RenderTransformOrigin="0.5,0.5" BackgroundColor="#FF414141" TextColor="#EEEEEE" TextSize="19"/>
-   
-        <local:HoverButton x:Name="waveButton" Canvas.Top="400" Width="1800" Height="160" Click="waveform_Clicked"  Canvas.Left="0" />
-
-
+        <Canvas Name="timelineCanvas" Canvas.Top="400" Height="320" Width="1800" Canvas.Left="0">
+            <local:HoverButton x:Name="waveButton" Width="1800" Height="160" Click="waveform_Clicked"/>
+            <Canvas Name="segmentCanvas" Width="1800" Height="160" Canvas.Top="160"></Canvas>
+        </Canvas>
         <TextBlock Name="gestureText" Canvas.Top="0" Canvas.Left="0" Foreground="White" Text=""/>
         <my:KinectSensorChooser Canvas.Left="384" Canvas.Top="201" Name="kinectSensorChooser1" Width="328" DataContext="{Binding ElementName=kinectSensorChooser, Path=Kinect}" />
 
