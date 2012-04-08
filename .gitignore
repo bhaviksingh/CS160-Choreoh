@@ -1,0 +1,8 @@
+*.exe
+*.pdb
+*.manifest
+*.dll
+*.tlog
+*.baml
+*.cache
+*.resources

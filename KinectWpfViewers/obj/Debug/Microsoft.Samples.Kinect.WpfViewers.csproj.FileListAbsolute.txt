@@ -1,104 +1,26 @@
-C:\Users\Bhavik Singh\Documents\Kinect wpfs\C#\KinectWpfViewers\bin\Debug\Microsoft.Samples.Kinect.WpfViewers.dll
-C:\Users\Bhavik Singh\Documents\Kinect wpfs\C#\KinectWpfViewers\bin\Debug\Microsoft.Samples.Kinect.WpfViewers.pdb
-C:\Users\Bhavik Singh\Documents\Kinect wpfs\C#\KinectWpfViewers\obj\Debug\ResolveAssemblyReference.cache
-C:\Users\Bhavik Singh\Documents\Kinect wpfs\C#\KinectWpfViewers\obj\Debug\KinectSettings.baml
-C:\Users\Bhavik Singh\Documents\Kinect wpfs\C#\KinectWpfViewers\obj\Debug\KinectSensorChooser.g.cs
-C:\Users\Bhavik Singh\Documents\Kinect wpfs\C#\KinectWpfViewers\obj\Debug\KinectAudioViewer.g.cs
-C:\Users\Bhavik Singh\Documents\Kinect wpfs\C#\KinectWpfViewers\obj\Debug\KinectDepthViewer.g.cs
-C:\Users\Bhavik Singh\Documents\Kinect wpfs\C#\KinectWpfViewers\obj\Debug\KinectColorViewer.g.cs
-C:\Users\Bhavik Singh\Documents\Kinect wpfs\C#\KinectWpfViewers\obj\Debug\KinectDiagnosticViewer.g.cs
-C:\Users\Bhavik Singh\Documents\Kinect wpfs\C#\KinectWpfViewers\obj\Debug\KinectSettings.g.cs
-C:\Users\Bhavik Singh\Documents\Kinect wpfs\C#\KinectWpfViewers\obj\Debug\KinectSkeletonViewer.g.cs
-C:\Users\Bhavik Singh\Documents\Kinect wpfs\C#\KinectWpfViewers\obj\Debug\GeneratedInternalTypeHelper.g.cs
-C:\Users\Bhavik Singh\Documents\Kinect wpfs\C#\KinectWpfViewers\obj\Debug\Microsoft.Samples.Kinect.WpfViewers_MarkupCompile.cache
-C:\Users\Bhavik Singh\Documents\Kinect wpfs\C#\KinectWpfViewers\obj\Debug\Microsoft.Samples.Kinect.WpfViewers_MarkupCompile.lref
-C:\Users\Bhavik Singh\Documents\Kinect wpfs\C#\KinectWpfViewers\obj\Debug\KinectSensorChooser.baml
-C:\Users\Bhavik Singh\Documents\Kinect wpfs\C#\KinectWpfViewers\obj\Debug\KinectAudioViewer.baml
-C:\Users\Bhavik Singh\Documents\Kinect wpfs\C#\KinectWpfViewers\obj\Debug\KinectDepthViewer.baml
-C:\Users\Bhavik Singh\Documents\Kinect wpfs\C#\KinectWpfViewers\obj\Debug\KinectColorViewer.baml
-C:\Users\Bhavik Singh\Documents\Kinect wpfs\C#\KinectWpfViewers\obj\Debug\KinectDiagnosticViewer.baml
-C:\Users\Bhavik Singh\Documents\Kinect wpfs\C#\KinectWpfViewers\obj\Debug\KinectSkeletonViewer.baml
-C:\Users\Bhavik Singh\Documents\Kinect wpfs\C#\KinectWpfViewers\obj\Debug\Microsoft.Samples.Kinect.WpfViewers.g.resources
-C:\Users\Bhavik Singh\Documents\Kinect wpfs\C#\KinectWpfViewers\obj\Debug\Microsoft.Samples.Kinect.WpfViewers.Properties.Resources.resources
-C:\Users\Bhavik Singh\Documents\Kinect wpfs\C#\KinectWpfViewers\obj\Debug\GenerateResource.read.1.tlog
-C:\Users\Bhavik Singh\Documents\Kinect wpfs\C#\KinectWpfViewers\obj\Debug\GenerateResource.write.1.tlog
-C:\Users\Bhavik Singh\Documents\Kinect wpfs\C#\KinectWpfViewers\obj\Debug\Microsoft.Samples.Kinect.WpfViewers.dll
-C:\Users\Bhavik Singh\Documents\Kinect wpfs\C#\KinectWpfViewers\obj\Debug\Microsoft.Samples.Kinect.WpfViewers.pdb
-C:\Users\Bhavik Singh\Documents\Visual Studio 2010\Projects\ipa2\KinectWpfViewers\bin\Debug\Microsoft.Samples.Kinect.WpfViewers.dll
-C:\Users\Bhavik Singh\Documents\Visual Studio 2010\Projects\ipa2\KinectWpfViewers\bin\Debug\Microsoft.Samples.Kinect.WpfViewers.pdb
-C:\Users\Bhavik Singh\Documents\Visual Studio 2010\Projects\ipa2\KinectWpfViewers\obj\Debug\ResolveAssemblyReference.cache
-C:\Users\Bhavik Singh\Documents\Visual Studio 2010\Projects\ipa2\KinectWpfViewers\obj\Debug\KinectSettings.baml
-C:\Users\Bhavik Singh\Documents\Visual Studio 2010\Projects\ipa2\KinectWpfViewers\obj\Debug\KinectSensorChooser.g.cs
-C:\Users\Bhavik Singh\Documents\Visual Studio 2010\Projects\ipa2\KinectWpfViewers\obj\Debug\KinectAudioViewer.g.cs
-C:\Users\Bhavik Singh\Documents\Visual Studio 2010\Projects\ipa2\KinectWpfViewers\obj\Debug\KinectDepthViewer.g.cs
-C:\Users\Bhavik Singh\Documents\Visual Studio 2010\Projects\ipa2\KinectWpfViewers\obj\Debug\KinectColorViewer.g.cs
-C:\Users\Bhavik Singh\Documents\Visual Studio 2010\Projects\ipa2\KinectWpfViewers\obj\Debug\KinectDiagnosticViewer.g.cs
-C:\Users\Bhavik Singh\Documents\Visual Studio 2010\Projects\ipa2\KinectWpfViewers\obj\Debug\KinectSettings.g.cs
-C:\Users\Bhavik Singh\Documents\Visual Studio 2010\Projects\ipa2\KinectWpfViewers\obj\Debug\KinectSkeletonViewer.g.cs
-C:\Users\Bhavik Singh\Documents\Visual Studio 2010\Projects\ipa2\KinectWpfViewers\obj\Debug\GeneratedInternalTypeHelper.g.cs
-C:\Users\Bhavik Singh\Documents\Visual Studio 2010\Projects\ipa2\KinectWpfViewers\obj\Debug\Microsoft.Samples.Kinect.WpfViewers_MarkupCompile.cache
-C:\Users\Bhavik Singh\Documents\Visual Studio 2010\Projects\ipa2\KinectWpfViewers\obj\Debug\Microsoft.Samples.Kinect.WpfViewers_MarkupCompile.lref
-C:\Users\Bhavik Singh\Documents\Visual Studio 2010\Projects\ipa2\KinectWpfViewers\obj\Debug\KinectSensorChooser.baml
-C:\Users\Bhavik Singh\Documents\Visual Studio 2010\Projects\ipa2\KinectWpfViewers\obj\Debug\KinectAudioViewer.baml
-C:\Users\Bhavik Singh\Documents\Visual Studio 2010\Projects\ipa2\KinectWpfViewers\obj\Debug\KinectDepthViewer.baml
-C:\Users\Bhavik Singh\Documents\Visual Studio 2010\Projects\ipa2\KinectWpfViewers\obj\Debug\KinectColorViewer.baml
-C:\Users\Bhavik Singh\Documents\Visual Studio 2010\Projects\ipa2\KinectWpfViewers\obj\Debug\KinectDiagnosticViewer.baml
-C:\Users\Bhavik Singh\Documents\Visual Studio 2010\Projects\ipa2\KinectWpfViewers\obj\Debug\KinectSkeletonViewer.baml
-C:\Users\Bhavik Singh\Documents\Visual Studio 2010\Projects\ipa2\KinectWpfViewers\obj\Debug\Microsoft.Samples.Kinect.WpfViewers.g.resources
-C:\Users\Bhavik Singh\Documents\Visual Studio 2010\Projects\ipa2\KinectWpfViewers\obj\Debug\Microsoft.Samples.Kinect.WpfViewers.Properties.Resources.resources
-C:\Users\Bhavik Singh\Documents\Visual Studio 2010\Projects\ipa2\KinectWpfViewers\obj\Debug\GenerateResource.read.1.tlog
-C:\Users\Bhavik Singh\Documents\Visual Studio 2010\Projects\ipa2\KinectWpfViewers\obj\Debug\GenerateResource.write.1.tlog
-C:\Users\Bhavik Singh\Documents\Visual Studio 2010\Projects\ipa2\KinectWpfViewers\obj\Debug\Microsoft.Samples.Kinect.WpfViewers.dll
-C:\Users\Bhavik Singh\Documents\Visual Studio 2010\Projects\ipa2\KinectWpfViewers\obj\Debug\Microsoft.Samples.Kinect.WpfViewers.pdb
-C:\Users\Brennan\Coding\CS160\Choreoh\KinectWpfViewers\bin\Debug\Microsoft.Samples.Kinect.WpfViewers.dll
-C:\Users\Brennan\Coding\CS160\Choreoh\KinectWpfViewers\bin\Debug\Microsoft.Samples.Kinect.WpfViewers.pdb
-C:\Users\Brennan\Coding\CS160\Choreoh\KinectWpfViewers\obj\Debug\ResolveAssemblyReference.cache
-C:\Users\Brennan\Coding\CS160\Choreoh\KinectWpfViewers\obj\Debug\KinectSettings.baml
-C:\Users\Brennan\Coding\CS160\Choreoh\KinectWpfViewers\obj\Debug\KinectSensorChooser.g.cs
-C:\Users\Brennan\Coding\CS160\Choreoh\KinectWpfViewers\obj\Debug\KinectAudioViewer.g.cs
-C:\Users\Brennan\Coding\CS160\Choreoh\KinectWpfViewers\obj\Debug\KinectDepthViewer.g.cs
-C:\Users\Brennan\Coding\CS160\Choreoh\KinectWpfViewers\obj\Debug\KinectColorViewer.g.cs
-C:\Users\Brennan\Coding\CS160\Choreoh\KinectWpfViewers\obj\Debug\KinectDiagnosticViewer.g.cs
-C:\Users\Brennan\Coding\CS160\Choreoh\KinectWpfViewers\obj\Debug\KinectSettings.g.cs
-C:\Users\Brennan\Coding\CS160\Choreoh\KinectWpfViewers\obj\Debug\KinectSkeletonViewer.g.cs
-C:\Users\Brennan\Coding\CS160\Choreoh\KinectWpfViewers\obj\Debug\GeneratedInternalTypeHelper.g.cs
-C:\Users\Brennan\Coding\CS160\Choreoh\KinectWpfViewers\obj\Debug\Microsoft.Samples.Kinect.WpfViewers_MarkupCompile.cache
-C:\Users\Brennan\Coding\CS160\Choreoh\KinectWpfViewers\obj\Debug\Microsoft.Samples.Kinect.WpfViewers_MarkupCompile.lref
-C:\Users\Brennan\Coding\CS160\Choreoh\KinectWpfViewers\obj\Debug\KinectSensorChooser.baml
-C:\Users\Brennan\Coding\CS160\Choreoh\KinectWpfViewers\obj\Debug\KinectAudioViewer.baml
-C:\Users\Brennan\Coding\CS160\Choreoh\KinectWpfViewers\obj\Debug\KinectDepthViewer.baml
-C:\Users\Brennan\Coding\CS160\Choreoh\KinectWpfViewers\obj\Debug\KinectColorViewer.baml
-C:\Users\Brennan\Coding\CS160\Choreoh\KinectWpfViewers\obj\Debug\KinectDiagnosticViewer.baml
-C:\Users\Brennan\Coding\CS160\Choreoh\KinectWpfViewers\obj\Debug\KinectSkeletonViewer.baml
-C:\Users\Brennan\Coding\CS160\Choreoh\KinectWpfViewers\obj\Debug\Microsoft.Samples.Kinect.WpfViewers.g.resources
-C:\Users\Brennan\Coding\CS160\Choreoh\KinectWpfViewers\obj\Debug\Microsoft.Samples.Kinect.WpfViewers.Properties.Resources.resources
-C:\Users\Brennan\Coding\CS160\Choreoh\KinectWpfViewers\obj\Debug\GenerateResource.read.1.tlog
-C:\Users\Brennan\Coding\CS160\Choreoh\KinectWpfViewers\obj\Debug\GenerateResource.write.1.tlog
-C:\Users\Brennan\Coding\CS160\Choreoh\KinectWpfViewers\obj\Debug\Microsoft.Samples.Kinect.WpfViewers.dll
-C:\Users\Brennan\Coding\CS160\Choreoh\KinectWpfViewers\obj\Debug\Microsoft.Samples.Kinect.WpfViewers.pdb
-C:\Users\Bhavik Singh\Documents\Visual Studio 2010\Projects\Choreoh\KinectWpfViewers\bin\Debug\Microsoft.Samples.Kinect.WpfViewers.dll
-C:\Users\Bhavik Singh\Documents\Visual Studio 2010\Projects\Choreoh\KinectWpfViewers\bin\Debug\Microsoft.Samples.Kinect.WpfViewers.pdb
-C:\Users\Bhavik Singh\Documents\Visual Studio 2010\Projects\Choreoh\KinectWpfViewers\obj\Debug\ResolveAssemblyReference.cache
-C:\Users\Bhavik Singh\Documents\Visual Studio 2010\Projects\Choreoh\KinectWpfViewers\obj\Debug\KinectSettings.baml
-C:\Users\Bhavik Singh\Documents\Visual Studio 2010\Projects\Choreoh\KinectWpfViewers\obj\Debug\KinectSensorChooser.g.cs
-C:\Users\Bhavik Singh\Documents\Visual Studio 2010\Projects\Choreoh\KinectWpfViewers\obj\Debug\KinectAudioViewer.g.cs
-C:\Users\Bhavik Singh\Documents\Visual Studio 2010\Projects\Choreoh\KinectWpfViewers\obj\Debug\KinectDepthViewer.g.cs
-C:\Users\Bhavik Singh\Documents\Visual Studio 2010\Projects\Choreoh\KinectWpfViewers\obj\Debug\KinectColorViewer.g.cs
-C:\Users\Bhavik Singh\Documents\Visual Studio 2010\Projects\Choreoh\KinectWpfViewers\obj\Debug\KinectDiagnosticViewer.g.cs
-C:\Users\Bhavik Singh\Documents\Visual Studio 2010\Projects\Choreoh\KinectWpfViewers\obj\Debug\KinectSettings.g.cs
-C:\Users\Bhavik Singh\Documents\Visual Studio 2010\Projects\Choreoh\KinectWpfViewers\obj\Debug\KinectSkeletonViewer.g.cs
-C:\Users\Bhavik Singh\Documents\Visual Studio 2010\Projects\Choreoh\KinectWpfViewers\obj\Debug\GeneratedInternalTypeHelper.g.cs
-C:\Users\Bhavik Singh\Documents\Visual Studio 2010\Projects\Choreoh\KinectWpfViewers\obj\Debug\Microsoft.Samples.Kinect.WpfViewers_MarkupCompile.cache
-C:\Users\Bhavik Singh\Documents\Visual Studio 2010\Projects\Choreoh\KinectWpfViewers\obj\Debug\Microsoft.Samples.Kinect.WpfViewers_MarkupCompile.lref
-C:\Users\Bhavik Singh\Documents\Visual Studio 2010\Projects\Choreoh\KinectWpfViewers\obj\Debug\KinectSensorChooser.baml
-C:\Users\Bhavik Singh\Documents\Visual Studio 2010\Projects\Choreoh\KinectWpfViewers\obj\Debug\KinectAudioViewer.baml
-C:\Users\Bhavik Singh\Documents\Visual Studio 2010\Projects\Choreoh\KinectWpfViewers\obj\Debug\KinectDepthViewer.baml
-C:\Users\Bhavik Singh\Documents\Visual Studio 2010\Projects\Choreoh\KinectWpfViewers\obj\Debug\KinectColorViewer.baml
-C:\Users\Bhavik Singh\Documents\Visual Studio 2010\Projects\Choreoh\KinectWpfViewers\obj\Debug\KinectDiagnosticViewer.baml
-C:\Users\Bhavik Singh\Documents\Visual Studio 2010\Projects\Choreoh\KinectWpfViewers\obj\Debug\KinectSkeletonViewer.baml
-C:\Users\Bhavik Singh\Documents\Visual Studio 2010\Projects\Choreoh\KinectWpfViewers\obj\Debug\Microsoft.Samples.Kinect.WpfViewers.g.resources
-C:\Users\Bhavik Singh\Documents\Visual Studio 2010\Projects\Choreoh\KinectWpfViewers\obj\Debug\Microsoft.Samples.Kinect.WpfViewers.Properties.Resources.resources
-C:\Users\Bhavik Singh\Documents\Visual Studio 2010\Projects\Choreoh\KinectWpfViewers\obj\Debug\GenerateResource.read.1.tlog
-C:\Users\Bhavik Singh\Documents\Visual Studio 2010\Projects\Choreoh\KinectWpfViewers\obj\Debug\GenerateResource.write.1.tlog
-C:\Users\Bhavik Singh\Documents\Visual Studio 2010\Projects\Choreoh\KinectWpfViewers\obj\Debug\Microsoft.Samples.Kinect.WpfViewers.dll
-C:\Users\Bhavik Singh\Documents\Visual Studio 2010\Projects\Choreoh\KinectWpfViewers\obj\Debug\Microsoft.Samples.Kinect.WpfViewers.pdb
+C:\Users\Ken\Documents\Visual Studio 2010\Projects\Choreoh\KinectWpfViewers\bin\Debug\Microsoft.Samples.Kinect.WpfViewers.dll
+C:\Users\Ken\Documents\Visual Studio 2010\Projects\Choreoh\KinectWpfViewers\bin\Debug\Microsoft.Samples.Kinect.WpfViewers.pdb
+C:\Users\Ken\Documents\Visual Studio 2010\Projects\Choreoh\KinectWpfViewers\obj\Debug\ResolveAssemblyReference.cache
+C:\Users\Ken\Documents\Visual Studio 2010\Projects\Choreoh\KinectWpfViewers\obj\Debug\KinectSettings.baml
+C:\Users\Ken\Documents\Visual Studio 2010\Projects\Choreoh\KinectWpfViewers\obj\Debug\KinectSensorChooser.g.cs
+C:\Users\Ken\Documents\Visual Studio 2010\Projects\Choreoh\KinectWpfViewers\obj\Debug\KinectAudioViewer.g.cs
+C:\Users\Ken\Documents\Visual Studio 2010\Projects\Choreoh\KinectWpfViewers\obj\Debug\KinectDepthViewer.g.cs
+C:\Users\Ken\Documents\Visual Studio 2010\Projects\Choreoh\KinectWpfViewers\obj\Debug\KinectColorViewer.g.cs
+C:\Users\Ken\Documents\Visual Studio 2010\Projects\Choreoh\KinectWpfViewers\obj\Debug\KinectDiagnosticViewer.g.cs
+C:\Users\Ken\Documents\Visual Studio 2010\Projects\Choreoh\KinectWpfViewers\obj\Debug\KinectSettings.g.cs
+C:\Users\Ken\Documents\Visual Studio 2010\Projects\Choreoh\KinectWpfViewers\obj\Debug\KinectSkeletonViewer.g.cs
+C:\Users\Ken\Documents\Visual Studio 2010\Projects\Choreoh\KinectWpfViewers\obj\Debug\GeneratedInternalTypeHelper.g.cs
+C:\Users\Ken\Documents\Visual Studio 2010\Projects\Choreoh\KinectWpfViewers\obj\Debug\Microsoft.Samples.Kinect.WpfViewers_MarkupCompile.cache
+C:\Users\Ken\Documents\Visual Studio 2010\Projects\Choreoh\KinectWpfViewers\obj\Debug\Microsoft.Samples.Kinect.WpfViewers_MarkupCompile.lref
+C:\Users\Ken\Documents\Visual Studio 2010\Projects\Choreoh\KinectWpfViewers\obj\Debug\KinectSensorChooser.baml
+C:\Users\Ken\Documents\Visual Studio 2010\Projects\Choreoh\KinectWpfViewers\obj\Debug\KinectAudioViewer.baml
+C:\Users\Ken\Documents\Visual Studio 2010\Projects\Choreoh\KinectWpfViewers\obj\Debug\KinectDepthViewer.baml
+C:\Users\Ken\Documents\Visual Studio 2010\Projects\Choreoh\KinectWpfViewers\obj\Debug\KinectColorViewer.baml
+C:\Users\Ken\Documents\Visual Studio 2010\Projects\Choreoh\KinectWpfViewers\obj\Debug\KinectDiagnosticViewer.baml
+C:\Users\Ken\Documents\Visual Studio 2010\Projects\Choreoh\KinectWpfViewers\obj\Debug\KinectSkeletonViewer.baml
+C:\Users\Ken\Documents\Visual Studio 2010\Projects\Choreoh\KinectWpfViewers\obj\Debug\Microsoft.Samples.Kinect.WpfViewers.g.resources
+C:\Users\Ken\Documents\Visual Studio 2010\Projects\Choreoh\KinectWpfViewers\obj\Debug\Microsoft.Samples.Kinect.WpfViewers.Properties.Resources.resources
+C:\Users\Ken\Documents\Visual Studio 2010\Projects\Choreoh\KinectWpfViewers\obj\Debug\GenerateResource.read.1.tlog
+C:\Users\Ken\Documents\Visual Studio 2010\Projects\Choreoh\KinectWpfViewers\obj\Debug\GenerateResource.write.1.tlog
+C:\Users\Ken\Documents\Visual Studio 2010\Projects\Choreoh\KinectWpfViewers\obj\Debug\Microsoft.Samples.Kinect.WpfViewers.dll
+C:\Users\Ken\Documents\Visual Studio 2010\Projects\Choreoh\KinectWpfViewers\obj\Debug\Microsoft.Samples.Kinect.WpfViewers.pdb

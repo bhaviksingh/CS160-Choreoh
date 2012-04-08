@@ -48,6 +48,11 @@
         <local:RadialMenu x:Name="radialMenu" Visibility="Hidden" TopText="Top" LeftText="Leftn" RightText="Right" BottomText="Cancel" bottomClick="bottom_Click" Canvas.Left="751" Canvas.Top="218" />
 
         <my:KinectSensorChooser Canvas.Left="384" Canvas.Top="201" Name="kinectSensorChooser1" Width="328" DataContext="{Binding ElementName=kinectSensorChooser, Path=Kinect}" />
+
+        <Canvas Name="recordingCanvas" Canvas.Top="50" Canvas.Left="206" Height="480" Width="640" Panel.ZIndex="100" Visibility="Hidden" Background="White">
+            <my:KinectColorViewer Width="640" Height="480" Name="recordingColorViewer" Kinect="{Binding ElementName=kinectSensorChooser1, Path=Kinect}" Panel.ZIndex="100"></my:KinectColorViewer>
+            <my:KinectSkeletonViewer Name="recordingSkeletonViewer" Width="640" Height="480" Kinect="{Binding ElementName=kinectSensorChooser1, Path=Kinect}" Panel.ZIndex="100"></my:KinectSkeletonViewer>
+         </Canvas>
         <TextBox Canvas.Left="12" Canvas.Top="697" Height="59"  Width="986" Name="debug" FontSize="20" />
        
         <local:HandCursor x:Name="hand" Canvas.Top="79" Canvas.Left="256" GestureEvent="hand_GestureEvent" />

@@ -14,6 +14,7 @@ using System.Windows.Shapes;
 using Microsoft.Kinect;
 using Microsoft.Samples.Kinect.WpfViewers;
 using Coding4Fun.Kinect.Wpf;
+using System.Diagnostics;
 
 namespace Choreoh
 {
@@ -28,11 +29,21 @@ namespace Choreoh
         private double menuX = 0;
         private double menuY = 0;
         private int i = 0;
+        private KinectSensor sensor;
+        private DanceSegment segmentToRecordTo;
+        private DanceRoutine routine;
 
         public MainWindow()
         {
             InitializeComponent();
         }
+
+        /*
+         * delete these testing vars when done
+         * */
+        DanceSegment newSegment;
+        bool isRecording = false;
+        int framesLeft = 30 * 3;
 
         //Load window
         private void Window_Loaded(object sender, RoutedEventArgs e)
@@ -44,7 +55,17 @@ namespace Choreoh
             Global.canGestureTimer.Elapsed += new System.Timers.ElapsedEventHandler(Global.canGestureTimer_Elapsed);
             Global.windowWidth = mainCanvas.ActualWidth;
             Global.windowHeight = mainCanvas.ActualHeight;
-            
+
+            if (DanceRoutine.saveAlreadyExists("fakeSong.wav"))
+            {
+                routine = DanceRoutine.load("fakeSong.wav");
+            } else  {
+                routine = new DanceRoutine("fakeSong.wav");
+            }
+            routine.deleteDanceSegmentAt(0);
+            showRecordingCanvas();
+
+            newSegment = routine.addDanceSegment(0);
         }
 
         void newSensor_AllFramesReady(object sender, AllFramesReadyEventArgs e)
@@ -180,7 +201,7 @@ namespace Choreoh
             StopKinect(oldSensor);
 
             KinectSensor newSensor = (KinectSensor)e.NewValue;
-
+            sensor = newSensor;
             if (newSensor == null)
             {
                 return;
@@ -197,6 +218,9 @@ namespace Choreoh
 
             newSensor.SkeletonStream.Enable(parameters);
             newSensor.AllFramesReady += new EventHandler<AllFramesReadyEventArgs>(newSensor_AllFramesReady);
+            // DELETE THIS TEMPRECORD
+            newSensor.AllFramesReady += new EventHandler<AllFramesReadyEventArgs>(tempRecord);
+
             newSensor.ColorStream.Enable(ColorImageFormat.RgbResolution640x480Fps30);
             newSensor.DepthStream.Enable(DepthImageFormat.Resolution640x480Fps30);
             newSensor.SkeletonStream.Enable();
@@ -241,5 +265,85 @@ namespace Choreoh
         {
             debug.Text = debug.Text + "gesture " + Global.lastGesture;
         }
+
+
+        private void showRecordingCanvas()
+        {
+            recordingCanvas.Visibility = Visibility.Visible;
+        }
+
+        private void hideRecordingCanvas()
+        {
+            recordingCanvas.Visibility = Visibility.Hidden;
+        }
+
+        public void StartRecording(DanceSegment s)
+        {
+            Debug.WriteLine("Setting recording canvas's segment to destination segment");
+            segmentToRecordTo = s;
+
+            sensor.AllFramesReady += newSensor_AllFramesReady_Record;
+        }
+
+        public void StopRecording()
+        {
+            segmentToRecordTo = null;
+            Debug.WriteLine("Set recording canvas's segment to null");
+
+            sensor.AllFramesReady -= newSensor_AllFramesReady_Record;
+        }
+
+        //this event fires when Color/Depth/Skeleton are synchronized
+        void newSensor_AllFramesReady_Record(object sender, AllFramesReadyEventArgs e)
+        {
+            if (closing)
+            {
+                return;
+            }
+
+            //Get a skeleton
+            Skeleton first = GetFirstSkeleton(e);
+            BitmapSource bitmap = GetBitmap();
+            if (first == null)
+            {
+                return;
+            }
+
+            Debug.WriteLine("Recording frame");
+            if (segmentToRecordTo != null)
+            {
+                segmentToRecordTo.updateImages(bitmap);
+                segmentToRecordTo.updateSkeletons(first);
+            }
+            else
+            {
+                Debug.WriteLine("Trying to record to empty segment");
+            }
+        }
+
+        BitmapSource GetBitmap()
+        {
+            RenderTargetBitmap renderBitmap = new RenderTargetBitmap((int)recordingCanvas.ActualWidth, (int)recordingCanvas.ActualHeight, 96d, 96d, PixelFormats.Pbgra32);
+            renderBitmap.Render(recordingColorViewer);
+            return renderBitmap;
+        }
+
+
+
+        void tempRecord(object sender, AllFramesReadyEventArgs e)
+        {
+            if (!isRecording && framesLeft > 0)
+            {
+                isRecording = true;
+                StartRecording(newSegment);
+            }
+
+            framesLeft--;
+
+            if (framesLeft == 0)
+            {
+                StopRecording();
+            }
+        }       
     }
 }
