@@ -58,9 +58,10 @@ namespace Choreoh
             Canvas.SetTop(hb, 100);
             Canvas.SetLeft(hb, 0);
             mainCanvas.Children.Add(hb);
+            hb.Click += new HoverButton.ClickHandler(button_Clicked);
             */
 
-        
+
         /*
          * delete these testing vars when done
          * */
@@ -132,21 +133,7 @@ namespace Choreoh
             hand.SetPosition(handJoint);
             backButton.Check(hand);
 
-            radialCreator.Check(hand);
-            //HoverButton hb = new HoverButton();
-            //hb.Text = "SDjf";
-            //Panel.SetZIndex(hb, 1020);
-            //SolidColorBrush sb = new SolidColorBrush();
-            //sb.Color = Color.FromArgb(255, 255, 0, 0);
-            //hb.BackgroundColor = sb;
-            //hb.Width = 500;
-            //hb.Height = 500;
-            //hb.Click += new HoverButton.ClickHandler(button_Clicked);
-            //Canvas.SetLeft(hb, 60);
-            //Canvas.SetTop(hb, 30);
-
-            //mainCanvas.Children.Add(hb);
-           
+            radialCreator.Check(hand);         
         }
 
        

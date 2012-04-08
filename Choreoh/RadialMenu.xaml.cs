@@ -33,7 +33,14 @@ namespace Choreoh
             InitializeComponent();
             radialAnimate = new RadialAnimate();
             this.Effect = shadowEffect;
+            setSize(300);
         }
+
+        private void setSize(int diameter)
+        {
+
+        }
+
 
         #region Properties
         public static readonly DependencyProperty TopTextProperty = DependencyProperty.Register(
