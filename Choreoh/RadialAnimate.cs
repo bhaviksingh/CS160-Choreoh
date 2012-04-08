@@ -29,6 +29,7 @@ namespace Choreoh
         TranslateTransform topTrans = new TranslateTransform();
         TranslateTransform leftTrans = new TranslateTransform();
         TranslateTransform bottomTrans = new TranslateTransform();
+        private int expandTo = 128;
 
         public RadialAnimate()
         {
@@ -50,26 +51,26 @@ namespace Choreoh
             switch (direction)
             {
                 case ("Left"):
-                    dax.KeyFrames.Add(new LinearDoubleKeyFrame(-128, KeyTime.FromTimeSpan(TimeSpan.FromSeconds(2))));
+                    dax.KeyFrames.Add(new LinearDoubleKeyFrame(-expandTo, KeyTime.FromTimeSpan(TimeSpan.FromSeconds(2))));
                     day.KeyFrames.Add(new LinearDoubleKeyFrame(0, KeyTime.FromTimeSpan(TimeSpan.FromSeconds(2))));
                     control.RenderTransform = leftTrans;
                     leftTrans.BeginAnimation(TranslateTransform.XProperty, dax);
                     break;
                 case ("Top"):
                     dax.KeyFrames.Add(new LinearDoubleKeyFrame(0, KeyTime.FromTimeSpan(TimeSpan.FromSeconds(2))));
-                    day.KeyFrames.Add(new LinearDoubleKeyFrame(-128, KeyTime.FromTimeSpan(TimeSpan.FromSeconds(2))));
+                    day.KeyFrames.Add(new LinearDoubleKeyFrame(-expandTo, KeyTime.FromTimeSpan(TimeSpan.FromSeconds(2))));
                     control.RenderTransform = topTrans;
                     topTrans.BeginAnimation(TranslateTransform.YProperty, day);
                     break;
                 case ("Right"):
-                    dax.KeyFrames.Add(new LinearDoubleKeyFrame(128, KeyTime.FromTimeSpan(TimeSpan.FromSeconds(2))));
+                    dax.KeyFrames.Add(new LinearDoubleKeyFrame(expandTo, KeyTime.FromTimeSpan(TimeSpan.FromSeconds(2))));
                     day.KeyFrames.Add(new LinearDoubleKeyFrame(0, KeyTime.FromTimeSpan(TimeSpan.FromSeconds(2))));
                     control.RenderTransform = rightTrans;
                     rightTrans.BeginAnimation(TranslateTransform.XProperty, dax);
                     break;
                 case ("Bottom"):
                     dax.KeyFrames.Add(new LinearDoubleKeyFrame(0, KeyTime.FromTimeSpan(TimeSpan.FromSeconds(2))));
-                    day.KeyFrames.Add(new LinearDoubleKeyFrame(128, KeyTime.FromTimeSpan(TimeSpan.FromSeconds(2))));
+                    day.KeyFrames.Add(new LinearDoubleKeyFrame(expandTo, KeyTime.FromTimeSpan(TimeSpan.FromSeconds(2))));
                     control.RenderTransform = bottomTrans;
                     bottomTrans.BeginAnimation(TranslateTransform.YProperty, day);
                     break;
@@ -133,7 +134,7 @@ namespace Choreoh
             set
             {
                 currentVal = value;
-                if (currentVal == 80)
+                if (currentVal == expandTo)
                 {
                     OnComplete();
                 }
