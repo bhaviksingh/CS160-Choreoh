@@ -5,22 +5,22 @@
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
              mc:Ignorable="d" 
              x:Name="menu" 
-             d:DesignHeight="500" d:DesignWidth="500" Width="424" Height="420">
-    <Canvas Width="420" Height="421">
-        <Image Name="RadialLeft" Source="Images/RadialLeft.png" Width="210"  Height="300"  Canvas.Left="0" Canvas.Top="60" Panel.ZIndex="100" />
-        <Image Name="RadialTop" Source="Images/RadialTop.png" Width="300" Height="210" Canvas.Left="60" Canvas.Top="0" Panel.ZIndex="100" />
-        <Image Name="RadialRight" Source="Images/RadialRight.png" Width="210" Height="300" Canvas.Left="210" Canvas.Top="58" Panel.ZIndex="98"/>
-        <Image Name="RadialBottom" Source="Images/RadialBottom.png" Width="300" Height="210" Canvas.Left="60" Canvas.Top="209" Panel.ZIndex="100"/>
-        <Image Name="RadialMiddle" Source="Images/RadialMiddle.png" Width="92" Height="92" Canvas.Left="165" Canvas.Top="164" Panel.ZIndex="100"/>
-        <Image Name="RadialHighRight" Source="Images/RadialHighRight.png" Width="210" Opacity=".6" Height="298" Canvas.Left="41" Canvas.Top="59" Panel.ZIndex="99" />
-        <Image Name="RadialHighBottom" Source="Images/RadialHighBottom.png" Width="298" Opacity=".6" Height="210" Canvas.Left="62" Canvas.Top="39" Panel.ZIndex="96" />
-        <Image Name="RadialHighTop" Source="Images/RadialHighTop.png" Width="298" Opacity=".6" Height="210" Canvas.Left="60" Canvas.Top="170" Panel.ZIndex="96" />
-        <Image Name="RadialHighLeft" Source="Images/RadialHighLeft.png" Width="210" Opacity=".6" Height="298" Canvas.Left="172" Canvas.Top="61" Panel.ZIndex="96" />
-        <Ellipse Name="RadialOuter" Fill="White" StrokeThickness="3" Width="420" Height="420" Canvas.Left="0" Canvas.Top="-1" Panel.ZIndex="94" Stroke="#FFDEDEDE" />
-        <TextBlock Canvas.Left="100" Canvas.Top="37" Text="{Binding Path=TopText, ElementName=menu}" Width="218" Foreground="#FF5F5F5F" Panel.ZIndex="101" FontSize="35" FontFamily="..\img\ui\#Nevis" TextAlignment="Center" TextWrapping="Wrap" Height="63" />
-        <TextBlock Canvas.Left="100" Canvas.Top="318" Text="{Binding Path=BottomText, ElementName=menu}" Width="218" Foreground="#FF5F5F5F" Panel.ZIndex="101" FontSize="35" FontFamily="..\img\ui\#Nevis" TextAlignment="Center" TextWrapping="Wrap" Height="63" />
-        <TextBlock Canvas.Left="12" Canvas.Top="142" Text="{Binding Path=LeftText, ElementName=menu}" Width="128" Foreground="#FF5F5F5F" Panel.ZIndex="101" FontSize="35" FontFamily="..\img\ui\#Nevis" TextAlignment="Center" Height="134" TextWrapping="Wrap" Padding="0,30,0,10"/>
-        <TextBlock Canvas.Left="277" Canvas.Top="142" Text="{Binding Path=RightText, ElementName=menu}" FontSize="35" FontFamily="..\img\ui\#Nevis" Foreground="#FF5F5F5F" Height="134" Panel.ZIndex="101"  TextAlignment="Center" TextWrapping="Wrap" Width="128" Padding="0,30,0,10"/>
+             d:DesignHeight="319" d:DesignWidth="319" Width="319" Height="319">
+    <Canvas Width="319" Height="319">
+        <Image Name="RadialLeft" Source="Images/RadialLeft.png" Width="160"  Height="220"  Canvas.Left="0" Canvas.Top="48" Panel.ZIndex="100" />
+        <Image Name="RadialTop" Source="Images/RadialTop.png" Width="220" Height="160" Canvas.Left="47" Canvas.Top="0" Panel.ZIndex="100" />
+        <Image Name="RadialRight" Source="Images/RadialRight.png" Width="160" Height="220" Canvas.Left="155" Canvas.Top="48" Panel.ZIndex="98"/>
+        <Image Name="RadialBottom" Source="Images/RadialBottom.png" Width="220" Height="160" Canvas.Left="48" Canvas.Top="156" Panel.ZIndex="100"/>
+        <Image Name="RadialMiddle" Source="Images/RadialMiddle.png" Width="65" Height="65" Canvas.Left="124" Canvas.Top="124" Panel.ZIndex="100"/>
+        <Image Name="RadialHighRight" Source="Images/RadialHighRight.png" Width="160" Opacity=".6" Height="220" Canvas.Left="27" Canvas.Top="47" Panel.ZIndex="99" />
+        <Image Name="RadialHighBottom" Source="Images/RadialHighBottom.png" Width="220" Opacity=".6" Height="160" Canvas.Left="48" Canvas.Top="27" Panel.ZIndex="96" />
+        <Image Name="RadialHighTop" Source="Images/RadialHighTop.png" Width="220" Opacity=".6" Height="160" Canvas.Left="46" Canvas.Top="130" Panel.ZIndex="96" />
+        <Image Name="RadialHighLeft" Source="Images/RadialHighLeft.png" Width="160" Opacity=".6" Height="220" Canvas.Left="128" Canvas.Top="47" Panel.ZIndex="96" />
+        <Ellipse Name="RadialOuter" Fill="White" StrokeThickness="3" Width="315" Height="317" Canvas.Left="0" Canvas.Top="-1" Panel.ZIndex="94" Stroke="#FFDEDEDE" />
+        <TextBlock Canvas.Left="80" Canvas.Top="26" Text="{Binding Path=TopText, ElementName=menu}" Width="156" Foreground="#FF5F5F5F" Panel.ZIndex="101" FontSize="35" FontFamily="..\img\ui\#Nevis" TextAlignment="Center" TextWrapping="Wrap" Height="47" />
+        <TextBlock Canvas.Left="80" Canvas.Top="241" Text="{Binding Path=BottomText, ElementName=menu}" Width="156" Foreground="#FF5F5F5F" Panel.ZIndex="101" FontSize="35" FontFamily="..\img\ui\#Nevis" TextAlignment="Center" TextWrapping="Wrap" Height="47" />
+        <TextBlock Canvas.Left="12" Canvas.Top="106" Text="{Binding Path=LeftText, ElementName=menu}" Width="96" Foreground="#FF5F5F5F" Panel.ZIndex="101" FontSize="35" FontFamily="..\img\ui\#Nevis" TextAlignment="Center" Height="97" TextWrapping="Wrap" Padding="0,30,0,10"/>
+        <TextBlock Canvas.Left="207" Canvas.Top="106" Text="{Binding Path=RightText, ElementName=menu}" FontSize="35" FontFamily="..\img\ui\#Nevis" Foreground="#FF5F5F5F" Height="97" Panel.ZIndex="101"  TextAlignment="Center" TextWrapping="Wrap" Width="96" Padding="0,30,0,10"/>
     </Canvas>
 </UserControl>
 

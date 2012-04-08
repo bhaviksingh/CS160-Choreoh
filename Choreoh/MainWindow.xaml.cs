@@ -109,11 +109,11 @@ namespace Choreoh
 
                 Point handPosition = hand.TransformToAncestor(mainCanvas).Transform(new Point(0, 0));
                 menuY = handPosition.Y;
-                menuY = menuY + hand.ActualHeight / 2;
+                menuY = menuY + hand.ActualHeight / 2 - radialMenu.getDiameter()/2;
                 menuX = handPosition.X;
-                menuX = menuX + hand.ActualWidth / 2;
-                Canvas.SetLeft(radialMenu, menuX - radialMenu.ActualWidth / 2);
-                Canvas.SetTop(radialMenu, menuY - radialMenu.ActualHeight / 2);
+                menuX = menuX + hand.ActualWidth / 2 - radialMenu.getDiameter()/2;
+                Canvas.SetLeft(radialMenu, menuX );
+                Canvas.SetTop(radialMenu, menuY);
 
                 hand.menuOpened = true;
                 hand.SetRadialMenu(handPosition.X, handPosition.Y, radialMenu);
@@ -202,8 +202,8 @@ namespace Choreoh
                     menuY = menuY + hand.ActualHeight / 2;
                     menuX = handPosition.X;
                     menuX = menuX + hand.ActualWidth / 2;
-                    Canvas.SetLeft(radialMenu, menuX - radialMenu.ActualWidth / 2);
-                    Canvas.SetTop(radialMenu, menuY - radialMenu.ActualHeight / 2);
+                    Canvas.SetLeft(radialMenu, menuX - radialMenu.getDiameter() / 2);
+                    Canvas.SetTop(radialMenu, menuY - radialMenu.getDiameter() / 2);
                     hand.menuOpened = true;
                     hand.SetRadialMenu(handPosition.X, handPosition.Y, radialMenu);
                     radialMenu.Visibility = Visibility.Visible;
