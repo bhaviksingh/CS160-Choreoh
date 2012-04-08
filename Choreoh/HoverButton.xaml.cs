@@ -121,6 +121,22 @@ namespace Choreoh
             set { this.SetValue(CornerRadiusProperty, value); }
         }
 
+        public static readonly DependencyProperty LeftImageProperty = DependencyProperty.Register(
+           "LeftImage", typeof(string), typeof(HoverButton), new PropertyMetadata(""));
+        public string LeftImage
+        {
+            get { return (string)this.GetValue(LeftImageProperty); }
+            set { this.SetValue(LeftImageProperty, value); }
+        }
+
+        public static readonly DependencyProperty RightImageProperty = DependencyProperty.Register(
+           "RightImage", typeof(string), typeof(HoverButton), new PropertyMetadata(""));
+        public string RightImage
+        {
+            get { return (string)this.GetValue(RightImageProperty); }
+            set { this.SetValue(RightImageProperty, value); }
+        }
+
         #endregion
 
         #region Button Effects

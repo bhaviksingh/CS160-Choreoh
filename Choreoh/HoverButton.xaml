@@ -9,6 +9,9 @@
         <Border CornerRadius="{Binding CornerRadius}" Background="{Binding HoverOverlay}">
             <Grid Name="hoverCanvas">
                 <Image Source="{Binding Image}" Stretch="Fill"/>
+                <Image Source="{Binding LeftImage}" HorizontalAlignment="Left" Margin="10"/>
+                <Image Source="{Binding RightImage}" HorizontalAlignment="Right" Margin="10" />
+                <TextBlock Name="dotDot" Text="..." HorizontalAlignment="Center" FontSize="50" VerticalAlignment="Center" Padding="0" Margin="0" Visibility="Hidden"/>
                 <TextBlock Text="{Binding Text}" FontSize="{Binding TextSize}" Foreground="{Binding TextColor}" FontFamily="../img/ui/#Nevis" Padding="12,12,15,5" HorizontalAlignment="{Binding HorizontalTextAlignment}" VerticalAlignment="{Binding VerticalTextAlignment}"/>
                 <Rectangle Name="Mask" Fill="{Binding HoverColor}" Width="{Binding Width}" Opacity="0.3" RenderTransformOrigin="0,0" Height="0" HorizontalAlignment="Left" VerticalAlignment="Top" />
             </Grid>
