@@ -471,9 +471,14 @@ namespace Choreoh
         private void LoadWords()
         {
             var path = System.IO.Path.GetFullPath("english_words.txt");
-         
-            wordsForGrammar = File.ReadAllText(path);
-
+            if (File.Exists(path))
+            {
+                wordsForGrammar = File.ReadAllText(path);
+            }
+            else
+            {
+                wordsForGrammar = "panda";
+            }
             wordsArray = wordsForGrammar.Split('\n');
 
             for (int i = 0; i < wordsArray.Length; i++)
