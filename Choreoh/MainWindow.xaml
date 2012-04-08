@@ -22,51 +22,53 @@
         </Style>
     </Window.Resources>
     
-    <Canvas  Height="768" HorizontalAlignment="Left" Name="mainCanvas" VerticalAlignment="Top" Width="1024" Background="#FFEEEEEE" >
-        <Border Style="{StaticResource UITextElement}" Name="playbackMode" Canvas.Left="372" Canvas.Top="-5" Width="268" Height="50">
-        <Canvas Width="256">
-            <Label  Foreground="#FF1A9D1A" Canvas.Left="50" Canvas.Top="9" Style="{StaticResource UIText}" >PLAYBACK MODE</Label>
-            <Image Canvas.Left="6" Canvas.Top="8" Height="34" Name="playbackModeImage" Stretch="Fill" Width="24" Source="img/ui/playbutton.png" />
-        </Canvas>
-        </Border>
-        <Border Style="{StaticResource UITextElement}" Name="recordMode" Canvas.Left="372" Canvas.Top="69" Width="268" Height="50" BorderBrush="#FFDEDEDE">
-            <Canvas Width="256">
-                <Label  Foreground="#FF812A2F" Canvas.Left="50" Canvas.Top="9" Style="{StaticResource UIText}">RECORDING MODE</Label>
-                <Image Canvas.Left="6" Canvas.Top="8" Height="34" Name="recordModeImage" Stretch="Fill" Width="30" Source="img/ui/recordbutton.png" />
+    <Canvas Height="768" Width="1024" Background="Blue" Name="containerCanvas">
+        <Canvas  Height="768" HorizontalAlignment="Left" Name="mainCanvas" VerticalAlignment="Top" Width="1024" Background="#FFEEEEEE" >
+            <Border Style="{StaticResource UITextElement}" Name="playbackMode" Canvas.Left="372" Canvas.Top="-5" Width="268" Height="50">
+                <Canvas Width="256">
+                    <Label  Foreground="#FF1A9D1A" Canvas.Left="50" Canvas.Top="9" Style="{StaticResource UIText}" >PLAYBACK MODE</Label>
+                    <Image Canvas.Left="6" Canvas.Top="8" Height="34" Name="playbackModeImage" Stretch="Fill" Width="24" Source="img/ui/playbutton.png" />
+                </Canvas>
+            </Border>
+            <Border Style="{StaticResource UITextElement}" Name="recordMode" Canvas.Left="372" Canvas.Top="69" Width="268" Height="50" BorderBrush="#FFDEDEDE">
+                <Canvas Width="256">
+                    <Label  Foreground="#FF812A2F" Canvas.Left="50" Canvas.Top="9" Style="{StaticResource UIText}">RECORDING MODE</Label>
+                    <Image Canvas.Left="6" Canvas.Top="8" Height="34" Name="recordModeImage" Stretch="Fill" Width="30" Source="img/ui/recordbutton.png" />
+                </Canvas>
+            </Border>
+            <Border Style="{StaticResource UITextElement}" Name="songLabel" Canvas.Right="0" Canvas.Top="-5" Width="180" Height="50">
+                <Canvas Width="180">
+                    <Label Foreground="#FF5F5F5F" Canvas.Left="10" Canvas.Top="9" Style="{StaticResource UIText}">"Billy Jean" - MJ</Label>
+                </Canvas>
+            </Border>
+            <local:HoverButton x:Name="backButton" Text="BACK" Canvas.Top="-4" Width="180" Height="50" Click="button_Clicked"  Canvas.Left="-6"  HorizontalTextAlignment="Center" VerticalTextAlignment="Center" CornerRadius="2" RenderTransformOrigin="0.5,0.5" BackgroundColor="#FF414141" TextColor="#EEEEEE" TextSize="19"/>
+            <local:HoverButton x:Name="radialCreator" Text="radialmenu" Canvas.Top="182" Width="180" Height="50" Click="button_Clicked"  Canvas.Left="88"  HorizontalTextAlignment="Center" VerticalTextAlignment="Center" CornerRadius="2" RenderTransformOrigin="0.5,0.5" BackgroundColor="#FF414141" TextColor="#EEEEEE" TextSize="19"/>
+
+            <local:HoverButton x:Name="waveButton" Canvas.Top="400" Width="1800" Height="160" Click="waveform_Clicked"  Canvas.Left="0" />
+
+            <Canvas Name="recordingCanvas" Canvas.Top="50" Canvas.Left="306" Height="320" Width="420"  Visibility="Hidden" Background="White">
+                <my:KinectColorViewer Canvas.Left ="-30" Width="480" Height="320" Name="recordingColorViewer" Kinect="{Binding ElementName=kinectSensorChooser1, Path=Kinect}" Panel.ZIndex="100"></my:KinectColorViewer>
+                <my:KinectSkeletonViewer Canvas.Left="0" Name="recordingSkeletonViewer" Width="420" Height="320" Kinect="{Binding ElementName=kinectSensorChooser1, Path=Kinect}" Panel.ZIndex="100"></my:KinectSkeletonViewer>
+
             </Canvas>
-        </Border>
-        <Border Style="{StaticResource UITextElement}" Name="songLabel" Canvas.Right="0" Canvas.Top="-5" Width="180" Height="50">
-        <Canvas Width="180">
-            <Label Foreground="#FF5F5F5F" Canvas.Left="10" Canvas.Top="9" Style="{StaticResource UIText}">"Billy Jean" - MJ</Label>
+            <TextBox Canvas.Left="12" Canvas.Top="697" Height="59"  Width="986" Name="debug" FontSize="20" />
+
+            <local:RadialMenu x:Name="radialMenu" Visibility="Collapsed" TopText="Top" LeftText="Leftn" RightText="Right" BottomText="Cancel" bottomClick="bottom_Click" Canvas.Left="-185" Canvas.Top="-49" />
         </Canvas>
-        </Border>
-        <local:HoverButton x:Name="backButton" Text="BACK" Canvas.Top="-4" Width="180" Height="50" Click="button_Clicked"  Canvas.Left="-6"  HorizontalTextAlignment="Center" VerticalTextAlignment="Center" CornerRadius="2" RenderTransformOrigin="0.5,0.5" BackgroundColor="#FF414141" TextColor="#EEEEEE" TextSize="19"/>
-        <local:HoverButton x:Name="radialCreator" Text="radialmenu" Canvas.Top="182" Width="180" Height="50" Click="button_Clicked"  Canvas.Left="88"  HorizontalTextAlignment="Center" VerticalTextAlignment="Center" CornerRadius="2" RenderTransformOrigin="0.5,0.5" BackgroundColor="#FF414141" TextColor="#EEEEEE" TextSize="19"/>
-   
-        <local:HoverButton x:Name="waveButton" Canvas.Top="400" Width="1800" Height="160" Click="waveform_Clicked"  Canvas.Left="0" />
 
-
-        <TextBlock Name="gestureText" Canvas.Top="0" Canvas.Left="0" Foreground="White" Text=""/>
-        <my:KinectSensorChooser Canvas.Left="384" Canvas.Top="201" Name="kinectSensorChooser1" Width="328" DataContext="{Binding ElementName=kinectSensorChooser, Path=Kinect}" />
-
-        <Canvas Name="recordingCanvas" Canvas.Top="50" Canvas.Left="306" Height="320" Width="420" Panel.ZIndex="100" Visibility="Hidden" Background="Red">
-            <my:KinectColorViewer Canvas.Left ="-30" Width="480" Height="320" Name="recordingColorViewer" Kinect="{Binding ElementName=kinectSensorChooser1, Path=Kinect}" Panel.ZIndex="100"></my:KinectColorViewer>
-            <my:KinectSkeletonViewer Canvas.Left="0" Name="recordingSkeletonViewer" Width="420" Height="320" Kinect="{Binding ElementName=kinectSensorChooser1, Path=Kinect}" Panel.ZIndex="100"></my:KinectSkeletonViewer>
-            
-        </Canvas>
-        <TextBox Canvas.Left="12" Canvas.Top="697" Height="59"  Width="986" Name="debug" FontSize="20" />
-
-        <Canvas Height="768" Width="1024" Name="homeCanvas"  VerticalAlignment="Top" HorizontalAlignment="Left" Background="#EEEEEE" Visibility="Collapsed">
+        <Canvas Height="768" Width="1024" Name="homeCanvas"  VerticalAlignment="Top" HorizontalAlignment="Left" Background="#EEEEEE">
             <TextBlock Canvas.Left="3" Canvas.Top="24" Text="Choreoh!"  Height="70" Name="label1" Width="1024" TextAlignment="Center" FontFamily="..\img\ui\#Nevis" FontSize="50" Foreground="DarkGray"/>
             <TextBlock Canvas.Left="0" Canvas.Top="24" Text="Choreoh!"  Height="70" Name="label2" Width="1024" TextAlignment="Center" FontFamily="..\img\ui\#Nevis" FontSize="50" />
             <local:HoverButton Canvas.Left="88" Canvas.Top="132" Height="250" x:Name="song1" Width="250" BackgroundColor="#FF1F73B7" Text="Dont stop till you get enough &#10; - MJ" VerticalTextAlignment="Top" HorizontalTextAlignment="Left" HorizontalAlignment="Left" CornerRadius="2"/>
-            <local:HoverButton Canvas.Left="372" Canvas.Top="132" Height="250" x:Name="song2" Width="250" BackgroundColor="#FF1F73B7" Text="Beat it &#10; - MJ"  VerticalTextAlignment="Top" HorizontalTextAlignment="Left" HorizontalAlignment="Left" CornerRadius="2" />
+            <local:HoverButton Canvas.Left="372" Canvas.Top="132" Height="250" x:Name="songBeat" Width="250" BackgroundColor="#FF1F73B7" Text="Beat it &#10; - MJ"  VerticalTextAlignment="Top" HorizontalTextAlignment="Left" HorizontalAlignment="Left" CornerRadius="2" Click="songBeat_Click" />
             <local:HoverButton Canvas.Left="659" Canvas.Top="132" Height="250" x:Name="song3" Width="250" BackgroundColor="#FF1F73B7" Text="Friday &#10; - Rebecca Black"  VerticalTextAlignment="Top" HorizontalTextAlignment="Left" HorizontalAlignment="Left" CornerRadius="2"/>
             <local:HoverButton Canvas.Left="88" Canvas.Top="412" Height="250" x:Name="song4" Width="250" BackgroundColor="#FF1F73B7" Text="Hot Interface &#10; - 160 cent" VerticalTextAlignment="Top" HorizontalTextAlignment="Left" HorizontalAlignment="Left" CornerRadius="2"/>
             <local:HoverButton Canvas.Left="372" Canvas.Top="412" Height="250" x:Name="song5" Width="250" BackgroundColor="#FF1F73B7" Text="Wonderwall &#10; - Oasis"  VerticalTextAlignment="Top" HorizontalTextAlignment="Left" HorizontalAlignment="Left" CornerRadius="2"/>
         </Canvas>
-        <local:RadialMenu x:Name="radialMenu" Visibility="Collapsed" TopText="Top" LeftText="Leftn" RightText="Right" BottomText="Cancel" bottomClick="bottom_Click" Canvas.Left="-185" Canvas.Top="-49" />
-        <local:HandCursor x:Name="hand" Canvas.Top="79" Canvas.Left="256" GestureEvent="hand_GestureEvent" Panel.ZIndex="999" />
+
+
+        <my:KinectSensorChooser Canvas.Left="384" Canvas.Top="201" Name="kinectSensorChooser1" Width="328" DataContext="{Binding ElementName=kinectSensorChooser, Path=Kinect}" />
+        <local:HandCursor x:Name="hand" Canvas.Top="79" Canvas.Left="256" GestureEvent="hand_GestureEvent" />
     </Canvas>
 
 </Window>
