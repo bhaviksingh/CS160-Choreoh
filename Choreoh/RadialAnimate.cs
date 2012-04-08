@@ -134,7 +134,7 @@ namespace Choreoh
             set
             {
                 currentVal = value;
-                if (currentVal == expandTo)
+                if (currentVal == expandTo || currentVal ==-expandTo)
                 {
                     OnComplete();
                 }

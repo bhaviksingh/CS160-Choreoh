@@ -71,13 +71,15 @@ namespace Choreoh
         //Load window
         private void Window_Loaded(object sender, RoutedEventArgs e)
         {
+            homeCanvas.Visibility = Visibility.Visible;
+            mainCanvas.Visibility = Visibility.Collapsed;               
 
             kinectSensorChooser1.KinectSensorChanged += new DependencyPropertyChangedEventHandler(kinectSensorChooser1_KinectSensorChanged);
             this.Cursor = Cursors.None;      
             moves = new LinkedList<Skeleton>();
             Global.canGestureTimer.Elapsed += new System.Timers.ElapsedEventHandler(Global.canGestureTimer_Elapsed);
-            Global.windowWidth = mainCanvas.ActualWidth;
-            Global.windowHeight = mainCanvas.ActualHeight;
+            Global.windowWidth = containerCanvas.ActualWidth;
+            Global.windowHeight = containerCanvas.ActualHeight;
 
             if (DanceRoutine.saveAlreadyExists("fakeSong.wav"))
             {
@@ -106,7 +108,7 @@ namespace Choreoh
                 Debug.WriteLine("Waveform Button clicked");
                 HoverButton waveButton = (HoverButton)sender;
 
-                Point handPosition = hand.TransformToAncestor(mainCanvas).Transform(new Point(0, 0));
+                Point handPosition = hand.TransformToAncestor(containerCanvas).Transform(new Point(0, 0));
                 menuY = handPosition.Y;
                 menuY = menuY + hand.ActualHeight / 2 - timelineRadialMenu.getDiameter()/2;
                 menuX = handPosition.X;
@@ -153,8 +155,7 @@ namespace Choreoh
                     hand.checkGestures(moves);
                     buttonUpdater(handJoint);
                     //temporary to clear gestureText
-                    if (Global.canGesture)
-                        gestureText.Text = "";
+                   
                 }
             }
 
@@ -167,6 +168,11 @@ namespace Choreoh
 
             radialCreator.Check(hand);
             waveButton.Check(hand);
+            song1.Check(hand);
+            songBeat.Check(hand);
+            song3.Check(hand);
+            song4.Check(hand);
+            song5.Check(hand);
         }
 
        
@@ -190,7 +196,8 @@ namespace Choreoh
                 debug.Text += "hover button" + temp.Name;
                 if (temp.Name == "backButton")
                 {
-                    debug.Text = "go back homeeeee";
+                    homeCanvas.Visibility = Visibility.Visible;
+                    mainCanvas.Visibility = Visibility.Collapsed;
                 }
                 else
                 {
@@ -260,7 +267,9 @@ namespace Choreoh
                 MaxDeviationRadius = 0.04f
             };
 
+
             newSensor.SkeletonStream.Enable(parameters);
+           
             newSensor.AllFramesReady += new EventHandler<AllFramesReadyEventArgs>(newSensor_AllFramesReady);
             // DELETE THIS TEMPRECORD
             // newSensor.AllFramesReady += new EventHandler<AllFramesReadyEventArgs>(tempRecord);
@@ -690,19 +699,33 @@ namespace Choreoh
         #region timeline radial menu clicks
         private void timelineRadialMenu_leftClick(object sender, EventArgs e)
         {
-            Debug.WriteLine("orange");
+
             RadialMenu menu = (RadialMenu)sender;
+            hand.menuOpened = false;
+
+            menu.Visibility = Visibility.Collapsed;
+            Debug.WriteLine("orange");
             Debug.WriteLine(menu.ToString());
+
         }
 
         private void timelineRadialMenu_rightClick(object sender, EventArgs e)
         {
 
         }
+     
 
         private void timelineRadialMenu_topClick(object sender, EventArgs e)
         {
 
+        }
+        #endregion
+
+        #region homescreen
+        private void songBeat_Click(object sender, EventArgs e)
+        {
+            homeCanvas.Visibility = Visibility.Collapsed;
+            mainCanvas.Visibility = Visibility.Visible;
         }
         #endregion
     }
