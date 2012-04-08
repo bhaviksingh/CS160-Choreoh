@@ -66,7 +66,7 @@
             <local:HoverButton Canvas.Left="372" Canvas.Top="412" Height="250" x:Name="song5" Width="250" BackgroundColor="#FF1F73B7" Text="Wonderwall &#10; - Oasis"  VerticalTextAlignment="Top" HorizontalTextAlignment="Left" HorizontalAlignment="Left" CornerRadius="2"/>
         </Canvas>
         <local:RadialMenu x:Name="radialMenu" Visibility="Collapsed" TopText="Top" LeftText="Leftn" RightText="Right" BottomText="Cancel" bottomClick="bottom_Click" Canvas.Left="-185" Canvas.Top="-49"/>
-        <local:RadialMenu x:Name="timelineRadialMenu" Visibility="Collapsed" TopText="Select Start" LeftText="Add Comment" RightText="Play From Here" BottomText="Cancel" bottomClick="bottom_Click" Canvas.Left="-185" Canvas.Top="-49" Panel.ZIndex="500"/>
+        <local:RadialMenu x:Name="timelineRadialMenu" Visibility="Collapsed" TopText="Select Start" LeftText="Add Comment" RightText="Play From Here" BottomText="Cancel" bottomClick="bottom_Click" Canvas.Left="-185" Canvas.Top="-49" Panel.ZIndex="500" leftClick="timelineRadialMenu_leftClick" rightClick="timelineRadialMenu_rightClick" topClick="timelineRadialMenu_topClick" />
         <local:HandCursor x:Name="hand" Canvas.Top="79" Canvas.Left="256" GestureEvent="hand_GestureEvent" Panel.ZIndex="999" />
     </Canvas>
 

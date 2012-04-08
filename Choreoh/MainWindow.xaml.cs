@@ -34,7 +34,6 @@ namespace Choreoh
         LinkedList<Skeleton> moves;
         private double menuX = 0;
         private double menuY = 0;
-        private int i = 0;
         private KinectSensor sensor;
         private DanceSegment segmentToRecordTo;
         private DanceRoutine routine;
@@ -176,7 +175,7 @@ namespace Choreoh
         {
             RadialMenu menu = (RadialMenu)sender;
             String direction = menu.getLastHovering();
-            radialMenu.Visibility = Visibility.Hidden;
+            menu.Visibility = Visibility.Collapsed;
             hand.menuOpened = false;
         }
         
@@ -687,8 +686,24 @@ namespace Choreoh
             Dispatcher.BeginInvoke(new Action(() => { debug.Text = debug.Text + " " + newText; }), DispatcherPriority.Normal);
         }
         #endregion
+        #endregion
+        #region timeline radial menu clicks
+        private void timelineRadialMenu_leftClick(object sender, EventArgs e)
+        {
+            Debug.WriteLine("orange");
+            RadialMenu menu = (RadialMenu)sender;
+            Debug.WriteLine(menu.ToString());
+        }
 
+        private void timelineRadialMenu_rightClick(object sender, EventArgs e)
+        {
 
+        }
+
+        private void timelineRadialMenu_topClick(object sender, EventArgs e)
+        {
+
+        }
         #endregion
     }
 }
