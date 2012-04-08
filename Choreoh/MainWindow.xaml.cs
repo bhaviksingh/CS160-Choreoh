@@ -45,6 +45,21 @@ namespace Choreoh
             InitializeComponent();
         }
 
+        /* This is how to create a dance segment button
+         * Want to do it programmatically so need a linked list of
+         * dance segment buttons so when click event takes place
+         * iterate throw the linkedlist calling listElement.check(handCursor);
+            HoverButton hb = new HoverButton();
+            hb.LeftImage = "Images/RadialHighLeft.png";
+            hb.RightImage = "Images/RadialHighRight.png";
+            hb.dotDot.Visibility = Visibility.Visible;
+            hb.Height = 100;
+            hb.Width = 200;
+            Canvas.SetTop(hb, 100);
+            Canvas.SetLeft(hb, 0);
+            mainCanvas.Children.Add(hb);
+            */
+
         
         /*
          * delete these testing vars when done
