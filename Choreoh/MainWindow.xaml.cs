@@ -109,17 +109,16 @@ namespace Choreoh
 
                 Point handPosition = hand.TransformToAncestor(mainCanvas).Transform(new Point(0, 0));
                 menuY = handPosition.Y;
-                menuY = menuY + hand.ActualHeight / 2 - radialMenu.getDiameter()/2;
+                menuY = menuY + hand.ActualHeight / 2 - timelineRadialMenu.getDiameter()/2;
                 menuX = handPosition.X;
-                menuX = menuX + hand.ActualWidth / 2 - radialMenu.getDiameter()/2;
-                Canvas.SetLeft(radialMenu, menuX );
-                Canvas.SetTop(radialMenu, menuY);
+                menuX = menuX + hand.ActualWidth / 2 - timelineRadialMenu.getDiameter() / 2;
+                Canvas.SetLeft(timelineRadialMenu, menuX);
+                Canvas.SetTop(timelineRadialMenu, menuY);
 
                 hand.menuOpened = true;
-                hand.SetRadialMenu(handPosition.X, handPosition.Y, radialMenu);
-                hand.
+                hand.SetRadialMenu(handPosition.X, handPosition.Y, timelineRadialMenu);
 
-                radialMenu.Visibility = Visibility.Visible;
+                timelineRadialMenu.Visibility = Visibility.Visible;
             }
             else
             {

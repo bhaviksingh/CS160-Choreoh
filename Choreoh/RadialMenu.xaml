@@ -17,10 +17,10 @@
         <Image Name="RadialHighTop" Source="Images/RadialHighTop.png" Width="220" Opacity=".6" Height="160" Canvas.Left="46" Canvas.Top="130" Panel.ZIndex="96" />
         <Image Name="RadialHighLeft" Source="Images/RadialHighLeft.png" Width="160" Opacity=".6" Height="220" Canvas.Left="128" Canvas.Top="47" Panel.ZIndex="96" />
         <Ellipse Name="RadialOuter" Fill="White" StrokeThickness="3" Width="315" Height="317" Canvas.Left="0" Canvas.Top="-1" Panel.ZIndex="94" Stroke="#FFDEDEDE" />
-        <TextBlock Canvas.Left="80" Canvas.Top="26" Text="{Binding Path=TopText, ElementName=menu}" Width="156" Foreground="#FF5F5F5F" Panel.ZIndex="101" FontSize="35" FontFamily="..\img\ui\#Nevis" TextAlignment="Center" TextWrapping="Wrap" Height="47" />
-        <TextBlock Canvas.Left="80" Canvas.Top="241" Text="{Binding Path=BottomText, ElementName=menu}" Width="156" Foreground="#FF5F5F5F" Panel.ZIndex="101" FontSize="35" FontFamily="..\img\ui\#Nevis" TextAlignment="Center" TextWrapping="Wrap" Height="47" />
-        <TextBlock Canvas.Left="12" Canvas.Top="106" Text="{Binding Path=LeftText, ElementName=menu}" Width="96" Foreground="#FF5F5F5F" Panel.ZIndex="101" FontSize="35" FontFamily="..\img\ui\#Nevis" TextAlignment="Center" Height="97" TextWrapping="Wrap" Padding="0,30,0,10"/>
-        <TextBlock Canvas.Left="207" Canvas.Top="106" Text="{Binding Path=RightText, ElementName=menu}" FontSize="35" FontFamily="..\img\ui\#Nevis" Foreground="#FF5F5F5F" Height="97" Panel.ZIndex="101"  TextAlignment="Center" TextWrapping="Wrap" Width="96" Padding="0,30,0,10"/>
+        <TextBlock Canvas.Left="80" Canvas.Top="26" Text="{Binding Path=TopText, ElementName=menu}" Width="156" Foreground="#FF5F5F5F" Panel.ZIndex="101" FontSize="24" FontFamily="..\img\ui\#Nevis" TextAlignment="Center" TextWrapping="Wrap" Height="74" VerticalAlignment="Center" />
+        <TextBlock Canvas.Left="80" Canvas.Top="227" Text="{Binding Path=BottomText, ElementName=menu}" Width="156" Foreground="#FF5F5F5F" Panel.ZIndex="101" FontSize="24" FontFamily="..\img\ui\#Nevis" TextAlignment="Center" TextWrapping="Wrap" Height="61" VerticalAlignment="Center"/>
+        <TextBlock Canvas.Left="12" Canvas.Top="80" Text="{Binding Path=LeftText, ElementName=menu}" Width="110" Foreground="#FF5F5F5F" Panel.ZIndex="101" FontSize="24" FontFamily="..\img\ui\#Nevis" TextAlignment="Center" Height="160" TextWrapping="Wrap" Padding="0,30,0,10" VerticalAlignment="Center"/>
+        <TextBlock Canvas.Left="193" Canvas.Top="80" Text="{Binding Path=RightText, ElementName=menu}" FontSize="24" FontFamily="..\img\ui\#Nevis" Foreground="#FF5F5F5F" Height="160" Panel.ZIndex="101"  TextAlignment="Center" TextWrapping="Wrap" Width="110" Padding="0,30,0,10" VerticalAlignment="Center"/>
     </Canvas>
 </UserControl>
 
