@@ -4,15 +4,11 @@
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
              mc:Ignorable="d" 
-             d:DesignHeight="40" d:DesignWidth="40">
-    <Ellipse Height="40" Width="40" Name="hand">
-        <Ellipse.Fill>
-            <RadialGradientBrush>
-                <GradientStop Color="Red" Offset="0.189" />
-                <GradientStop Color="Transparent" Offset="1" />
-                <GradientStop Color="#7BFFFFFF" Offset="0.677" />
-            </RadialGradientBrush>
-        </Ellipse.Fill>
-    </Ellipse>
+             d:DesignHeight="60" d:DesignWidth="60">
+    <Canvas Height="60" Width="60" Name="hand">
+        <Ellipse Height="60" Width="60"  Opacity=".7" Fill="White"></Ellipse>
+        <Image Height="60" Width="60" Source="img/ui/Hand.png"/>
+    </Canvas>
+ 
 </UserControl>
 
