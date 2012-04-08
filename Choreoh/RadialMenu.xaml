@@ -16,7 +16,7 @@
         <Image Name="RadialHighBottom" Source="Images/RadialHighBottom.png" Width="150" Opacity=".6" Height="106" Canvas.Left="35" Canvas.Top="43" Panel.ZIndex="96" />
         <Image Name="RadialHighTop" Source="Images/RadialHighTop.png" Width="150" Opacity=".6" Height="106" Canvas.Left="35" Canvas.Top="72" Panel.ZIndex="96" />
         <Image Name="RadialHighLeft" Source="Images/RadialHighLeft.png" Width="106" Opacity=".6" Height="150" Canvas.Left="71" Canvas.Top="36" Panel.ZIndex="96" />
-        <Ellipse Name="RadialOuter" Fill="White" Stroke="Black" StrokeThickness="3" Width="218" Height="218" Canvas.Left="1" Canvas.Top="2" Panel.ZIndex="97"/>
+        <Ellipse Name="RadialOuter" Fill="White" StrokeThickness="2" Width="214" Height="214" Canvas.Left="3" Canvas.Top="4" Panel.ZIndex="97" Stroke="#FFDEDEDE" />
         <TextBlock Canvas.Left="51" Canvas.Top="22" Text="{Binding Path=TopText, ElementName=menu}" Width="120" Foreground="Black" Panel.ZIndex="101" FontSize="20" TextAlignment="Center" />
         <TextBlock Canvas.Left="51" Canvas.Top="172" Text="{Binding Path=BottomText, ElementName=menu}" Width="120" Foreground="Black" Panel.ZIndex="101" FontSize="20" TextAlignment="Center" />
         <TextBlock Canvas.Left="12" Canvas.Top="79" Text="{Binding Path=LeftText, ElementName=menu}" Width="63" Foreground="Black" Panel.ZIndex="101" FontSize="20" TextAlignment="Center" Height="70" TextWrapping="Wrap"/>
