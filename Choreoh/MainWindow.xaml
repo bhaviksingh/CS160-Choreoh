@@ -25,8 +25,8 @@
         <Border Style="{StaticResource UITextElement}" Name="playbackMode" Canvas.Left="372" Canvas.Top="-5" Width="268" Height="50">
         <Canvas Width="256">
             <Label  Foreground="#FF1A9D1A" Canvas.Left="50" Canvas.Top="9" Style="{StaticResource UIText}" >PLAYBACK MODE</Label>
-                <Image Canvas.Left="6" Canvas.Top="8" Height="34" Name="playbackModeImage" Stretch="Fill" Width="24" Source="img/ui/playbutton.png" />
-            </Canvas>
+            <Image Canvas.Left="6" Canvas.Top="8" Height="34" Name="playbackModeImage" Stretch="Fill" Width="24" Source="img/ui/playbutton.png" />
+        </Canvas>
         </Border>
         <Border Style="{StaticResource UITextElement}" Name="recordMode" Canvas.Left="372" Canvas.Top="69" Width="268" Height="50" BorderBrush="#FFDEDEDE">
             <Canvas Width="256">
@@ -39,17 +39,23 @@
             <Label Foreground="#FF5F5F5F" Canvas.Left="10" Canvas.Top="9" Style="{StaticResource UIText}">"Billy Jean" - MJ</Label>
         </Canvas>
         </Border>
-        <local:HoverButton x:Name="btn1" Text="" Height="100" Width="100" Canvas.Top="277" Click="btn1_Clicked"  Canvas.Left="100"  HorizontalTextAlignment="Right" VerticalTextAlignment="Bottom" CornerRadius="5" RenderTransformOrigin="0.5,0.5"/>
+        <local:HoverButton x:Name="backButton" Text="BACK" Canvas.Top="-4" Width="180" Height="50" Click="button_Clicked"  Canvas.Left="-6"  HorizontalTextAlignment="Center" VerticalTextAlignment="Center" CornerRadius="2" RenderTransformOrigin="0.5,0.5" BackgroundColor="#FF414141" TextColor="#EEEEEE" TextSize="19"/>
+        <local:HoverButton x:Name="radialCreator" Text="radialmenu" Canvas.Top="182" Width="180" Height="50" Click="button_Clicked"  Canvas.Left="88"  HorizontalTextAlignment="Center" VerticalTextAlignment="Center" CornerRadius="2" RenderTransformOrigin="0.5,0.5" BackgroundColor="#FF414141" TextColor="#EEEEEE" TextSize="19"/>
+
+
         <TextBlock Name="gestureText" Canvas.Top="0" Canvas.Left="0" Foreground="White" Text=""/>
-        <local:RadialMenu x:Name="radialMenu" Visibility="Hidden" TopText="Top" LeftText="Leftn" RightText="Right" BottomText="Cancel" bottomClick="bottom_Click" Canvas.Left="0" Canvas.Top="50" />
-        <local:HandCursor x:Name="hand" Canvas.Top="79" Canvas.Left="256" GestureEvent="hand_GestureEvent"/>
-        
+
+        <local:RadialMenu x:Name="radialMenu" Visibility="Hidden" TopText="Top" LeftText="Leftn" RightText="Right" BottomText="Cancel" bottomClick="bottom_Click" Canvas.Left="751" Canvas.Top="218" />
+
         <my:KinectSensorChooser Canvas.Left="384" Canvas.Top="201" Name="kinectSensorChooser1" Width="328" DataContext="{Binding ElementName=kinectSensorChooser, Path=Kinect}" />
-        <TextBox Canvas.Left="336" Canvas.Top="425" Height="59"  Width="285" Name="debug" />
+
         <Canvas Name="recordingCanvas" Canvas.Top="50" Canvas.Left="206" Height="480" Width="640" Panel.ZIndex="100" Visibility="Hidden" Background="White">
             <my:KinectColorViewer Width="640" Height="480" Name="recordingColorViewer" Kinect="{Binding ElementName=kinectSensorChooser1, Path=Kinect}" Panel.ZIndex="100"></my:KinectColorViewer>
             <my:KinectSkeletonViewer Name="recordingSkeletonViewer" Width="640" Height="480" Kinect="{Binding ElementName=kinectSensorChooser1, Path=Kinect}" Panel.ZIndex="100"></my:KinectSkeletonViewer>
          </Canvas>
+        <TextBox Canvas.Left="12" Canvas.Top="697" Height="59"  Width="986" Name="debug" FontSize="20" />
+       
+        <local:HandCursor x:Name="hand" Canvas.Top="79" Canvas.Left="256" GestureEvent="hand_GestureEvent" />
     </Canvas>
 
 </Window>

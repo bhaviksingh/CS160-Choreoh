@@ -123,9 +123,9 @@ namespace Choreoh
             Joint rightHand = moves.First<Skeleton>().Joints[JointType.HandRight];
             Joint leftHand = moves.First<Skeleton>().Joints[JointType.HandLeft];
             Joint head = moves.First<Skeleton>().Joints[JointType.Head];
-            if (rightHand.Position.Y > .1 + head.Position.Y && leftHand.Position.Y > .1 + head.Position.Y)
+            if (rightHand.Position.Y > .05 + head.Position.Y && leftHand.Position.Y > .05 + head.Position.Y)
             {
-                if (Math.Abs(rightHand.Position.X - leftHand.Position.X) > .5)
+                if (Math.Abs(rightHand.Position.X - leftHand.Position.X) > .3)
                 {
                     initPos = !initPos;
                     canGesture = false;

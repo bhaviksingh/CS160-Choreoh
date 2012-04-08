@@ -106,8 +106,26 @@ namespace Choreoh
         private void buttonUpdater(Joint handJoint)
         {
             hand.SetPosition(handJoint);
-            btn1.Check(hand);
+            backButton.Check(hand);
+
+            radialCreator.Check(hand);
+            //HoverButton hb = new HoverButton();
+            //hb.Text = "SDjf";
+            //Panel.SetZIndex(hb, 1020);
+            //SolidColorBrush sb = new SolidColorBrush();
+            //sb.Color = Color.FromArgb(255, 255, 0, 0);
+            //hb.BackgroundColor = sb;
+            //hb.Width = 500;
+            //hb.Height = 500;
+            //hb.Click += new HoverButton.ClickHandler(button_Clicked);
+            //Canvas.SetLeft(hb, 60);
+            //Canvas.SetTop(hb, 30);
+
+            //mainCanvas.Children.Add(hb);
+           
         }
+
+       
 
         private void bottom_Click(object sender, EventArgs e)
         {
@@ -116,19 +134,41 @@ namespace Choreoh
             radialMenu.Visibility = Visibility.Hidden;
             hand.menuOpened = false;
         }
-        private void btn1_Clicked(object sender, EventArgs e)
+        
+        private void button_Clicked(object sender, EventArgs e)
         {
-            debug.Text = debug.Text + "button clicked";
-            Point handPosition = hand.TransformToAncestor(mainCanvas).Transform(new Point(0, 0));
-            menuY = handPosition.Y;
-            menuY = menuY + hand.ActualHeight / 2;
-            menuX = handPosition.X;
-            menuX = menuX + hand.ActualWidth / 2;
-            Canvas.SetLeft(radialMenu, menuX - radialMenu.ActualWidth / 2);
-            Canvas.SetTop(radialMenu, menuY - radialMenu.ActualHeight / 2);
-            hand.menuOpened = true;
-            hand.SetRadialMenu(handPosition.X, handPosition.Y, radialMenu);
-            radialMenu.Visibility = Visibility.Visible;
+
+            debug.Text += "bclick";
+            if (sender.ToString() == "Choreoh.HoverButton")
+            {
+                
+                HoverButton temp = (HoverButton)sender;
+                debug.Text += "hover button" + temp.Name;
+                if (temp.Name == "backButton")
+                {
+                    debug.Text = "go back homeeeee";
+                }
+                else
+                {
+                    debug.Text = debug.Text + "radial menu";
+                    Point handPosition = hand.TransformToAncestor(mainCanvas).Transform(new Point(0, 0));
+                    menuY = handPosition.Y;
+                    menuY = menuY + hand.ActualHeight / 2;
+                    menuX = handPosition.X;
+                    menuX = menuX + hand.ActualWidth / 2;
+                    Canvas.SetLeft(radialMenu, menuX - radialMenu.ActualWidth / 2);
+                    Canvas.SetTop(radialMenu, menuY - radialMenu.ActualHeight / 2);
+                    hand.menuOpened = true;
+                    hand.SetRadialMenu(handPosition.X, handPosition.Y, radialMenu);
+                    radialMenu.Visibility = Visibility.Visible;
+                }
+               
+
+            }
+            else
+            {
+                debug.Text = "I have made a huge mistake";
+            }
         }
         #region helper functions
         Skeleton GetFirstSkeleton(AllFramesReadyEventArgs e)

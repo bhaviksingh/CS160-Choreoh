@@ -27,7 +27,7 @@ namespace Choreoh
         public event EventHandler CompleteChanged;
         private ScaleTransform RectXForm = new ScaleTransform();
         private ScaleTransform RectYForm = new ScaleTransform();
-        private double ratioToGrow = 1.05;
+        private double ratioToGrow = 1.01;
         private int expandMilli = 300;
         private int contractMilli = 200;
 
@@ -45,7 +45,7 @@ namespace Choreoh
             //Initialization
             HoverButton button = (HoverButton)border;
             SolidColorBrush scb = new SolidColorBrush();
-            scb.Color = Color.FromArgb(50, 255, 255, 0);
+            scb.Color = Color.FromArgb(30, 0, 0, 0);
             button.HoverOverlay = scb;
             growImageX.KeyFrames.Add(new LinearDoubleKeyFrame(1, KeyTime.FromPercent(0)));
             growImageX.KeyFrames.Add(new LinearDoubleKeyFrame(ratioToGrow, KeyTime.FromPercent(1)));
