@@ -126,11 +126,11 @@ namespace Choreoh
         #region Button Effects
         DropShadowEffect shadowEffect = new DropShadowEffect
         {
-            Color = new Color { A = 255, R = 0, G = 0, B = 0 },
-            Direction = 270,
-            ShadowDepth = 8,
+            Color = new Color { A = 255, R = 5, G = 5, B = 5 },
+            Direction = 0,
+            ShadowDepth = 0,
             Opacity = .7,
-            BlurRadius = 14
+            BlurRadius = 15
         };
         #endregion
 
@@ -148,6 +148,7 @@ namespace Choreoh
             if (!isHovering && canClick)
             {
                 isHovering = true;
+                this.Effect = shadowEffect;
                 expandAnimation.CompleteChanged += new EventHandler(expandAnimation_Completed);
                 expandAnimation.expand(this);
             }
@@ -174,6 +175,7 @@ namespace Choreoh
             if (isHovering)
             {
                 isHovering = false;
+                this.Effect = null;
                 expandAnimation.CompleteChanged -= new EventHandler(expandAnimation_Completed);
                 expandAnimation.contract(this);
 
@@ -239,7 +241,8 @@ namespace Choreoh
         {
             InitializeComponent();
             this.DataContext = this;
-            this.Effect = shadowEffect;
+            this.Effect = null;
+            
             expandAnimation = new ButtonAnimate();
             canClickTimer.Elapsed += new System.Timers.ElapsedEventHandler(canClickTimer_Elapsed);
 
