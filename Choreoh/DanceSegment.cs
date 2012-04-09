@@ -62,7 +62,7 @@ namespace Choreoh
             newFrame.Save(imageFramePath(skeletons.Count), Coding4Fun.Kinect.Wpf.ImageFormat.Jpeg);
         }
 
-        private String imageFramePath(int frameNumber)
+        public String imageFramePath(int frameNumber)
         {
             // note that frameNumbers start at 1
             return @"" + saveDestinationFolder + "\\" + frameNumber + ".jpg";
@@ -79,7 +79,17 @@ namespace Choreoh
             return imageFramePath(frameNumber);
             
         }
-
+        public BitmapSource getFrameSource(int frameNumber)
+        {
+            var bitmap = new Bitmap(imageFramePath(frameNumber));
+            System.Windows.Media.Imaging.BitmapSource bitmapSource =
+  System.Windows.Interop.Imaging.CreateBitmapSourceFromHBitmap(
+    bitmap.GetHbitmap(),
+    IntPtr.Zero,
+    Int32Rect.Empty,
+    System.Windows.Media.Imaging.BitmapSizeOptions.FromEmptyOptions());
+            return bitmapSource;
+        }
         public string getFirstFrame()
         {
             return getFrame(0);
