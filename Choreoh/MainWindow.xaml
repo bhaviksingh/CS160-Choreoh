@@ -80,7 +80,7 @@
             <local:HoverButton Canvas.Left="372" Canvas.Top="412" Height="250" x:Name="song5" Width="250" BackgroundColor="#FF1F73B7" Text="Wonderwall &#10; - Oasis"  VerticalTextAlignment="Top" HorizontalTextAlignment="Left" HorizontalAlignment="Left" CornerRadius="2"/>
         </Canvas>
 
-        <my:KinectSensorChooser Canvas.Left="384" Canvas.Top="201" Name="kinectSensorChooser1" Width="328" DataContext="{Binding ElementName=kinectSensorChooser, Path=Kinect}" />
+        <my:KinectSensorChooser Canvas.Left="384" Canvas.Top="201" Name="kinectSensorChooser1" Width="328" DataContext="{Binding ElementName=kinectSensorChooser1, Path=Kinect}" />
         <local:HandCursor x:Name="hand" Canvas.Top="79" Canvas.Left="256" GestureEvent="hand_GestureEvent" />
             
     </Canvas>
