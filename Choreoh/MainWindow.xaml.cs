@@ -71,7 +71,7 @@ namespace Choreoh
         bool isSelectingSegment = false;
         double startSecondsIntoWaveform;
         double endSecondsIntoWaveform;
-        String songFilename = "fakeSong.wav";
+        String songFilename = "beatit.wav";
         LinkedList<HoverButton> segmentList = new LinkedList<HoverButton>();
         Dictionary<HoverButton, DanceSegment> buttonSegments;
 
@@ -619,14 +619,14 @@ namespace Choreoh
             int videoCounter = 0;
 
             videoPlaybackCanvas.Visibility = Visibility.Visible;
+            Image img = new System.Windows.Controls.Image();
+
+            videoPlaybackCanvas.Children.Add(img);
+
+            Canvas.SetTop(img, 0);
+            Canvas.SetLeft(img, 0);
             videoPlayerTimer.Tick += new EventHandler((object localsender, EventArgs locale) =>
             {
-
-                for (int elementIndex = videoPlaybackCanvas.Children.Count - 1; elementIndex >= 0; elementIndex--)
-                {
-                    var child = videoPlaybackCanvas.Children[elementIndex];
-                    videoPlaybackCanvas.Children.Remove(child);
-                }
                 if (videoCounter >= selectedSegment.length)
                 {
                     videoPlaybackCanvas.Visibility = Visibility.Collapsed;
@@ -634,16 +634,12 @@ namespace Choreoh
                     return;
                 }
 
-                var img = new System.Windows.Controls.Image();
                 img.Source = selectedSegment.getFrameSource(videoCounter);
-                videoPlaybackCanvas.Children.Add(img);
 
-                Canvas.SetTop(img, 0);
-                Canvas.SetLeft(img, 0);
 
                 videoCounter++;
             });
-            videoPlayerTimer.Interval = new TimeSpan((int)(1 / 28) * (1000000000 / 100));
+            videoPlayerTimer.Interval = new TimeSpan((int)(1 / 26) * (1000000000 / 100));
 
 
             int frameOfSegmentStart = 0;
@@ -1030,6 +1026,7 @@ namespace Choreoh
                         waveform.startPlay();
                         startOfSegment = (int)(startTime.TotalSeconds * 30);
                         DanceSegment segment = routine.addDanceSegment(startOfSegment);
+                        renderSegment(startOfSegment);
                         StartRecording(segment);
                         recordingTimer.Start();
                         return;
