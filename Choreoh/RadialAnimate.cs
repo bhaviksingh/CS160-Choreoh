@@ -133,10 +133,13 @@ namespace Choreoh
             get { return currentVal; }
             set
             {
-                currentVal = value;
-                if (currentVal == expandTo || currentVal ==-expandTo)
+                if (currentVal != value)
                 {
-                    OnComplete();
+                    currentVal = value;
+                    if (currentVal == expandTo || currentVal == -expandTo)
+                    {
+                        OnComplete();
+                    }
                 }
             }
         }
