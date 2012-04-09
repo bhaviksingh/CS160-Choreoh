@@ -639,7 +639,7 @@ namespace Choreoh
 
                 videoCounter++;
             });
-            videoPlayerTimer.Interval = new TimeSpan((int)(1 / 26) * (1000000000 / 100));
+            videoPlayerTimer.Interval = new TimeSpan((int)(1 / 30) * (1000000000 / 100));
 
 
             int frameOfSegmentStart = 0;
