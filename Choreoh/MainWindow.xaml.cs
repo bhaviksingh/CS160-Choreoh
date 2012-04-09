@@ -695,7 +695,16 @@ namespace Choreoh
                         Debug.WriteLine("Start Time: " + startTime.ToString());
                         Debug.WriteLine("Duration Time: " + durationTime.ToString());
 
+                        var waveformTicker = new DispatcherTimer();
+                        waveformTicker.Tick += new EventHandler((object localsender, EventArgs locale) =>
+                        {
+
+                        });
+                        waveformTicker.Interval = new TimeSpan((int)(1 / 30) * (1000000000 / 100));
+
+
                         AudioPlay.playForDuration(mainCanvas, songFilename, startTime, durationTime);
+                        waveformTicker.Start();
 
                         return;
                     default:
