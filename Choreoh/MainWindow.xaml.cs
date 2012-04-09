@@ -303,6 +303,7 @@ namespace Choreoh
         //Set up kinect
         void kinectSensorChooser1_KinectSensorChanged(object sender, DependencyPropertyChangedEventArgs e)
         {
+            Debug.WriteLine("Sensor changed");
             KinectSensor oldSensor = (KinectSensor)e.OldValue;
 
             StopKinect(oldSensor);
@@ -325,10 +326,8 @@ namespace Choreoh
 
 
             newSensor.SkeletonStream.Enable(parameters);
-           
+
             newSensor.AllFramesReady += new EventHandler<AllFramesReadyEventArgs>(newSensor_AllFramesReady);
-            // DELETE THIS TEMPRECORD
-            // newSensor.AllFramesReady += new EventHandler<AllFramesReadyEventArgs>(tempRecord);
 
             newSensor.ColorStream.Enable(ColorImageFormat.RgbResolution640x480Fps30);
             newSensor.DepthStream.Enable(DepthImageFormat.Resolution640x480Fps30);
@@ -646,7 +645,6 @@ namespace Choreoh
 
         void sre_SpeechRecognized(object sender, SpeechRecognizedEventArgs e)
         {
-
             var alternates = e.Result.Alternates;
             String alternates_string = "";
             String[] alternates_string_array = new String[alternates.Count];
@@ -682,15 +680,13 @@ namespace Choreoh
                     case "START":
                         pre_recording = false;
                         //start_label.Visibility = Visibility.Visible;
-                        beforeRecordCanvas.Visibility = Visibility.Visible;
+                        beforeRecordCanvas.Visibility = Visibility.Collapsed;
 
                         int duration = (int)(endSecondsIntoWaveform - startSecondsIntoWaveform);
                         TimeSpan startTime = new TimeSpan(0, 0, (int)startSecondsIntoWaveform);
                         TimeSpan durationTime = new TimeSpan(0, 0, duration);
                         AudioPlay.playForDuration(mainCanvas, songFilename, startTime , durationTime);
-                        showRecordingCanvas();
-                        switchModeToRecording();
-
+                        /*
                         int pixelsToMove = (int) (durationTime.Seconds * waveform.getPixelsPerSecond());
                         var playTimer = new DispatcherTimer();
                         playTimer.Tick += new EventHandler((object senderlocal, EventArgs elocal) =>
@@ -712,9 +708,11 @@ namespace Choreoh
                         });
                         dispatcherTimer.Interval = durationTime;
                         dispatcherTimer.Start();
-                        playTimer.Start();
+                        playTimer.Start();*/
                         waveform.startPlay();
-
+                        
+                        showRecordingCanvas();
+                        switchModeToRecording();
                         return;
                     default:
                         return;
