@@ -147,17 +147,14 @@ namespace Choreoh
             playSlider.Visibility = Visibility.Visible;
         }
 
-        public void movePlay(int pixels)
+        public void movePlay()
         {
-            for (int i = 0; i < pixels; i++)
-            {
                 if (Canvas.GetLeft(playSlider) >= Canvas.GetLeft(stopSlider))
                 {
                     endPlay();
                     return;
                 }
-                Canvas.SetLeft(playSlider, Canvas.GetLeft(playSlider));
-            }
+                Canvas.SetLeft(playSlider, Canvas.GetLeft(playSlider) + 1);
         }
 
         public void endPlay()

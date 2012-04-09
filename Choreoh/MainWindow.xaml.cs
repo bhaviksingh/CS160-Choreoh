@@ -70,13 +70,14 @@ namespace Choreoh
         Point timelineMenuOpenedPosition;
         bool isSelectingSegment = false;
         double startSecondsIntoWaveform;
+        double endSecondsIntoWaveform;
+        String songFilename = "fakeSong.wav";
 
         //Load window
         private void Window_Loaded(object sender, RoutedEventArgs e)
         {
             homeCanvas.Visibility = Visibility.Visible;
             mainCanvas.Visibility = Visibility.Collapsed;
-            AudioPlay.playForDuration(mainCanvas, "fakeSong.wav", new TimeSpan(0, 0, 0), new TimeSpan(0, 0, 5));
 
             switchModeToPlayback();
             Canvas.SetTop(playbackMode, 0);
@@ -134,13 +135,13 @@ namespace Choreoh
                     double pixelsIntoWaveform = -1 * timelineX + handX;
                     Debug.WriteLine("Hand is " + pixelsIntoWaveform + " pixels into the waveform");
 
-                    double secondsIntoWaveform = (pixelsIntoWaveform - 8) / waveform.getPixelsPerSecond();
-                    Debug.WriteLine("This means we are " + secondsIntoWaveform + " seconds into the waveform");
+                    endSecondsIntoWaveform = (pixelsIntoWaveform - 8) / waveform.getPixelsPerSecond();
+                    Debug.WriteLine("This means we are " + endSecondsIntoWaveform + " seconds into the waveform");
 
-                    if (secondsIntoWaveform > startSecondsIntoWaveform)
+                    if (endSecondsIntoWaveform > startSecondsIntoWaveform)
                     {
                         Debug.WriteLine("End time is greater than start time");
-                        waveform.selectEnd(secondsIntoWaveform);
+                        waveform.selectEnd(endSecondsIntoWaveform);
 
                         Debug.WriteLine("selected start of the waveform");
                     }
@@ -679,11 +680,41 @@ namespace Choreoh
                 switch (e.Result.Text.ToString().ToUpperInvariant())
                 {
                     case "START":
-                        //start_label.Visibility = Visibility.Visible;
-                        beforeRecordCanvas.Visibility = Visibility.Hidden;
                         pre_recording = false;
+                        //start_label.Visibility = Visibility.Visible;
+                        beforeRecordCanvas.Visibility = Visibility.Visible;
+
+                        int duration = (int)(endSecondsIntoWaveform - startSecondsIntoWaveform);
+                        TimeSpan startTime = new TimeSpan(0, 0, (int)startSecondsIntoWaveform);
+                        TimeSpan durationTime = new TimeSpan(0, 0, duration);
+                        AudioPlay.playForDuration(mainCanvas, songFilename, startTime , durationTime);
                         showRecordingCanvas();
                         switchModeToRecording();
+
+                        int pixelsToMove = (int) (durationTime.Seconds * waveform.getPixelsPerSecond());
+                        var playTimer = new DispatcherTimer();
+                        playTimer.Tick += new EventHandler((object senderlocal, EventArgs elocal) =>
+                        {
+                            if (pixelsToMove == 0)
+                            {
+                                (senderlocal as DispatcherTimer).Stop();
+                            }
+                            pixelsToMove--;
+                            waveform.movePlay();
+                        });
+                        playTimer.Interval = new TimeSpan(0, 0, 1 / 30);
+
+                        var dispatcherTimer = new DispatcherTimer();
+                        dispatcherTimer.Tick += new EventHandler((object senderlocal, EventArgs elocal) =>
+                        {
+                            (senderlocal as DispatcherTimer).Stop();
+                            waveform.endPlay();
+                        });
+                        dispatcherTimer.Interval = durationTime;
+                        dispatcherTimer.Start();
+                        playTimer.Start();
+                        waveform.startPlay();
+
                         return;
                     default:
                         return;
@@ -798,6 +829,7 @@ namespace Choreoh
         #region timeline selection menu clicks
         private void selectionRadialMenu_leftClick(object sender, EventArgs e)
         {
+
             beforeRecordCanvas.Visibility = Visibility.Visible;
             pre_recording = true;
         }
