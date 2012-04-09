@@ -61,8 +61,15 @@
             <local:RadialMenu x:Name="waveformRadialMenu" Visibility="Collapsed" TopText="Select Start" LeftText="Add Comment" RightText="Play From Here" BottomText="Cancel" bottomClick="bottom_Click" Canvas.Left="-185" Canvas.Top="-49" Panel.ZIndex="500" leftClick="waveformRadialMenu_leftClick" rightClick="waveformRadialMenu_rightClick" topClick="waveformRadialMenu_topClick" />
             <local:RadialMenu x:Name="selectionRadialMenu" Visibility="Collapsed" TopText="Play Section" LeftText="Record Section" RightText="" BottomText="Cancel" bottomClick="bottom_Click" Canvas.Left="-185" Canvas.Top="-49" Panel.ZIndex="500" leftClick="selectionRadialMenu_leftClick" topClick="selectionRadialMenu_topClick" />
 
-        </Canvas>
 
+            <Canvas Visibility="Collapsed" Name="beforeRecordCanvas" Canvas.Top="100" Canvas.Left="100" Panel.ZIndex="1000">
+                <TextBlock Height="568" Width="824" FontSize="50" Background="White">Say "START" to begin recording.</TextBlock>
+            </Canvas>
+
+            <Canvas Visibility="Collapsed" Name="afterRecordCanvas" Canvas.Top="100" Canvas.Left="100" Panel.ZIndex="1009">
+                <TextBlock Height="568" Width="824" FontSize="50" Background="White">Say "KEEP" to keep the recording.<LineBreak />Say "CANCEL" to discard the recording.<LineBreak />Say "REDO" to redo the dance.<LineBreak />Say "PLAY" to FUCK THIS.</TextBlock>
+            </Canvas>
+        </Canvas>
         <Canvas Height="768" Width="1024" Name="homeCanvas"  VerticalAlignment="Top" HorizontalAlignment="Left" Background="#EEEEEE">
             <TextBlock Canvas.Left="3" Canvas.Top="24" Text="Choreoh!"  Height="70" Name="label1" Width="1024" TextAlignment="Center" FontFamily="..\img\ui\#Nevis" FontSize="50" Foreground="DarkGray"/>
             <TextBlock Canvas.Left="0" Canvas.Top="24" Text="Choreoh!"  Height="70" Name="label2" Width="1024" TextAlignment="Center" FontFamily="..\img\ui\#Nevis" FontSize="50" />

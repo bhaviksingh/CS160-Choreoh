@@ -75,7 +75,12 @@ namespace Choreoh
         private void Window_Loaded(object sender, RoutedEventArgs e)
         {
             homeCanvas.Visibility = Visibility.Visible;
-            mainCanvas.Visibility = Visibility.Collapsed;               
+            mainCanvas.Visibility = Visibility.Collapsed;
+            AudioPlay.playForDuration(mainCanvas, "fakeSong.wav", new TimeSpan(0, 0, 0), new TimeSpan(0, 0, 5));
+
+            switchModeToPlayback();
+            Canvas.SetTop(playbackMode, 0);
+            Canvas.SetTop(recordMode, 0);
 
             kinectSensorChooser1.KinectSensorChanged += new DependencyPropertyChangedEventHandler(kinectSensorChooser1_KinectSensorChanged);
             this.Cursor = Cursors.None;      
@@ -485,7 +490,7 @@ namespace Choreoh
 
         private bool pre_recording = false;
         private bool post_recording = false;
-        private bool annotating = true;
+        private bool annotating = false;
 
         private void startAudio()
         {
@@ -670,10 +675,15 @@ namespace Choreoh
             }
             else if (pre_recording)
             {
+                Debug.WriteLine("Pre-recording Speech detected: " + e.Result.Text.ToString());
                 switch (e.Result.Text.ToString().ToUpperInvariant())
                 {
                     case "START":
                         //start_label.Visibility = Visibility.Visible;
+                        beforeRecordCanvas.Visibility = Visibility.Hidden;
+                        pre_recording = false;
+                        showRecordingCanvas();
+                        switchModeToRecording();
                         return;
                     default:
                         return;
@@ -681,7 +691,7 @@ namespace Choreoh
             }
             else if (post_recording)
             {
-
+                Debug.WriteLine("Post-recording Speech detected: " + e.Result.Text.ToString());
                 switch (e.Result.Text.ToString().ToUpperInvariant())
                 {
                     case "KEEP":
@@ -788,7 +798,8 @@ namespace Choreoh
         #region timeline selection menu clicks
         private void selectionRadialMenu_leftClick(object sender, EventArgs e)
         {
-            
+            beforeRecordCanvas.Visibility = Visibility.Visible;
+            pre_recording = true;
         }
 
         private void selectionRadialMenu_topClick(object sender, EventArgs e)
@@ -803,6 +814,20 @@ namespace Choreoh
             homeCanvas.Visibility = Visibility.Collapsed;
             mainCanvas.Visibility = Visibility.Visible;
         }
+        #endregion
+
+        #region mode switching
+        private void switchModeToRecording(){
+            playbackMode.Visibility = Visibility.Collapsed;
+            recordMode.Visibility = Visibility.Visible;
+        }
+        private void switchModeToPlayback()
+        {
+
+            recordMode.Visibility = Visibility.Collapsed;
+            playbackMode.Visibility = Visibility.Visible;
+        }
+
         #endregion
     }
 }

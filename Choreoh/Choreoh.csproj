@@ -64,6 +64,7 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </ApplicationDefinition>
+    <Compile Include="AudioPlay.cs" />
     <Compile Include="ButtonAnimate.cs" />
     <Compile Include="DanceRoutine.cs" />
     <Compile Include="DanceSegment.cs" />
