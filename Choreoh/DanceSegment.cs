@@ -74,26 +74,20 @@ namespace Choreoh
             get { return skeletons.Count; }
         }
 
-        public BitmapSource getFrame(int frameNumber)
+        public string getFrame(int frameNumber)
         {
-            var bitmap = new Bitmap(imageFramePath(frameNumber));
-            System.Windows.Media.Imaging.BitmapSource bitmapSource =
-  System.Windows.Interop.Imaging.CreateBitmapSourceFromHBitmap(
-    bitmap.GetHbitmap(),
-    IntPtr.Zero,
-    Int32Rect.Empty,
-    System.Windows.Media.Imaging.BitmapSizeOptions.FromEmptyOptions());
-            return bitmapSource;
+            return imageFramePath(frameNumber);
+            
         }
 
-        public BitmapSource getFirstFrame()
+        public string getFirstFrame()
         {
             return getFrame(0);
         }
 
-        public BitmapSource getLastFrame()
+        public string getLastFrame()
         {
-            return getFrame(length);
+            return getFrame(length-1);
         }
 
 

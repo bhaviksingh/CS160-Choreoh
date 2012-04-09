@@ -72,6 +72,7 @@ namespace Choreoh
         double startSecondsIntoWaveform;
         double endSecondsIntoWaveform;
         String songFilename = "fakeSong.wav";
+        LinkedList<HoverButton> segmentList = new LinkedList<HoverButton>();
 
         //Load window
         private void Window_Loaded(object sender, RoutedEventArgs e)
@@ -90,11 +91,11 @@ namespace Choreoh
             Global.windowWidth = containerCanvas.ActualWidth;
             Global.windowHeight = containerCanvas.ActualHeight;
 
-            if (DanceRoutine.saveAlreadyExists("fakeSong.wav"))
+            if (DanceRoutine.saveAlreadyExists(songFilename))
             {
-                routine = DanceRoutine.load("fakeSong.wav");
+                routine = DanceRoutine.load(DanceRoutine.getSaveDestinationName(songFilename));
             } else  {
-                routine = new DanceRoutine("fakeSong.wav");
+                routine = new DanceRoutine(songFilename);
             }
             routine.deleteDanceSegmentAt(0);
             showRecordingCanvas();
@@ -128,27 +129,16 @@ namespace Choreoh
                 if (segment == null) return;
                 pos = frame / 30 * waveform.getPixelsPerSecond();
                 HoverButton hb = new HoverButton();
-                hb.leftImageName = new Image
-                {
-                    Source = segment.getFirstFrame(),
-                    Height = hb.Height,
-                    Width = hb.Width / 2,
-                    Stretch = Stretch.Fill
-                };
-                hb.rightImageName = new Image
-                {
-                    Source = segment.getLastFrame(),
-                    Height = hb.Height,
-                    Width = hb.Width / 2,
-                    Stretch = Stretch.Fill
-                }; ;
+                hb.LeftImage = segment.getFirstFrame();
+                hb.RightImage = segment.getLastFrame();
                 hb.dotDot.Visibility = Visibility.Visible;
                 hb.Height = 160;
-                hb.Width = 400;
+                hb.Width = 200;
                 segmentCanvas.Children.Add(hb);
                 Canvas.SetTop(hb, 0);
                 Canvas.SetLeft(hb, pos);
                 hb.Click += new HoverButton.ClickHandler(segment_Clicked);
+                segmentList.AddLast(hb);
             }
             if (routine.comments.TryGetValue(frame, out comment))
             {
@@ -166,11 +156,13 @@ namespace Choreoh
                     Width = 40,
                     leftImageName = cImg,
                     Visibility = Visibility.Visible,
+                    BackgroundColor = Brushes.White,
                 };
                 segmentCanvas.Children.Add(commentImg);
                 Canvas.SetTop(commentImg, 0);
                 Canvas.SetLeft(commentImg, pos);
                 commentImg.Click += new HoverButton.ClickHandler(comment_Clicked);
+                segmentList.AddLast(commentImg);
             }
         }
 
@@ -332,6 +324,10 @@ namespace Choreoh
             song3.Check(hand);
             song4.Check(hand);
             song5.Check(hand);
+            foreach (HoverButton hb in segmentList)
+            {
+                hb.Check(hand);
+            }
         }
 
        
@@ -602,9 +598,32 @@ namespace Choreoh
         }
         private void segmentRadialMenu_topClick(object sender, EventArgs e)
         {
+            Debug.WriteLine("Segment radial menu top clicked");
+            hand.menuOpened = false;
+            RadialMenu menu = (RadialMenu)sender;
+
+            double handX = timelineMenuOpenedPosition.X;
+            handX = handX + hand.ActualWidth / 2;
+
+            menu.Visibility = Visibility.Collapsed;
+            Debug.WriteLine(menu.ToString());
+
+            Point handPosition = hand.TransformToAncestor(containerCanvas).Transform(new Point(0, 0));
+            handPointX = handPosition.X + hand.ActualWidth / 2;
+            timelineMenuOpenedPosition = handPosition;
+
+            RadialMenu menu2 = commentRadialMenu;
+
+            hand.menuOpened = true;
+
+
+            menu2.Visibility = Visibility.Visible;
+
             commentBox.Visibility = Visibility.Visible;
             annotating = true;
             commentToSave = comment;
+            
+
         }
         #endregion
 
@@ -968,7 +987,7 @@ namespace Choreoh
         #region timeline radial menu clicks
         private void waveformRadialMenu_leftClick(object sender, EventArgs e)
         {
-            
+            renderSegments();
         }
 
         private void waveformRadialMenu_rightClick(object sender, EventArgs e)

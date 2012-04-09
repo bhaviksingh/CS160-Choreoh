@@ -101,6 +101,7 @@ namespace Choreoh
 
         public String addComment(int frame, String comment)
         {
+            if (comments.ContainsKey(frame)) comments.Remove(frame);
             comments.Add(frame, comment);
             return comment;
         }
