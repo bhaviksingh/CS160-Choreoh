@@ -155,8 +155,31 @@ namespace Choreoh
             {
                 if (comment == null) return;
                 pos = frame / 30 * waveform.getPixelsPerSecond();
+                Image cImg = new Image
+                {
+                    Height = 160,
+                    Width = 40,
+                    Source = new BitmapImage(new Uri(@"pack://application:,,,/Choreoh;component/img/waveform/startslider.png")),
+                };
+                HoverButton commentImg = new HoverButton
+                {
+                    Height = 160,
+                    Width = 40,
+                    leftImageName = cImg,
+                    Visibility = Visibility.Visible,
+                };
+                segmentCanvas.Children.Add(commentImg);
+                Canvas.SetTop(commentImg, 0);
+                Canvas.SetLeft(commentImg, pos);
+                commentImg.Click += new HoverButton.ClickHandler(comment_Clicked);
             }
         }
+
+        private void comment_Clicked(object sender, EventArgs e)
+        {
+
+        }
+
         double handPointX;
         private void segment_Clicked(object sender, EventArgs e)
         {
@@ -318,6 +341,8 @@ namespace Choreoh
             hand.menuOpened = false;
 
             waveform.deselectSegment();
+            annotating = false;
+            comment = "";
         }
         
         private void button_Clicked(object sender, EventArgs e)
