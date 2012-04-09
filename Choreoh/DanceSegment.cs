@@ -65,7 +65,7 @@ namespace Choreoh
         private String imageFramePath(int frameNumber)
         {
             // note that frameNumbers start at 1
-            return @"" + saveDestinationFolder + "\\" + frameNumber + ".jpg";
+            return @"" + saveDestinationFolder + "/" + frameNumber + ".jpg";
         }
 
         // returns the length in number of frames

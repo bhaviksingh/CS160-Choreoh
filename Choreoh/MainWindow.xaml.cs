@@ -123,23 +123,32 @@ namespace Choreoh
         {
             double pos;
             DanceSegment segment;
-            String comment;
             if (routine.segments.TryGetValue(frame, out segment))
             {
                 if (segment == null) return;
                 pos = frame / 30 * waveform.getPixelsPerSecond();
                 HoverButton hb = new HoverButton();
-                hb.LeftImage = segment.getFirstFrame();
+                hb.LeftImage = "img/waveform/0.jpg";
+                Debug.WriteLine(segment.getFirstFrame());
                 hb.RightImage = segment.getLastFrame();
+                Debug.WriteLine(segment.getLastFrame());
                 hb.dotDot.Visibility = Visibility.Visible;
                 hb.Height = 160;
                 hb.Width = 200;
+                hb.BackgroundColor = Brushes.White;
                 segmentCanvas.Children.Add(hb);
                 Canvas.SetTop(hb, 0);
                 Canvas.SetLeft(hb, pos);
                 hb.Click += new HoverButton.ClickHandler(segment_Clicked);
                 segmentList.AddLast(hb);
             }
+            renderComment(frame);
+        }
+
+        private void renderComment(int frame)
+        {
+            double pos;
+            String comment;
             if (routine.comments.TryGetValue(frame, out comment))
             {
                 if (comment == null) return;
@@ -614,8 +623,15 @@ namespace Choreoh
 
             RadialMenu menu2 = commentRadialMenu;
 
-            hand.menuOpened = true;
+            menuY = handPosition.Y;
+            menuY = menuY + hand.ActualHeight / 2 - menu2.getDiameter() / 2;
+            menuX = handPosition.X;
+            menuX = menuX + hand.ActualWidth / 2 - menu2.getDiameter() / 2;
+            Canvas.SetLeft(menu2, menuX);
+            Canvas.SetTop(menu2, menuY);
 
+            hand.menuOpened = true;
+            hand.SetRadialMenu(handPosition.X, handPosition.Y, menu2);
 
             menu2.Visibility = Visibility.Visible;
 
@@ -638,10 +654,22 @@ namespace Choreoh
         }
         private void commentRadialMenu_topClick(object sender, EventArgs e)
         {
+            hand.menuOpened = false;
+            RadialMenu menu = (RadialMenu)sender;
+
+            double handX = timelineMenuOpenedPosition.X;
+            handX = handX + hand.ActualWidth / 2;
+
+            menu.Visibility = Visibility.Collapsed;
+            Debug.WriteLine(menu.ToString());
+
             int pos = (int)((handPointX+waveform.getOffset()) / waveform.getPixelsPerSecond() * 30);
             routine.addComment(pos, commentToSave);
             commentToSave = comment = "";
             annotating = false;
+            commentBox.Text = "";
+            commentBox.Visibility = Visibility.Hidden;
+            renderComment(pos);
         }
         #endregion
 

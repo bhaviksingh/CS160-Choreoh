@@ -50,7 +50,7 @@
                 <Canvas Name="segmentCanvas" Width="1800" Height="160" Canvas.Top="160"></Canvas>
             </Canvas>
             
-            <TextBox Name="commentBox" Canvas.Top="250" Canvas.Left="300" Height="250" Width="400" Visibility="Hidden" />
+            <TextBox Name="commentBox" Canvas.Top="150" Canvas.Left="0" Height="250" Width="400" Panel.ZIndex="500" Visibility="Hidden" />
             
             <Canvas Name="recordingCanvas" Canvas.Top="50" Canvas.Left="306" Height="320" Width="420"  Visibility="Hidden" Background="White">
                 <my:KinectColorViewer Canvas.Left ="-30" Width="480" Height="320" Name="recordingColorViewer" Kinect="{Binding ElementName=kinectSensorChooser1, Path=Kinect}" Panel.ZIndex="100"></my:KinectColorViewer>
@@ -63,7 +63,7 @@
             <local:RadialMenu x:Name="waveformRadialMenu" Visibility="Collapsed" TopText="Make Selection" LeftText="Add Comment" RightText="Play From Here" BottomText="Cancel" bottomClick="bottom_Click" Canvas.Left="-185" Canvas.Top="-49" Panel.ZIndex="500" leftClick="waveformRadialMenu_leftClick" rightClick="waveformRadialMenu_rightClick" topClick="waveformRadialMenu_topClick" />
             <local:RadialMenu x:Name="selectionRadialMenu" Visibility="Collapsed" TopText="Play Section" LeftText="Record Section" RightText="" BottomText="Cancel" bottomClick="bottom_Click" Canvas.Left="-185" Canvas.Top="-49" Panel.ZIndex="500" leftClick="selectionRadialMenu_leftClick" topClick="selectionRadialMenu_topClick" />
             <local:RadialMenu x:Name="segmentRadialMenu" Visibility="Collapsed" TopText="Add Comment" LeftText="Move" RightText="Delete" BottomText="Cancel" bottomClick="bottom_Click" Canvas.Left="-185" Canvas.Top="-49" Panel.ZIndex="500" leftClick="segmentRadialMenu_leftClick" rightClick="segmentRadialMenu_rightClick" topClick="segmentRadialMenu_topClick" />
-            <local:RadialMenu x:Name="commentRadialMenu" Visibility="Collapsed" TopText="Save" BottomText="Cancel" bottomClick="bottom_Click" Canvas.Left="-185" Canvas.Top="-49" Panel.ZIndex="500" leftClick="commentRadialMenu_leftClick" rightClick="commentRadialMenu_rightClick" topClick="commentRadialMenu_topClick" />
+            <local:RadialMenu x:Name="commentRadialMenu" Visibility="Collapsed" TopText="Save" BottomText="Cancel" bottomClick="bottom_Click" Canvas.Left="700" Canvas.Top="400" Panel.ZIndex="500" leftClick="commentRadialMenu_leftClick" rightClick="commentRadialMenu_rightClick" topClick="commentRadialMenu_topClick" />
 
             <Canvas Visibility="Collapsed" Name="beforeRecordCanvas" Canvas.Top="100" Canvas.Left="100" Panel.ZIndex="1000">
                 <TextBlock Height="568" Width="824" FontSize="50" Background="White">Say "START" to begin recording.</TextBlock>
