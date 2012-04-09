@@ -903,7 +903,7 @@ namespace Choreoh
             var gb_1 = new GrammarBuilder { Culture = ri.Culture };
             gb_1.Append(wordChoices);
 
-            /*
+            
             var gb_2 = new GrammarBuilder { Culture = ri.Culture };
             gb_2.Append(wordChoices);
 
@@ -912,7 +912,7 @@ namespace Choreoh
 
             var gb_4 = new GrammarBuilder { Culture = ri.Culture };
             gb_4.Append(wordChoices);
-            */
+            
 
             var gb = new GrammarBuilder { Culture = ri.Culture };
 
@@ -921,9 +921,9 @@ namespace Choreoh
 
             //gb.Append(new SemanticResultKey("Words0", wordChoices));
             gb.Append(gb_1, 0, 1);
-            //gb.Append(gb_2, 0, 1);
-            //gb.Append(gb_3, 0, 1);
-            //gb.Append(gb_4, 0, 1);
+            gb.Append(gb_2, 0, 1);
+            gb.Append(gb_3, 0, 1);
+            gb.Append(gb_4, 0, 1);
 
 
 
