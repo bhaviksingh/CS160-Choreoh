@@ -804,7 +804,7 @@ namespace Choreoh
                 alternates_string_array[j] = alternates_string + " " + i.Text.ToString();
                 j++;
             }
-
+            int startOfSegment = 0;
             if (annotating)
             {
                 if (e.Result.Confidence < 0.5)
@@ -879,8 +879,8 @@ namespace Choreoh
                         AudioPlay.playForDuration(mainCanvas, songFilename, startTime, durationTime);
                         waveformTicker.Start();
                         waveform.startPlay();
-
-                        DanceSegment segment = routine.addDanceSegment((int) (startTime.TotalSeconds * 30));
+                        startOfSegment = (int)(startTime.TotalSeconds * 30);
+                        DanceSegment segment = routine.addDanceSegment(startOfSegment);
                         StartRecording(segment);
                         recordingTimer.Start();
                         return;
@@ -897,6 +897,8 @@ namespace Choreoh
                         //keep_label.Visibility = Visibility.Visible;
                         post_recording = false;
                         afterRecordCanvas.Visibility = Visibility.Collapsed;
+                        routine.save();
+                        renderSegment(startOfSegment);
                         return;
                     case "CANCEL":
                         //cancel_label.Visibility = Visibility.Visible;
