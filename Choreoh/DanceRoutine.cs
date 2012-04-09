@@ -111,6 +111,7 @@ namespace Choreoh
             {
                 if (kvp.Value == segment)
                 {
+                    segment.deleteFiles();
                     segments.Remove(kvp.Key);
                     return;
                 }

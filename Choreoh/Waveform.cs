@@ -153,7 +153,7 @@ namespace Choreoh
 
         public void movePlay()
         {
-            if (Canvas.GetLeft(playSlider) >= Canvas.GetLeft(stopSlider))
+            if ((Canvas.GetLeft(playSlider) + 1) >= Canvas.GetLeft(stopSlider))
             {
                 Debug.WriteLine("Stopping playing waveform");
                 endPlay();
@@ -234,8 +234,8 @@ namespace Choreoh
         public int waveformOnEdge(Canvas waveformCanvas)
         {
 
-            if (Canvas.GetLeft(waveformCanvas) == 0) return -1;
-            if (Canvas.GetLeft(waveformCanvas) + waveformCanvas.Width == 1024) return 1;
+            if (Canvas.GetLeft(waveformCanvas) >= 0) return -1;
+            if (Canvas.GetLeft(waveformCanvas) + waveformCanvas.Width <= 1024) return 1;
             return 0;
         }
 
