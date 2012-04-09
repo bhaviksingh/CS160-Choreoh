@@ -45,8 +45,8 @@
             <local:HoverButton x:Name="backButton" Text="BACK" Canvas.Top="-4" Width="180" Height="50" Click="button_Clicked"  Canvas.Left="-6"  HorizontalTextAlignment="Center" VerticalTextAlignment="Center" CornerRadius="2" RenderTransformOrigin="0.5,0.5" BackgroundColor="#FF414141" TextColor="#EEEEEE" TextSize="19"/>
             <local:HoverButton x:Name="radialCreator" Text="radialmenu" Canvas.Top="182" Width="180" Height="50" Click="button_Clicked"  Canvas.Left="88"  HorizontalTextAlignment="Center" VerticalTextAlignment="Center" CornerRadius="2" RenderTransformOrigin="0.5,0.5" BackgroundColor="#FF414141" TextColor="#EEEEEE" TextSize="19"/>
 
-            <Canvas Name="timelineCanvas" Canvas.Top="400" Height="320" Width="1800" Canvas.Left="0">
-                <local:HoverButton x:Name="waveButton" Width="1800" Height="160" Click="waveform_Clicked"/>
+            <Canvas Name="timelineCanvas" Canvas.Top="400" Height="320" Width="1800" Canvas.Left="0" Background="White">
+                <local:HoverButton x:Name="waveButton" Width="1800" Height="160" Click="waveform_Clicked"  Background="White"/>
                 <Canvas Name="segmentCanvas" Width="1800" Height="160" Canvas.Top="160"></Canvas>
             </Canvas>
             
@@ -60,7 +60,7 @@
             <TextBox Canvas.Left="12" Canvas.Top="697" Height="59"  Width="986" Name="debug" FontSize="20" />
 
             <local:RadialMenu x:Name="radialMenu" Visibility="Collapsed" TopText="Top" LeftText="Leftn" RightText="Right" BottomText="Cancel" bottomClick="bottom_Click" Canvas.Left="-185" Canvas.Top="-49" />
-            <local:RadialMenu x:Name="waveformRadialMenu" Visibility="Collapsed" TopText="Select Start" LeftText="Add Comment" RightText="Play From Here" BottomText="Cancel" bottomClick="bottom_Click" Canvas.Left="-185" Canvas.Top="-49" Panel.ZIndex="500" leftClick="waveformRadialMenu_leftClick" rightClick="waveformRadialMenu_rightClick" topClick="waveformRadialMenu_topClick" />
+            <local:RadialMenu x:Name="waveformRadialMenu" Visibility="Collapsed" TopText="Make Selection" LeftText="Add Comment" RightText="Play From Here" BottomText="Cancel" bottomClick="bottom_Click" Canvas.Left="-185" Canvas.Top="-49" Panel.ZIndex="500" leftClick="waveformRadialMenu_leftClick" rightClick="waveformRadialMenu_rightClick" topClick="waveformRadialMenu_topClick" />
             <local:RadialMenu x:Name="selectionRadialMenu" Visibility="Collapsed" TopText="Play Section" LeftText="Record Section" RightText="" BottomText="Cancel" bottomClick="bottom_Click" Canvas.Left="-185" Canvas.Top="-49" Panel.ZIndex="500" leftClick="selectionRadialMenu_leftClick" topClick="selectionRadialMenu_topClick" />
             <local:RadialMenu x:Name="segmentRadialMenu" Visibility="Collapsed" TopText="Add Comment" LeftText="Move" RightText="Delete" BottomText="Cancel" bottomClick="bottom_Click" Canvas.Left="-185" Canvas.Top="-49" Panel.ZIndex="500" leftClick="segmentRadialMenu_leftClick" rightClick="segmentRadialMenu_rightClick" topClick="segmentRadialMenu_topClick" />
             <local:RadialMenu x:Name="commentRadialMenu" Visibility="Collapsed" TopText="Save" BottomText="Cancel" bottomClick="bottom_Click" Canvas.Left="-185" Canvas.Top="-49" Panel.ZIndex="500" leftClick="commentRadialMenu_leftClick" rightClick="commentRadialMenu_rightClick" topClick="commentRadialMenu_topClick" />

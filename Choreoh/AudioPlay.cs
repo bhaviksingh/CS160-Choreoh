@@ -15,6 +15,7 @@ namespace Choreoh
             MediaElement songMediaElement = new MediaElement();
             parent.Children.Add(songMediaElement);
             songMediaElement.LoadedBehavior = MediaState.Manual;
+            songMediaElement.Volume = 100;
             songMediaElement.Source = new Uri(@"" + filename, UriKind.RelativeOrAbsolute);
 
             var dispatcherTimer = new DispatcherTimer();

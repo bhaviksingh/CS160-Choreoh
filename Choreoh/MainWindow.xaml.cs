@@ -99,7 +99,6 @@ namespace Choreoh
             routine.deleteDanceSegmentAt(0);
             showRecordingCanvas();
 
-            newSegment = routine.addDanceSegment(0);
             Canvas wfcanvas = new Canvas();
             wfcanvas.Width = 1800;
             wfcanvas.Height = 160;
@@ -285,6 +284,10 @@ namespace Choreoh
 
         void newSensor_AllFramesReady(object sender, AllFramesReadyEventArgs e)
         {
+            if (isRecording)
+            {
+                return;
+            }
 
             if (closing)
             {
@@ -518,16 +521,16 @@ namespace Choreoh
         {
             Debug.WriteLine("Setting recording canvas's segment to destination segment");
             segmentToRecordTo = s;
-            //pre_recording = false;
+            isRecording = true;
 
             sensor.AllFramesReady += newSensor_AllFramesReady_Record;
         }
 
         public void StopRecording()
         {
-            segmentToRecordTo = null;
             Debug.WriteLine("Set recording canvas's segment to null");
             //post_recording = true;
+            isRecording = false;
 
             sensor.AllFramesReady -= newSensor_AllFramesReady_Record;
         }
@@ -562,7 +565,9 @@ namespace Choreoh
 
         BitmapSource GetBitmap()
         {
-            RenderTargetBitmap renderBitmap = new RenderTargetBitmap((int)recordingCanvas.ActualWidth, (int)recordingCanvas.ActualHeight, 96d, 96d, PixelFormats.Pbgra32);
+            int width = (int)recordingCanvas.ActualWidth;
+            int height = (int)recordingCanvas.ActualHeight;
+            RenderTargetBitmap renderBitmap = new RenderTargetBitmap(width > 0? width: 680, height > 0 ? height: 480, 96d, 96d, PixelFormats.Pbgra32);
             renderBitmap.Render(recordingColorViewer);
             return renderBitmap;
         }
@@ -671,8 +676,9 @@ namespace Choreoh
             }
             else
             {
-                wordsForGrammar = "panda";
+                wordsForGrammar = "";
             }
+            wordsForGrammar += "start\nkeep\ncancel\nredo\nplay";
             wordsArray = wordsForGrammar.Split('\n');
 
             for (int i = 0; i < wordsArray.Length; i++)
@@ -820,41 +826,63 @@ namespace Choreoh
                 switch (e.Result.Text.ToString().ToUpperInvariant())
                 {
                     case "START":
-                        pre_recording = false;
                         //start_label.Visibility = Visibility.Visible;
-                        beforeRecordCanvas.Visibility = Visibility.Visible;
+                        beforeRecordCanvas.Visibility = Visibility.Collapsed;
+                        pre_recording = false;
 
-                        int duration = (int)(endSecondsIntoWaveform - startSecondsIntoWaveform);
-                        TimeSpan startTime = new TimeSpan(0, 0, (int)startSecondsIntoWaveform);
-                        TimeSpan durationTime = new TimeSpan(0, 0, duration);
-                        AudioPlay.playForDuration(mainCanvas, songFilename, startTime , durationTime);
                         showRecordingCanvas();
                         switchModeToRecording();
 
-                        int pixelsToMove = (int) (durationTime.Seconds * waveform.getPixelsPerSecond());
-                        var playTimer = new DispatcherTimer();
-                        playTimer.Tick += new EventHandler((object senderlocal, EventArgs elocal) =>
-                        {
-                            if (pixelsToMove == 0)
-                            {
-                                (senderlocal as DispatcherTimer).Stop();
-                            }
-                            pixelsToMove--;
-                            waveform.movePlay();
-                        });
-                        playTimer.Interval = new TimeSpan(0, 0, 1 / 30);
+                        double duration = endSecondsIntoWaveform - startSecondsIntoWaveform;
 
-                        var dispatcherTimer = new DispatcherTimer();
-                        dispatcherTimer.Tick += new EventHandler((object senderlocal, EventArgs elocal) =>
+                        TimeSpan startTime = new TimeSpan(0,0,(int) startSecondsIntoWaveform);
+                        TimeSpan durationTime = new TimeSpan(0,0,(int) duration);
+
+                        Debug.WriteLine("Start Time: " + startTime.ToString());
+                        Debug.WriteLine("Duration Time: " + durationTime.ToString());
+
+                        var waveformTicker = new DispatcherTimer();
+                        waveformTicker.Tick += new EventHandler((object localsender, EventArgs locale) =>
                         {
-                            (senderlocal as DispatcherTimer).Stop();
-                            waveform.endPlay();
+                            if (waveform.isPlaying())
+                            {
+                                Debug.WriteLine("waveform is playing, so tick");
+                                waveform.movePlay();
+                            }
+                            else
+                            {
+                                Debug.WriteLine("waveform stopped playing, so stop ticking");
+                                (localsender as DispatcherTimer).Stop();
+                            }
                         });
-                        dispatcherTimer.Interval = durationTime;
-                        dispatcherTimer.Start();
-                        playTimer.Start();
+                        double secondsPerPixel = 1 / waveform.getPixelsPerSecond();
+                        double nanoseconds = secondsPerPixel * 1000000000;
+                        int ticks = (int)nanoseconds / 100;
+                        Debug.WriteLine("Ticks: " + ticks);
+                        waveformTicker.Interval = new TimeSpan(ticks);
+
+                        
+                        var recordingTimer = new DispatcherTimer();
+                        recordingTimer.Tick += new EventHandler((object localsender, EventArgs locale) =>
+                            {
+                                waveform.endPlay();
+                                waveformTicker.Stop();
+                                StopRecording();
+                                (localsender as DispatcherTimer).Stop();
+                                post_recording = true;
+                                afterRecordCanvas.Visibility = Visibility.Visible;
+                                switchModeToPlayback();
+                            });
+                        recordingTimer.Interval = durationTime;
+
+
+                        AudioPlay.playForDuration(mainCanvas, songFilename, startTime, durationTime);
+                        waveformTicker.Start();
                         waveform.startPlay();
 
+                        DanceSegment segment = routine.addDanceSegment((int) (startTime.TotalSeconds * 30));
+                        StartRecording(segment);
+                        recordingTimer.Start();
                         return;
                     default:
                         return;
@@ -867,15 +895,23 @@ namespace Choreoh
                 {
                     case "KEEP":
                         //keep_label.Visibility = Visibility.Visible;
+                        post_recording = false;
+                        afterRecordCanvas.Visibility = Visibility.Collapsed;
                         return;
                     case "CANCEL":
                         //cancel_label.Visibility = Visibility.Visible;
+                        post_recording = false;
+                        afterRecordCanvas.Visibility = Visibility.Collapsed;
+                        waveform.deselectSegment();
+                        routine.deleteDanceSegment(segmentToRecordTo);
                         return;
                     case "REDO":
                         //redo_label.Visibility = Visibility.Visible;
+                        post_recording = false;
                         return;
                     case "PLAY":
                         //play_label.Visibility = Visibility.Visible;
+                        post_recording = false;
                         return;
                     default:
                         return;
@@ -969,7 +1005,9 @@ namespace Choreoh
         #region timeline selection menu clicks
         private void selectionRadialMenu_leftClick(object sender, EventArgs e)
         {
-
+            hand.menuOpened = false;
+            RadialMenu menu = (RadialMenu)sender;
+            menu.Visibility = Visibility.Collapsed;
             beforeRecordCanvas.Visibility = Visibility.Visible;
             pre_recording = true;
         }

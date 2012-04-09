@@ -95,5 +95,15 @@ namespace Choreoh
         {
             return getFrame(length);
         }
+
+
+        public void deleteFiles()
+        {
+            for (int i = 0; i < length; i++)
+            {
+                File.Delete(imageFramePath(i));
+            }
+            Directory.Delete(saveDestinationFolder);
+        }
     }
 }
