@@ -131,10 +131,12 @@ namespace Choreoh
                 if (segment == null) return;
                 pos = frame / 30 * waveform.getPixelsPerSecond();
                 HoverButton hb = new HoverButton();
-                hb.LeftImage = "img/waveform/0.jpg";
-                Debug.WriteLine(segment.getFirstFrame());
-                hb.RightImage = segment.getLastFrame();
-                Debug.WriteLine(segment.getLastFrame());
+                var img = new System.Windows.Controls.Image();
+                img.Source = segment.getFrameSource(0);
+                hb.leftImageName.Source = img.Source;
+                var img2 = new System.Windows.Controls.Image();
+                img2.Source = segment.getFrameSource(segment.length-1);
+                hb.rightImageName.Source = img2.Source;
                 hb.dotDot.Visibility = Visibility.Visible;
                 hb.Height = 160;
                 hb.Width = 200;
@@ -162,8 +164,8 @@ namespace Choreoh
                 {
                     Height = 160,
                     Width = 40,
-                    Source = new BitmapImage(new Uri(@"pack://application:,,,/Choreoh;component/img/waveform/startslider.png")),
                 };
+                cImg.Source = new BitmapImage(new Uri(@"pack://application:,,,/Choreoh;component/img/waveform/startslider.png"));
                 HoverButton commentImg = new HoverButton
                 {
                     Height = 160,

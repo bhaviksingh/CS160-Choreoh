@@ -65,7 +65,7 @@ namespace Choreoh
         public String imageFramePath(int frameNumber)
         {
             // note that frameNumbers start at 1
-            return @"" + saveDestinationFolder + "/" + frameNumber + ".jpg";
+            return @"" + saveDestinationFolder + "\\" + frameNumber + ".jpg";
         }
 
         // returns the length in number of frames
@@ -81,7 +81,9 @@ namespace Choreoh
         }
         public BitmapSource getFrameSource(int frameNumber)
         {
-            var bitmap = new Bitmap(imageFramePath(frameNumber));
+            string str = imageFramePath(frameNumber);
+            //Debug.WriteLine("THIS THING: " + str);
+            var bitmap = new Bitmap(str);
             System.Windows.Media.Imaging.BitmapSource bitmapSource =
   System.Windows.Interop.Imaging.CreateBitmapSourceFromHBitmap(
     bitmap.GetHbitmap(),
