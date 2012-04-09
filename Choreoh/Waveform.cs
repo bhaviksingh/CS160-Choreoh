@@ -22,6 +22,7 @@ namespace Choreoh
         private double timeInc;
         private Image startSlider;
         private Image stopSlider;
+        private Image playSlider;
         private double offset;
         /**
          * Takes in the width of a waveform image, the length of a song in seconds, a properly formatted string for an image, and the Canvas this all needs to be drawn in.
@@ -105,6 +106,17 @@ namespace Choreoh
             Canvas.SetLeft(stopSlider, 0);
             Canvas.SetTop(stopSlider, -20);
             offset = 0.0;
+            playSlider = new Image
+            {
+                Height = 190,
+                Width = 54,
+                Stretch = Stretch.Fill,
+                Source = new BitmapImage(new Uri(@"pack://application:,,,/Choreoh;component/img/waveform/playslider.png", UriKind.RelativeOrAbsolute)),
+                Visibility = Visibility.Hidden
+            };
+            waveformCanvas.Children.Add(playSlider);
+            Canvas.SetLeft(playSlider,0);
+            Canvas.SetTop(playSlider,-20);
         }
 
         public void selectStart(double start)
@@ -127,6 +139,30 @@ namespace Choreoh
             Canvas.SetTop(selectRect, 0);
             selectRect.Width = length;
             selectRect.Visibility = Visibility.Visible;
+        }
+
+        public void startPlay()
+        {
+            Canvas.SetLeft(playSlider,Canvas.GetLeft(startSlider));
+            playSlider.Visibility = Visibility.Visible;
+        }
+
+        public void movePlay(int pixels)
+        {
+            for (int i = 0; i < pixels; i++)
+            {
+                if (Canvas.GetLeft(playSlider) >= Canvas.GetLeft(stopSlider))
+                {
+                    endPlay();
+                    return;
+                }
+                Canvas.SetLeft(playSlider, Canvas.GetLeft(playSlider));
+            }
+        }
+
+        public void endPlay()
+        {
+            playSlider.Visibility = Visibility.Hidden;
         }
 
         public void deselectSegment()
@@ -187,8 +223,8 @@ namespace Choreoh
         public int waveformOnEdge(Canvas waveformCanvas)
         {
 
-            if (Canvas.GetLeft(waveformCanvas) == 0) return -1;
-            if (Canvas.GetLeft(waveformCanvas) + waveformCanvas.Width == 1024) return 1;
+            if (Canvas.GetLeft(waveformCanvas) >= 0) return -1;
+            if (Canvas.GetLeft(waveformCanvas) + waveformCanvas.Width <= 1024) return 1;
             return 0;
         }
 
