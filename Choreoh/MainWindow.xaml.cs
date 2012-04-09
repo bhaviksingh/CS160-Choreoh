@@ -81,7 +81,7 @@ namespace Choreoh
             homeCanvas.Visibility = Visibility.Visible;
             mainCanvas.Visibility = Visibility.Collapsed;
 
-            switchModeToPlayback();
+            hideMode();
             Canvas.SetTop(playbackMode, 0);
             Canvas.SetTop(recordMode, 0);
 
@@ -602,9 +602,11 @@ namespace Choreoh
             Debug.WriteLine("Segment radial menu left clicked");
             hand.menuOpened = false;
             RadialMenu menu = (RadialMenu)sender;
+
             menu.Visibility = Visibility.Collapsed;
             var videoPlayerTimer = new DispatcherTimer();
             int videoCounter = 0;
+
             videoPlaybackCanvas.Visibility = Visibility.Visible;
             videoPlayerTimer.Tick += new EventHandler((object localsender, EventArgs locale) =>
             {
@@ -643,6 +645,9 @@ namespace Choreoh
                 }
             }
             int frameOfSegmentEnd = frameOfSegmentStart + selectedSegment.length;
+            
+            TimeSpan startTime = new TimeSpan((int) (frameOfSegmentStart / 30 * (1000000000 / 100)));
+            TimeSpan durationTime = new TimeSpan((int) ((frameOfSegmentEnd - frameOfSegmentStart) / 30 * (1000000000 / 100)));
 
             waveform.selectStart(frameOfSegmentStart / 30);
             waveform.selectEnd(frameOfSegmentEnd / 30);
@@ -663,13 +668,28 @@ namespace Choreoh
             });
             double secondsPerPixel = 1 / waveform.getPixelsPerSecond();
             double nanoseconds = secondsPerPixel * 1000000000;
-            int ticks = (int)nanoseconds / 100;
+            int ticks = (int) (nanoseconds / 100);
             Debug.WriteLine("Ticks: " + ticks);
             waveformTicker.Interval = new TimeSpan(ticks);
 
-            AudioPlay.playForDuration(mainCanvas, songFilename, new TimeSpan(0,0, frameOfSegmentStart/30), new TimeSpan(0,0, frameOfSegmentEnd/30 - frameOfSegmentStart/30));
+            var playbackTimer = new DispatcherTimer();
+            playbackTimer.Tick += new EventHandler((object localsender, EventArgs locale) =>
+            {
+                (localsender as DispatcherTimer).Stop();
+                videoPlayerTimer.Stop();
+                waveformTicker.Stop();
+                waveform.endPlay();
+                waveform.deselectSegment();
+                hideMode();
+            });
+            playbackTimer.Interval = durationTime;
+
+            AudioPlay.playForDuration(mainCanvas, songFilename, startTime, durationTime);
             videoPlayerTimer.Start();
             waveformTicker.Start();
+            waveform.startPlay();
+            playbackTimer.Start();
+            switchModeToPlayback();
             
         }
         private void segmentRadialMenu_rightClick(object sender, EventArgs e)
@@ -1137,6 +1157,12 @@ namespace Choreoh
 
             recordMode.Visibility = Visibility.Collapsed;
             playbackMode.Visibility = Visibility.Visible;
+        }
+
+        private void hideMode()
+        {
+            recordMode.Visibility = Visibility.Collapsed;
+            playbackMode.Visibility = Visibility.Collapsed;
         }
 
         #endregion
