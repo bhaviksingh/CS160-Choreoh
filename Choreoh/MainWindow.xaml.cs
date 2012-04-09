@@ -73,6 +73,7 @@ namespace Choreoh
         double endSecondsIntoWaveform;
         String songFilename = "fakeSong.wav";
         LinkedList<HoverButton> segmentList = new LinkedList<HoverButton>();
+        Dictionary<HoverButton, DanceSegment> buttonSegments;
 
         //Load window
         private void Window_Loaded(object sender, RoutedEventArgs e)
@@ -113,6 +114,8 @@ namespace Choreoh
 
         private void renderSegments()
         {
+
+            buttonSegments = new Dictionary<HoverButton, DanceSegment>();
             foreach (int frame in routine.segments.Keys)
             {
                 renderSegment(frame);
@@ -141,6 +144,8 @@ namespace Choreoh
                 Canvas.SetLeft(hb, pos);
                 hb.Click += new HoverButton.ClickHandler(segment_Clicked);
                 segmentList.AddLast(hb);
+
+                buttonSegments.Add(hb, segment);
             }
             renderComment(frame);
         }
@@ -181,14 +186,16 @@ namespace Choreoh
         }
 
         double handPointX;
+        DanceSegment selectedSegment;
         private void segment_Clicked(object sender, EventArgs e)
         {
             if (sender.ToString() == "Choreoh.HoverButton")
             {
                 Debug.WriteLine("Waveform Button clicked");
-
+                
 
                 HoverButton waveButton = (HoverButton)sender;
+                buttonSegments.TryGetValue(waveButton, out selectedSegment);
                 Point handPosition = hand.TransformToAncestor(containerCanvas).Transform(new Point(0, 0));
                 handPointX = handPosition.X + hand.ActualWidth / 2;
                 timelineMenuOpenedPosition = handPosition;
@@ -599,7 +606,80 @@ namespace Choreoh
         #region segment radial menu clicks
         private void segmentRadialMenu_leftClick(object sender, EventArgs e)
         {
+            // play the segment
+            
+            Debug.WriteLine("Segment radial menu left clicked");
+            hand.menuOpened = false;
+            RadialMenu menu = (RadialMenu)sender;
+            menu.Visibility = Visibility.Collapsed;
+            var videoPlayerTimer = new DispatcherTimer();
+            int videoCounter = 0;
+            videoPlaybackCanvas.Visibility = Visibility.Visible;
+            videoPlayerTimer.Tick += new EventHandler((object localsender, EventArgs locale) =>
+            {
 
+                for (int elementIndex = videoPlaybackCanvas.Children.Count - 1; elementIndex >= 0; elementIndex--)
+                {
+                    var child = videoPlaybackCanvas.Children[elementIndex];
+                    videoPlaybackCanvas.Children.Remove(child);
+                }
+                if (videoCounter >= selectedSegment.length)
+                {
+                    videoPlaybackCanvas.Visibility = Visibility.Collapsed;
+                    (localsender as DispatcherTimer).Stop();
+                    return;
+                }
+
+                var img = new System.Windows.Controls.Image();
+                img.Source = selectedSegment.getFrameSource(videoCounter);
+                videoPlaybackCanvas.Children.Add(img);
+
+                Canvas.SetTop(img, 0);
+                Canvas.SetLeft(img, 0);
+
+                videoCounter++;
+            });
+            videoPlayerTimer.Interval = new TimeSpan((int)(1 / 28) * (1000000000 / 100));
+
+
+            int frameOfSegmentStart = 0;
+            foreach (KeyValuePair<int, DanceSegment> kvp in routine.segments)
+            {
+                if (kvp.Value == selectedSegment)
+                {
+                    frameOfSegmentStart = kvp.Key;
+                    break;
+                }
+            }
+            int frameOfSegmentEnd = frameOfSegmentStart + selectedSegment.length;
+
+            waveform.selectStart(frameOfSegmentStart / 30);
+            waveform.selectEnd(frameOfSegmentEnd / 30);
+
+            var waveformTicker = new DispatcherTimer();
+            waveformTicker.Tick += new EventHandler((object localsender, EventArgs locale) =>
+            {
+                if (waveform.isPlaying())
+                {
+                    Debug.WriteLine("waveform is playing, so tick");
+                    waveform.movePlay();
+                }
+                else
+                {
+                    Debug.WriteLine("waveform stopped playing, so stop ticking");
+                    (localsender as DispatcherTimer).Stop();
+                }
+            });
+            double secondsPerPixel = 1 / waveform.getPixelsPerSecond();
+            double nanoseconds = secondsPerPixel * 1000000000;
+            int ticks = (int)nanoseconds / 100;
+            Debug.WriteLine("Ticks: " + ticks);
+            waveformTicker.Interval = new TimeSpan(ticks);
+
+            AudioPlay.playForDuration(mainCanvas, songFilename, new TimeSpan(0,0, frameOfSegmentStart/30), new TimeSpan(0,0, frameOfSegmentEnd/30 - frameOfSegmentStart/30));
+            videoPlayerTimer.Start();
+            waveformTicker.Start();
+            
         }
         private void segmentRadialMenu_rightClick(object sender, EventArgs e)
         {
