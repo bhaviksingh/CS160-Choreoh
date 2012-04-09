@@ -11,6 +11,7 @@ using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
+using System.Diagnostics;
 
 namespace Choreoh
 {
@@ -24,6 +25,7 @@ namespace Choreoh
         private Image playSlider;
         private Image stopSlider;
         private double offset;
+        private bool playing = false;
         /**
          * Takes in the width of a waveform image, the length of a song in seconds, a properly formatted string for an image, and the Canvas this all needs to be drawn in.
          * 
@@ -143,7 +145,9 @@ namespace Choreoh
         
         public void startPlay()
         {
+            Debug.WriteLine("Starting playing waveform");
             Canvas.SetLeft(playSlider, Canvas.GetLeft(startSlider));
+            playing = true;
             playSlider.Visibility = Visibility.Visible;
         }
 
@@ -151,15 +155,25 @@ namespace Choreoh
         {
             if (Canvas.GetLeft(playSlider) >= Canvas.GetLeft(stopSlider))
             {
+                Debug.WriteLine("Stopping playing waveform");
                 endPlay();
                 return;
             }
+            Debug.WriteLine("Moving playing waveform");
             Canvas.SetLeft(playSlider, Canvas.GetLeft(playSlider) + 1);
         }
 
         public void endPlay()
         {
+            Debug.WriteLine("Ending playing waveform");
+            playing = false;
+            Canvas.SetLeft(playSlider, -20);
             playSlider.Visibility = Visibility.Hidden;
+        }
+
+        public bool isPlaying()
+        {
+            return playing;
         }
 
         public void deselectSegment()

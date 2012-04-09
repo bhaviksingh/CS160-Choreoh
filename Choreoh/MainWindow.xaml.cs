@@ -698,13 +698,27 @@ namespace Choreoh
                         var waveformTicker = new DispatcherTimer();
                         waveformTicker.Tick += new EventHandler((object localsender, EventArgs locale) =>
                         {
-
+                            if (waveform.isPlaying())
+                            {
+                                Debug.WriteLine("waveform is playing, so tick");
+                                waveform.movePlay();
+                            }
+                            else
+                            {
+                                Debug.WriteLine("waveform stopped playing, so stop ticking");
+                                (localsender as DispatcherTimer).Stop();
+                            }
                         });
-                        waveformTicker.Interval = new TimeSpan((int)(1 / 30) * (1000000000 / 100));
+                        double secondsPerPixel = 1 / waveform.getPixelsPerSecond();
+                        double nanoseconds = secondsPerPixel * 1000000000;
+                        int ticks = (int)nanoseconds / 100;
+                        Debug.WriteLine("Ticks: " + ticks);
+                        waveformTicker.Interval = new TimeSpan(ticks);
 
 
                         AudioPlay.playForDuration(mainCanvas, songFilename, startTime, durationTime);
                         waveformTicker.Start();
+                        waveform.startPlay();
 
                         return;
                     default:
