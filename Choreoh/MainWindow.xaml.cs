@@ -118,6 +118,7 @@ namespace Choreoh
             buttonSegments = new Dictionary<HoverButton, DanceSegment>();
             foreach (int frame in routine.segments.Keys)
             {
+                
                 renderSegment(frame);
             }
         }
@@ -128,7 +129,7 @@ namespace Choreoh
             DanceSegment segment;
             if (routine.segments.TryGetValue(frame, out segment))
             {
-                if (segment == null) return;
+                if (segment == null || segment.length == 0) return;
                 pos = frame / 30 * waveform.getPixelsPerSecond();
                 HoverButton hb = new HoverButton();
                 var img = new System.Windows.Controls.Image();
@@ -139,7 +140,7 @@ namespace Choreoh
                 hb.rightImageName.Source = img2.Source;
                 hb.dotDot.Visibility = Visibility.Visible;
                 hb.Height = 160;
-                hb.Width = 200;
+                hb.Width = (segment.length/30 * waveform.getPixelsPerSecond());
                 hb.BackgroundColor = Brushes.White;
                 segmentCanvas.Children.Add(hb);
                 Canvas.SetTop(hb, 0);
@@ -1026,6 +1027,7 @@ namespace Choreoh
                                 post_recording = true;
                                 afterRecordCanvas.Visibility = Visibility.Visible;
                                 switchModeToPlayback();
+                                renderSegment(startOfSegment);
                             });
                         recordingTimer.Interval = durationTime;
 
@@ -1035,7 +1037,6 @@ namespace Choreoh
                         waveform.startPlay();
                         startOfSegment = (int)(startTime.TotalSeconds * 30);
                         DanceSegment segment = routine.addDanceSegment(startOfSegment);
-                        renderSegment(startOfSegment);
                         StartRecording(segment);
                         recordingTimer.Start();
                         return;
@@ -1050,6 +1051,8 @@ namespace Choreoh
                 {
                     case "KEEP":
                         //keep_label.Visibility = Visibility.Visible;
+                        hideMode();
+                        waveform.deselectSegment();
                         post_recording = false;
                         afterRecordCanvas.Visibility = Visibility.Collapsed;
                         routine.save();
