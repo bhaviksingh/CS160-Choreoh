@@ -49,8 +49,8 @@ namespace Choreoh
          * dance segment buttons so when click event takes place
          * iterate throw the linkedlist calling listElement.check(handCursor);
             HoverButton hb = new HoverButton();
-            hb.LeftImage = "Images/RadialHighLeft.png";
-            hb.RightImage = "Images/RadialHighRight.png";
+            hb.leftImage = DanceSegment.getFirstFrame();
+            hb.rightImage = "Images/RadialHighRight.png";
             hb.dotDot.Visibility = Visibility.Visible;
             hb.Height = 100;
             hb.Width = 200;
@@ -108,6 +108,85 @@ namespace Choreoh
             waveButton.hoverCanvas.Children.Add(wfcanvas);
             waveButton.enableExpandAnimation = false;
             waveform = new Waveform(1800, 259, wfcanvas);
+            renderSegments();
+        }
+
+        private void renderSegments()
+        {
+            foreach (int frame in routine.segments.Keys)
+            {
+                renderSegment(frame);
+            }
+        }
+
+        private void renderSegment(int frame)
+        {
+            double pos;
+            DanceSegment segment;
+            String comment;
+            if (routine.segments.TryGetValue(frame, out segment))
+            {
+                if (segment == null) return;
+                pos = frame / 30 * waveform.getPixelsPerSecond();
+                HoverButton hb = new HoverButton();
+                hb.leftImageName = new Image
+                {
+                    Source = segment.getFirstFrame(),
+                    Height = hb.Height,
+                    Width = hb.Width / 2,
+                    Stretch = Stretch.Fill
+                };
+                hb.rightImageName = new Image
+                {
+                    Source = segment.getLastFrame(),
+                    Height = hb.Height,
+                    Width = hb.Width / 2,
+                    Stretch = Stretch.Fill
+                }; ;
+                hb.dotDot.Visibility = Visibility.Visible;
+                hb.Height = 160;
+                hb.Width = 400;
+                segmentCanvas.Children.Add(hb);
+                Canvas.SetTop(hb, 0);
+                Canvas.SetLeft(hb, pos);
+                hb.Click += new HoverButton.ClickHandler(segment_Clicked);
+            }
+            if (routine.comments.TryGetValue(frame, out comment))
+            {
+                if (comment == null) return;
+                pos = frame / 30 * waveform.getPixelsPerSecond();
+            }
+        }
+        double handPointX;
+        private void segment_Clicked(object sender, EventArgs e)
+        {
+            if (sender.ToString() == "Choreoh.HoverButton")
+            {
+                Debug.WriteLine("Waveform Button clicked");
+
+
+                HoverButton waveButton = (HoverButton)sender;
+                Point handPosition = hand.TransformToAncestor(containerCanvas).Transform(new Point(0, 0));
+                handPointX = handPosition.X + hand.ActualWidth / 2;
+                timelineMenuOpenedPosition = handPosition;
+
+                RadialMenu menu = segmentRadialMenu;
+                menuY = handPosition.Y;
+                menuY = menuY + hand.ActualHeight / 2 - menu.getDiameter() / 2;
+                menuX = handPosition.X;
+                menuX = menuX + hand.ActualWidth / 2 - menu.getDiameter() / 2;
+                Canvas.SetLeft(menu, menuX);
+                Canvas.SetTop(menu, menuY);
+
+                hand.menuOpened = true;
+                hand.SetRadialMenu(handPosition.X, handPosition.Y, menu);
+
+                menu.Visibility = Visibility.Visible;
+            }
+            else
+            {
+                debug.Text = "I have made a huge mistake";
+            }
         }
 
         private void waveform_Clicked(object sender, EventArgs e)
@@ -481,6 +560,42 @@ namespace Choreoh
             }
         }
 
+        string commentToSave;
+        #region segment radial menu clicks
+        private void segmentRadialMenu_leftClick(object sender, EventArgs e)
+        {
+
+        }
+        private void segmentRadialMenu_rightClick(object sender, EventArgs e)
+        {
+
+        }
+        private void segmentRadialMenu_topClick(object sender, EventArgs e)
+        {
+            commentBox.Visibility = Visibility.Visible;
+            annotating = true;
+            commentToSave = comment;
+        }
+        #endregion
+
+        #region comment radial menu clicks
+        private void commentRadialMenu_leftClick(object sender, EventArgs e)
+        {
+
+        }
+        private void commentRadialMenu_rightClick(object sender, EventArgs e)
+        {
+
+        }
+        private void commentRadialMenu_topClick(object sender, EventArgs e)
+        {
+            int pos = (int)((handPointX+waveform.getOffset()) / waveform.getPixelsPerSecond() * 30);
+            routine.addComment(pos, commentToSave);
+            commentToSave = comment = "";
+            annotating = false;
+        }
+        #endregion
+
         #region audio config and control
 
         private DispatcherTimer readyTimer;
@@ -783,7 +898,7 @@ namespace Choreoh
         }
         private void UpdateText(string newText)
         {
-            Dispatcher.BeginInvoke(new Action(() => { debug.Text = debug.Text + " " + newText; }), DispatcherPriority.Normal);
+            Dispatcher.BeginInvoke(new Action(() => { commentBox.Text = commentBox.Text + " " + newText; }), DispatcherPriority.Normal);
         }
         #endregion
         #endregion
