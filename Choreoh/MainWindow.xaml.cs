@@ -80,6 +80,7 @@ namespace Choreoh
         {
             homeCanvas.Visibility = Visibility.Visible;
             mainCanvas.Visibility = Visibility.Collapsed;
+            blackBack.Visibility = Visibility.Collapsed;
 
             hideMode();
             Canvas.SetTop(playbackMode, 0);
@@ -102,13 +103,13 @@ namespace Choreoh
             showRecordingCanvas();
 
             Canvas wfcanvas = new Canvas();
-            wfcanvas.Width = 1800;
+            wfcanvas.Width = 3600;
             wfcanvas.Height = 160;
             Canvas.SetTop(wfcanvas, 0);
             Canvas.SetLeft(wfcanvas, 0);
             waveButton.hoverCanvas.Children.Add(wfcanvas);
             waveButton.enableExpandAnimation = false;
-            waveform = new Waveform(1800, 259, wfcanvas);
+            waveform = new Waveform(3600, 259, wfcanvas);
             renderSegments();
         }
 
@@ -141,7 +142,9 @@ namespace Choreoh
                 hb.dotDot.Visibility = Visibility.Visible;
                 hb.Height = 160;
                 hb.Width = (segment.length/30 * waveform.getPixelsPerSecond());
-                hb.BackgroundColor = Brushes.White;
+                hb.BackgroundColor = Brushes.LightYellow;
+                hb.BorderBrush = Brushes.DarkGray;
+                hb.BorderThickness = new Thickness(2);
                 segmentCanvas.Children.Add(hb);
                 Canvas.SetTop(hb, 0);
                 Canvas.SetLeft(hb, pos);
@@ -166,15 +169,15 @@ namespace Choreoh
                     Height = 160,
                     Width = 40,
                 };
-                cImg.Source = new BitmapImage(new Uri(@"pack://application:,,,/Choreoh;component/img/waveform/startslider.png"));
+                cImg.Source = new BitmapImage(new Uri(@"pack://application:,,,/Choreoh;component/img/waveform/Speech_bubble.png",UriKind.RelativeOrAbsolute));
                 HoverButton commentImg = new HoverButton
                 {
-                    Height = 160,
-                    Width = 40,
-                    leftImageName = cImg,
+                    Height = 50,
+                    Width = 50,
                     Visibility = Visibility.Visible,
-                    BackgroundColor = Brushes.White,
+                    BackgroundColor = Brushes.LavenderBlush
                 };
+                commentImg.leftImageName.Source = cImg.Source;
                 segmentCanvas.Children.Add(commentImg);
                 Canvas.SetTop(commentImg, 0);
                 Canvas.SetLeft(commentImg, pos);
@@ -214,6 +217,7 @@ namespace Choreoh
                 hand.menuOpened = true;
                 hand.SetRadialMenu(handPosition.X, handPosition.Y, menu);
 
+                blackBack.Visibility = Visibility.Visible;
                 menu.Visibility = Visibility.Visible;
             }
             else
@@ -285,6 +289,7 @@ namespace Choreoh
                 hand.menuOpened = true;
                 hand.SetRadialMenu(handPosition.X, handPosition.Y, menu);
 
+                blackBack.Visibility = Visibility.Visible;
                 menu.Visibility = Visibility.Visible;
             }
             else
@@ -336,7 +341,7 @@ namespace Choreoh
             hand.SetPosition(handJoint);
             backButton.Check(hand);
 
-            radialCreator.Check(hand);
+            
             waveButton.Check(hand);
             song1.Check(hand);
             songBeat.Check(hand);
@@ -355,6 +360,7 @@ namespace Choreoh
         {
             RadialMenu menu = (RadialMenu)sender;
             String direction = menu.getLastHovering();
+            blackBack.Visibility = Visibility.Collapsed;
             menu.Visibility = Visibility.Collapsed;
             hand.menuOpened = false;
 
@@ -389,6 +395,7 @@ namespace Choreoh
                     Canvas.SetTop(radialMenu, menuY - radialMenu.getDiameter() / 2);
                     hand.menuOpened = true;
                     hand.SetRadialMenu(handPosition.X, handPosition.Y, radialMenu);
+                    //blackBack.Visibility = Visibility.Visible;
                     radialMenu.Visibility = Visibility.Visible;
                 }
                
@@ -620,6 +627,7 @@ namespace Choreoh
             hand.menuOpened = false;
             RadialMenu menu = (RadialMenu)sender;
 
+            blackBack.Visibility = Visibility.Collapsed;
             menu.Visibility = Visibility.Collapsed;
             var videoPlayerTimer = new DispatcherTimer();
             int videoCounter = 0;
@@ -722,6 +730,7 @@ namespace Choreoh
             double handX = timelineMenuOpenedPosition.X;
             handX = handX + hand.ActualWidth / 2;
 
+            blackBack.Visibility = Visibility.Collapsed;
             menu.Visibility = Visibility.Collapsed;
             Debug.WriteLine(menu.ToString());
 
@@ -740,7 +749,7 @@ namespace Choreoh
 
             hand.menuOpened = true;
             hand.SetRadialMenu(handPosition.X, handPosition.Y, menu2);
-
+            blackBack.Visibility = Visibility.Visible;
             menu2.Visibility = Visibility.Visible;
 
             commentBox.Visibility = Visibility.Visible;
@@ -768,6 +777,7 @@ namespace Choreoh
             double handX = timelineMenuOpenedPosition.X;
             handX = handX + hand.ActualWidth / 2;
 
+            blackBack.Visibility = Visibility.Collapsed;
             menu.Visibility = Visibility.Collapsed;
             Debug.WriteLine(menu.ToString());
 
@@ -887,7 +897,7 @@ namespace Choreoh
             var preRecordingChoices = new Choices(new string[] { "start" });
             var gb_preR = new GrammarBuilder { Culture = ri.Culture };
 
-            var postRecordingChoices = new Choices(new string[] { "keep", "cancel", "redo", "play" });
+            var postRecordingChoices = new Choices(new string[] { "save", "cancel", "redo", "play" });
             var gb_postR = new GrammarBuilder { Culture = ri.Culture };
 
             var gb_1 = new GrammarBuilder { Culture = ri.Culture };
@@ -982,6 +992,7 @@ namespace Choreoh
                 {
                     case "START":
                         //start_label.Visibility = Visibility.Visible;
+                        blackBack.Visibility = Visibility.Collapsed;
                         beforeRecordCanvas.Visibility = Visibility.Collapsed;
                         pre_recording = false;
 
@@ -1025,6 +1036,7 @@ namespace Choreoh
                                 StopRecording();
                                 (localsender as DispatcherTimer).Stop();
                                 post_recording = true;
+                                blackBack.Visibility = Visibility.Visible;
                                 afterRecordCanvas.Visibility = Visibility.Visible;
                                 switchModeToPlayback();
                                 renderSegment(startOfSegment);
@@ -1049,11 +1061,12 @@ namespace Choreoh
                 Debug.WriteLine("Post-recording Speech detected: " + e.Result.Text.ToString());
                 switch (e.Result.Text.ToString().ToUpperInvariant())
                 {
-                    case "KEEP":
+                    case "SAVE":
                         //keep_label.Visibility = Visibility.Visible;
                         hideMode();
                         waveform.deselectSegment();
                         post_recording = false;
+                        blackBack.Visibility = Visibility.Collapsed;
                         afterRecordCanvas.Visibility = Visibility.Collapsed;
                         routine.save();
                         renderSegment(startOfSegment);
@@ -1061,6 +1074,7 @@ namespace Choreoh
                     case "CANCEL":
                         //cancel_label.Visibility = Visibility.Visible;
                         post_recording = false;
+                        blackBack.Visibility = Visibility.Collapsed;
                         afterRecordCanvas.Visibility = Visibility.Collapsed;
                         waveform.deselectSegment();
                         routine.deleteDanceSegment(segmentToRecordTo);
@@ -1068,10 +1082,14 @@ namespace Choreoh
                     case "REDO":
                         //redo_label.Visibility = Visibility.Visible;
                         post_recording = false;
+                            blackBack.Visibility = Visibility.Collapsed;
+                        afterRecordCanvas.Visibility = Visibility.Collapsed;
                         return;
                     case "PLAY":
                         //play_label.Visibility = Visibility.Visible;
                         post_recording = false;
+                          blackBack.Visibility = Visibility.Collapsed;
+                        afterRecordCanvas.Visibility = Visibility.Collapsed;
                         return;
                     default:
                         return;
@@ -1155,6 +1173,7 @@ namespace Choreoh
 
             Debug.WriteLine("selected start of the waveform");
 
+            blackBack.Visibility = Visibility.Collapsed;
             menu.Visibility = Visibility.Collapsed;
             Debug.WriteLine(menu.ToString());
 
@@ -1167,7 +1186,9 @@ namespace Choreoh
         {
             hand.menuOpened = false;
             RadialMenu menu = (RadialMenu)sender;
+            blackBack.Visibility = Visibility.Collapsed;
             menu.Visibility = Visibility.Collapsed;
+            blackBack.Visibility = Visibility.Visible;
             beforeRecordCanvas.Visibility = Visibility.Visible;
             pre_recording = true;
         }

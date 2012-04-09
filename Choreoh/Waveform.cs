@@ -56,19 +56,22 @@ namespace Choreoh
             {
                 TextBlock nextTimestamp = new TextBlock();
                 nextTimestamp.Foreground = Brushes.Black;
+                nextTimestamp.FontFamily = new FontFamily(new Uri(@"pack://application:,,,/"), "./img/ui/#nevis");
                 waveformCanvas.Children.Add(nextTimestamp);
                 Canvas.SetLeft(nextTimestamp, i * timeInc * 30);
+                Canvas.SetTop(nextTimestamp, -20);
                 nextTimestamp.Text = numToTime(i * 30);
+                nextTimestamp.FontSize = 36;
                 Rectangle timeTick = new Rectangle();
                 timeTick.Height = waveformCanvas.Height - 15;
-                timeTick.Width = 1;
+                timeTick.Width = 2;
                 timeTick.Stroke = Brushes.Black;
                 waveformCanvas.Children.Add(timeTick);
                 Canvas.SetLeft(timeTick, 30 * i * timeInc + 8);
                 Canvas.SetTop(timeTick, 15);
                 Rectangle timeTick2 = new Rectangle();
                 timeTick2.Height = waveformCanvas.Height - 25;
-                timeTick2.Width = 1;
+                timeTick2.Width = 2;
                 timeTick2.Stroke = Brushes.Black;
                 waveformCanvas.Children.Add(timeTick2);
                 Canvas.SetLeft(timeTick2, 30 * i * timeInc + 8 + (30 * timeInc / 2));
