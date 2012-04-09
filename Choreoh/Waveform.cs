@@ -84,26 +84,26 @@ namespace Choreoh
             waveformCanvas.Children.Add(selectRect);
             startSlider = new Image
             {
-                Height = 240,
-                Width = 60,
+                Height = 190,
+                Width = 54,
                 Stretch = Stretch.Fill,
                 Source = new BitmapImage(new Uri(@"pack://application:,,,/Choreoh;component/img/waveform/startslider.png", UriKind.RelativeOrAbsolute)),
                 Visibility = Visibility.Hidden
             };
             waveformCanvas.Children.Add(startSlider);
             Canvas.SetLeft(startSlider, 0);
-            Canvas.SetTop(startSlider, -80);
+            Canvas.SetTop(startSlider, -20);
             stopSlider = new Image
             {
-                Height = 240,
-                Width = 60,
+                Height = 190,
+                Width = 54,
                 Stretch = Stretch.Fill,
                 Source = new BitmapImage(new Uri(@"pack://application:,,,/Choreoh;component/img/waveform/stopslider.png", UriKind.RelativeOrAbsolute)),
                 Visibility = Visibility.Hidden
             };
             waveformCanvas.Children.Add(stopSlider);
             Canvas.SetLeft(stopSlider, 0);
-            Canvas.SetTop(stopSlider, -80);
+            Canvas.SetTop(stopSlider, -20);
             offset = 0.0;
         }
 
@@ -200,6 +200,11 @@ namespace Choreoh
         public double getOffset()
         {
             return offset;
+        }
+
+        public double getPixelsPerSecond()
+        {
+            return timeInc;
         }
 
     }

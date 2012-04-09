@@ -58,7 +58,7 @@
             <TextBox Canvas.Left="12" Canvas.Top="697" Height="59"  Width="986" Name="debug" FontSize="20" />
 
             <local:RadialMenu x:Name="radialMenu" Visibility="Collapsed" TopText="Top" LeftText="Leftn" RightText="Right" BottomText="Cancel" bottomClick="bottom_Click" Canvas.Left="-185" Canvas.Top="-49" />
-            <local:RadialMenu x:Name="timelineRadialMenu" Visibility="Collapsed" TopText="Select Start" LeftText="Add Comment" RightText="Play From Here" BottomText="Cancel" bottomClick="bottom_Click" Canvas.Left="-185" Canvas.Top="-49" Panel.ZIndex="500" leftClick="timelineRadialMenu_leftClick" rightClick="timelineRadialMenu_rightClick" topClick="timelineRadialMenu_topClick" />
+            <local:RadialMenu x:Name="waveformRadialMenu" Visibility="Collapsed" TopText="Select Start" LeftText="Add Comment" RightText="Play From Here" BottomText="Cancel" bottomClick="bottom_Click" Canvas.Left="-185" Canvas.Top="-49" Panel.ZIndex="500" leftClick="waveformRadialMenu_leftClick" rightClick="waveformRadialMenu_rightClick" topClick="waveformRadialMenu_topClick" />
 
         </Canvas>
 

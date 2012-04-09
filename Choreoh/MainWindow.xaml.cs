@@ -67,6 +67,9 @@ namespace Choreoh
         DanceSegment newSegment;
         bool isRecording = false;
         int framesLeft = 30 * 3;
+        Point timelineMenuOpenedPosition;
+        bool isSelectingSegment = false;
+        double startSecondsIntoWaveform;
 
         //Load window
         private void Window_Loaded(object sender, RoutedEventArgs e)
@@ -106,20 +109,53 @@ namespace Choreoh
             if (sender.ToString() == "Choreoh.HoverButton")
             {
                 Debug.WriteLine("Waveform Button clicked");
-                HoverButton waveButton = (HoverButton)sender;
+                if (isSelectingSegment)
+                {
+                    Debug.WriteLine("Selecting end segment");
 
-                Point handPosition = hand.TransformToAncestor(containerCanvas).Transform(new Point(0, 0));
-                menuY = handPosition.Y;
-                menuY = menuY + hand.ActualHeight / 2 - timelineRadialMenu.getDiameter()/2;
-                menuX = handPosition.X;
-                menuX = menuX + hand.ActualWidth / 2 - timelineRadialMenu.getDiameter() / 2;
-                Canvas.SetLeft(timelineRadialMenu, menuX);
-                Canvas.SetTop(timelineRadialMenu, menuY);
+                    double handX = hand.TransformToAncestor(containerCanvas).Transform(new Point(0, 0)).X;
+                    handX = handX + hand.ActualWidth / 2;
 
-                hand.menuOpened = true;
-                hand.SetRadialMenu(handPosition.X, handPosition.Y, timelineRadialMenu);
+                    double timelineX = Canvas.GetLeft(timelineCanvas);
 
-                timelineRadialMenu.Visibility = Visibility.Visible;
+                    double pixelsIntoWaveform = -1 * timelineX + handX;
+                    Debug.WriteLine("Hand is " + pixelsIntoWaveform + " pixels into the waveform");
+
+                    double secondsIntoWaveform = (pixelsIntoWaveform - 8) / waveform.getPixelsPerSecond();
+                    Debug.WriteLine("This means we are " + secondsIntoWaveform + " seconds into the waveform");
+
+                    if (secondsIntoWaveform > startSecondsIntoWaveform)
+                    {
+                        Debug.WriteLine("End time is greater than start time");
+                        waveform.selectEnd(secondsIntoWaveform);
+
+                        Debug.WriteLine("selected start of the waveform");
+                    }
+                    else
+                    {
+                        Debug.WriteLine("End time is BEFORE start time!");
+                    }
+                    isSelectingSegment = false;
+                }
+                else
+                {
+                    Debug.WriteLine("Opening timeline radial menu");
+                    HoverButton waveButton = (HoverButton)sender;
+
+                    Point handPosition = hand.TransformToAncestor(containerCanvas).Transform(new Point(0, 0));
+                    timelineMenuOpenedPosition = handPosition;
+                    menuY = handPosition.Y;
+                    menuY = menuY + hand.ActualHeight / 2 - waveformRadialMenu.getDiameter() / 2;
+                    menuX = handPosition.X;
+                    menuX = menuX + hand.ActualWidth / 2 - waveformRadialMenu.getDiameter() / 2;
+                    Canvas.SetLeft(waveformRadialMenu, menuX);
+                    Canvas.SetTop(waveformRadialMenu, menuY);
+
+                    hand.menuOpened = true;
+                    hand.SetRadialMenu(handPosition.X, handPosition.Y, waveformRadialMenu);
+
+                    waveformRadialMenu.Visibility = Visibility.Visible;
+                }
             }
             else
             {
@@ -697,27 +733,41 @@ namespace Choreoh
         #endregion
         #endregion
         #region timeline radial menu clicks
-        private void timelineRadialMenu_leftClick(object sender, EventArgs e)
+        private void waveformRadialMenu_leftClick(object sender, EventArgs e)
+        {
+            
+        }
+
+        private void waveformRadialMenu_rightClick(object sender, EventArgs e)
         {
 
-            RadialMenu menu = (RadialMenu)sender;
+        }
+
+        private void waveformRadialMenu_topClick(object sender, EventArgs e)
+        {
+            Debug.WriteLine("Timeline radial menu top clicked");
             hand.menuOpened = false;
+            RadialMenu menu = (RadialMenu)sender;
+
+            double handX = timelineMenuOpenedPosition.X;
+            handX = handX + hand.ActualWidth / 2;
+
+            double timelineX = Canvas.GetLeft(timelineCanvas);
+
+            double pixelsIntoWaveform = -1 * timelineX + handX;
+            Debug.WriteLine("Hand is " + pixelsIntoWaveform + " pixels into the waveform");
+
+            double secondsIntoWaveform = (pixelsIntoWaveform - 8) / waveform.getPixelsPerSecond();
+            startSecondsIntoWaveform = secondsIntoWaveform;
+            Debug.WriteLine("This means we are " + secondsIntoWaveform + " seconds into the waveform");
+            waveform.selectStart(secondsIntoWaveform);
+
+            Debug.WriteLine("selected start of the waveform");
 
             menu.Visibility = Visibility.Collapsed;
-            Debug.WriteLine("orange");
             Debug.WriteLine(menu.ToString());
 
-        }
-
-        private void timelineRadialMenu_rightClick(object sender, EventArgs e)
-        {
-
-        }
-     
-
-        private void timelineRadialMenu_topClick(object sender, EventArgs e)
-        {
-
+            isSelectingSegment = true;
         }
         #endregion
 
