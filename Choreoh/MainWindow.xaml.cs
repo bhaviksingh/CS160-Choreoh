@@ -257,7 +257,7 @@ namespace Choreoh
                 else
                 {
                     debug.Text = debug.Text + "radial menu";
-                    Point handPosition = hand.TransformToAncestor(mainCanvas).Transform(new Point(0, 0));
+                    Point handPosition = hand.TransformToAncestor(containerCanvas).Transform(new Point(0, 0));
                     menuY = handPosition.Y;
                     menuY = menuY + hand.ActualHeight / 2;
                     menuX = handPosition.X;
