@@ -23,6 +23,7 @@ namespace Choreoh
             {
                 songMediaElement.Stop();
                 (sender as DispatcherTimer).Stop();
+                parent.Children.Remove(songMediaElement);
             });
             dispatcherTimer.Interval = duration;
             songMediaElement.Position = startPosition;

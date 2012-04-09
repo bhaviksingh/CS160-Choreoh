@@ -605,11 +605,16 @@ namespace Choreoh
         }
 
         string commentToSave;
+        bool isPlaying;
         #region segment radial menu clicks
         private void segmentRadialMenu_leftClick(object sender, EventArgs e)
         {
             // play the segment
-            
+            if (isPlaying)
+            {
+                // for the wierd double-clicking issues...
+                return;
+            }
             Debug.WriteLine("Segment radial menu left clicked");
             hand.menuOpened = false;
             RadialMenu menu = (RadialMenu)sender;
@@ -639,7 +644,8 @@ namespace Choreoh
 
                 videoCounter++;
             });
-            videoPlayerTimer.Interval = new TimeSpan((int)(1 / 30) * (1000000000 / 100));
+            videoPlayerTimer.Interval = new TimeSpan((int)((1.0 / 30) * (1000000000/100)));
+            Debug.WriteLine("Videplayer Tick Interval is " + videoPlayerTimer.Interval.TotalMilliseconds + " milliseconds");
 
 
             int frameOfSegmentStart = 0;
@@ -653,8 +659,8 @@ namespace Choreoh
             }
             int frameOfSegmentEnd = frameOfSegmentStart + selectedSegment.length;
             
-            TimeSpan startTime = new TimeSpan((int) (frameOfSegmentStart / 30 * (1000000000 / 100)));
-            TimeSpan durationTime = new TimeSpan((int) ((frameOfSegmentEnd - frameOfSegmentStart) / 30 * (1000000000 / 100)));
+            TimeSpan startTime = new TimeSpan(0,0,(int) (frameOfSegmentStart / 30.0));
+            TimeSpan durationTime = new TimeSpan(0,0,(int) ((frameOfSegmentEnd - frameOfSegmentStart) / 30.0));
 
             waveform.selectStart(frameOfSegmentStart / 30);
             waveform.selectEnd(frameOfSegmentEnd / 30);
@@ -688,6 +694,8 @@ namespace Choreoh
                 waveform.endPlay();
                 waveform.deselectSegment();
                 hideMode();
+                isPlaying = false;
+                videoPlaybackCanvas.Visibility = Visibility.Collapsed;
             });
             playbackTimer.Interval = durationTime;
 
@@ -697,6 +705,7 @@ namespace Choreoh
             waveform.startPlay();
             playbackTimer.Start();
             switchModeToPlayback();
+            isPlaying = true;
             
         }
         private void segmentRadialMenu_rightClick(object sender, EventArgs e)
