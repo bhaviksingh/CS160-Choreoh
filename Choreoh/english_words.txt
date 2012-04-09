@@ -1,10 +1,7 @@
-﻿save
+﻿lean
+back
+second
+spin
+on
 start
-redo
-delete
-stop
-dance
-technique
-five
-use
-fire
+save

@@ -903,7 +903,7 @@ namespace Choreoh
             var gb_1 = new GrammarBuilder { Culture = ri.Culture };
             gb_1.Append(wordChoices);
 
-            
+           /* 
             var gb_2 = new GrammarBuilder { Culture = ri.Culture };
             gb_2.Append(wordChoices);
 
@@ -912,20 +912,20 @@ namespace Choreoh
 
             var gb_4 = new GrammarBuilder { Culture = ri.Culture };
             gb_4.Append(wordChoices);
-            
+            */
 
             var gb = new GrammarBuilder { Culture = ri.Culture };
 
             gb.Append(gb_preR, 0, 1);
             gb.Append(gb_postR, 0, 1);
-
+            /*
             //gb.Append(new SemanticResultKey("Words0", wordChoices));
             gb.Append(gb_1, 0, 1);
             gb.Append(gb_2, 0, 1);
             gb.Append(gb_3, 0, 1);
             gb.Append(gb_4, 0, 1);
 
-
+            */
 
             // Create the actual Grammar instance, and then load it into the speech recognizer.
             var g = new Grammar(gb);
@@ -1184,13 +1184,14 @@ namespace Choreoh
         #region timeline selection menu clicks
         private void selectionRadialMenu_leftClick(object sender, EventArgs e)
         {
+            pre_recording = true;
             hand.menuOpened = false;
             RadialMenu menu = (RadialMenu)sender;
             blackBack.Visibility = Visibility.Collapsed;
             menu.Visibility = Visibility.Collapsed;
             blackBack.Visibility = Visibility.Visible;
             beforeRecordCanvas.Visibility = Visibility.Visible;
-            pre_recording = true;
+            
         }
 
         private void selectionRadialMenu_topClick(object sender, EventArgs e)
