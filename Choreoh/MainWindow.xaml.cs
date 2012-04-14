@@ -463,6 +463,9 @@ namespace Choreoh
             newSensor.DepthStream.Enable(DepthImageFormat.Resolution640x480Fps30);
             newSensor.SkeletonStream.Enable();
             this.speechRecognizer = this.CreateSpeechRecognizer();
+            this.preSpeechRecognizer = this.CreateSpeechRecognizerPreRecording();
+            this.postSpeechRecognizer = this.CreateSpeechRecognizerPostRecording();
+            
             try
             {
                 newSensor.Start();
@@ -472,8 +475,8 @@ namespace Choreoh
                 kinectSensorChooser1.AppConflictOccurred();
             }
 
-            
-            if (this.speechRecognizer != null && sensor != null)
+
+            if (this.speechRecognizer != null && this.preSpeechRecognizer != null && this.postSpeechRecognizer != null && sensor != null)
             {
                 // NOTE: Need to wait 4 seconds for device to be ready to stream audio right after initialization
                 this.readyTimer = new DispatcherTimer();
@@ -511,12 +514,16 @@ namespace Choreoh
                         sensor.AudioSource.Stop();
                     }
 
-                    if (this.speechRecognizer != null && sensor != null)
+                    if (this.preSpeechRecognizer != null && this.speechRecognizer != null && this.postSpeechRecognizer != null && sensor != null)
                     {
                         sensor.AudioSource.Stop();
                         sensor.Stop();
                         this.speechRecognizer.RecognizeAsyncCancel();
                         this.speechRecognizer.RecognizeAsyncStop();
+                        this.preSpeechRecognizer.RecognizeAsyncCancel();
+                        this.preSpeechRecognizer.RecognizeAsyncStop();
+                        this.postSpeechRecognizer.RecognizeAsyncCancel();
+                        this.postSpeechRecognizer.RecognizeAsyncStop();
                     }
                 }
             }
@@ -795,6 +802,8 @@ namespace Choreoh
 
         private DispatcherTimer readyTimer;
         private SpeechRecognitionEngine speechRecognizer;
+        private SpeechRecognitionEngine preSpeechRecognizer;
+        private SpeechRecognitionEngine postSpeechRecognizer;
         private String wordsForGrammar;
         private String[] wordsArray;
         private String comment;
@@ -816,6 +825,14 @@ namespace Choreoh
                 kinectStream, new SpeechAudioFormatInfo(EncodingFormat.Pcm, 16000, 16, 1, 32000, 2, null));
             // Keep recognizing speech until window closes
             this.speechRecognizer.RecognizeAsync(RecognizeMode.Multiple);
+            this.preSpeechRecognizer.SetInputToAudioStream(
+                kinectStream, new SpeechAudioFormatInfo(EncodingFormat.Pcm, 16000, 16, 1, 32000, 2, null));
+            // Keep recognizing speech until window closes
+            this.preSpeechRecognizer.RecognizeAsync(RecognizeMode.Multiple);
+            this.postSpeechRecognizer.SetInputToAudioStream(
+                kinectStream, new SpeechAudioFormatInfo(EncodingFormat.Pcm, 16000, 16, 1, 32000, 2, null));
+            // Keep recognizing speech until window closes
+            this.postSpeechRecognizer.RecognizeAsync(RecognizeMode.Multiple);
         }
 
          #region Speech recognizer setup
@@ -853,6 +870,137 @@ namespace Choreoh
 
         }
 
+        private void CreateSpeechRecognizers()
+        {
+            CreateSpeechRecognizer();
+            CreateSpeechRecognizerPreRecording();
+            CreateSpeechRecognizerPostRecording();
+        }
+
+        private SpeechRecognitionEngine CreateSpeechRecognizerPreRecording()
+        {
+            {
+                #region Initialization
+                RecognizerInfo ri = GetKinectRecognizer();
+                if (ri == null)
+                {
+                    MessageBox.Show(
+                        @"There was a problem initializing Speech Recognition.
+                    Ensure you have the Microsoft Speech SDK installed.",
+                        "Failed to load Speech SDK",
+                        MessageBoxButton.OK,
+                        MessageBoxImage.Error);
+                    this.Close();
+                    return null;
+                }
+
+                SpeechRecognitionEngine sre;
+                try
+                {
+                    sre = new SpeechRecognitionEngine(ri.Id);
+                }
+                catch
+                {
+                    MessageBox.Show(
+                        @"There was a problem initializing Speech Recognition.
+                    Ensure you have the Microsoft Speech SDK installed and configured.",
+                        "Failed to load Speech SDK",
+                        MessageBoxButton.OK,
+                        MessageBoxImage.Error);
+                    this.Close();
+                    return null;
+                }
+                #endregion
+
+                #region Build grammar
+
+                var preRecordingChoices = new Choices(new string[] { "start" });
+               
+                var gb = new GrammarBuilder { Culture = ri.Culture };
+                gb.Append(preRecordingChoices);
+
+                // Create the actual Grammar instance, and then load it into the speech recognizer.
+                var g = new Grammar(gb);
+
+                sre.LoadGrammar(g);
+
+                #endregion
+
+                #region Hook up events
+                sre.SpeechRecognized += new EventHandler<SpeechRecognizedEventArgs>(sre_PreSpeechRecognized);
+                sre.SpeechRecognitionRejected += new EventHandler<SpeechRecognitionRejectedEventArgs>(sre_PreSpeechRecognitionRejected);
+                /*
+                sre.SpeechHypothesized += this.SreSpeechHypothesized;
+                sre.SpeechRecognitionRejected += this.SreSpeechRecognitionRejected;
+                */
+                #endregion
+
+                return sre;
+            }
+        }
+
+        private SpeechRecognitionEngine CreateSpeechRecognizerPostRecording()
+        {
+            {
+                #region Initialization
+                RecognizerInfo ri = GetKinectRecognizer();
+                if (ri == null)
+                {
+                    MessageBox.Show(
+                        @"There was a problem initializing Speech Recognition.
+                    Ensure you have the Microsoft Speech SDK installed.",
+                        "Failed to load Speech SDK",
+                        MessageBoxButton.OK,
+                        MessageBoxImage.Error);
+                    this.Close();
+                    return null;
+                }
+
+                SpeechRecognitionEngine sre;
+                try
+                {
+                    sre = new SpeechRecognitionEngine(ri.Id);
+                }
+                catch
+                {
+                    MessageBox.Show(
+                        @"There was a problem initializing Speech Recognition.
+                    Ensure you have the Microsoft Speech SDK installed and configured.",
+                        "Failed to load Speech SDK",
+                        MessageBoxButton.OK,
+                        MessageBoxImage.Error);
+                    this.Close();
+                    return null;
+                }
+                #endregion
+
+                #region Build grammar
+
+                var postRecordingChoices = new Choices(new string[] { "save", "cancel", "redo", "play" });
+               
+
+                var gb = new GrammarBuilder { Culture = ri.Culture };
+                gb.Append(postRecordingChoices);
+                // Create the actual Grammar instance, and then load it into the speech recognizer.
+                var g = new Grammar(gb);
+
+                sre.LoadGrammar(g);
+
+                #endregion
+
+                #region Hook up events
+                sre.SpeechRecognized += new EventHandler<SpeechRecognizedEventArgs>(sre_PostSpeechRecognized);
+                sre.SpeechRecognitionRejected += new EventHandler<SpeechRecognitionRejectedEventArgs>(sre_PostSpeechRecognitionRejected);
+                /*
+                sre.SpeechHypothesized += this.SreSpeechHypothesized;
+                sre.SpeechRecognitionRejected += this.SreSpeechRecognitionRejected;
+                */
+                #endregion
+
+                return sre;
+            }
+        }
+        
         private SpeechRecognitionEngine CreateSpeechRecognizer()
         {
             #region Initialization
@@ -894,16 +1042,10 @@ namespace Choreoh
 
             var wordChoices = new Choices(wordsArray);
 
-            var preRecordingChoices = new Choices(new string[] { "start" });
-            var gb_preR = new GrammarBuilder { Culture = ri.Culture };
-
-            var postRecordingChoices = new Choices(new string[] { "save", "cancel", "redo", "play" });
-            var gb_postR = new GrammarBuilder { Culture = ri.Culture };
-
+            /*
             var gb_1 = new GrammarBuilder { Culture = ri.Culture };
             gb_1.Append(wordChoices);
 
-           /* 
             var gb_2 = new GrammarBuilder { Culture = ri.Culture };
             gb_2.Append(wordChoices);
 
@@ -915,9 +1057,7 @@ namespace Choreoh
             */
 
             var gb = new GrammarBuilder { Culture = ri.Culture };
-
-            gb.Append(gb_preR, 0, 1);
-            gb.Append(gb_postR, 0, 1);
+            gb.Append(wordChoices);
             /*
             //gb.Append(new SemanticResultKey("Words0", wordChoices));
             gb.Append(gb_1, 0, 1);
@@ -950,6 +1090,142 @@ namespace Choreoh
 
         #region Speech recognition events
 
+
+        void sre_PreSpeechRecognitionRejected(object sender, SpeechRecognitionRejectedEventArgs e)
+        {
+            this.RejectSpeech(e.Result);
+        }
+
+        void sre_PostSpeechRecognitionRejected(object sender, SpeechRecognitionRejectedEventArgs e)
+        {
+            this.RejectSpeech(e.Result);
+        }
+
+        void sre_PreSpeechRecognized(object sender, SpeechRecognizedEventArgs e)
+        {
+            if (pre_recording)
+
+            {
+                Debug.WriteLine("Pre-recording Speech detected: " + e.Result.Text.ToString());
+                int startOfSegment = 0;
+                switch (e.Result.Text.ToString().ToUpperInvariant())
+                
+                {
+                    case "START":
+                        //start_label.Visibility = Visibility.Visible;
+                        blackBack.Visibility = Visibility.Collapsed;
+                        beforeRecordCanvas.Visibility = Visibility.Collapsed;
+                        pre_recording = false;
+
+                        showRecordingCanvas();
+                        switchModeToRecording();
+
+                        double duration = endSecondsIntoWaveform - startSecondsIntoWaveform;
+
+                        TimeSpan startTime = new TimeSpan(0, 0, (int)startSecondsIntoWaveform);
+                        TimeSpan durationTime = new TimeSpan(0, 0, (int)duration);
+
+                        Debug.WriteLine("Start Time: " + startTime.ToString());
+                        Debug.WriteLine("Duration Time: " + durationTime.ToString());
+
+                        var waveformTicker = new DispatcherTimer();
+                        waveformTicker.Tick += new EventHandler((object localsender, EventArgs locale) =>
+                        {
+                            if (waveform.isPlaying())
+                            {
+                                Debug.WriteLine("waveform is playing, so tick");
+                                waveform.movePlay();
+                            }
+                            else
+                            {
+                                Debug.WriteLine("waveform stopped playing, so stop ticking");
+                                (localsender as DispatcherTimer).Stop();
+                            }
+                        });
+                        double secondsPerPixel = 1 / waveform.getPixelsPerSecond();
+                        double nanoseconds = secondsPerPixel * 1000000000;
+                        int ticks = (int)nanoseconds / 100;
+                        Debug.WriteLine("Ticks: " + ticks);
+                        waveformTicker.Interval = new TimeSpan(ticks);
+
+
+                        var recordingTimer = new DispatcherTimer();
+                        recordingTimer.Tick += new EventHandler((object localsender, EventArgs locale) =>
+                        {
+                            waveform.endPlay();
+                            waveformTicker.Stop();
+                            StopRecording();
+                            (localsender as DispatcherTimer).Stop();
+                            post_recording = true;
+                            blackBack.Visibility = Visibility.Visible;
+                            afterRecordCanvas.Visibility = Visibility.Visible;
+                            switchModeToPlayback();
+                            renderSegment(startOfSegment);
+                        });
+                        recordingTimer.Interval = durationTime;
+
+
+                        AudioPlay.playForDuration(mainCanvas, songFilename, startTime, durationTime);
+                        waveformTicker.Start();
+                        waveform.startPlay();
+                        startOfSegment = (int)(startTime.TotalSeconds * 30);
+                        DanceSegment segment = routine.addDanceSegment(startOfSegment);
+                        StartRecording(segment);
+                        recordingTimer.Start();
+                        return;
+                    default:
+                        return;
+                }
+            }
+        }
+
+        void sre_PostSpeechRecognized(object sender, SpeechRecognizedEventArgs e)
+        {
+
+
+            if (post_recording)
+            {
+                Debug.WriteLine("Post-recording Speech detected: " + e.Result.Text.ToString());
+                int startOfSegment = 0;
+                switch (e.Result.Text.ToString().ToUpperInvariant())
+                {
+                    case "SAVE":
+                        //keep_label.Visibility = Visibility.Visible;
+                        hideMode();
+                        waveform.deselectSegment();
+                        post_recording = false;
+                        blackBack.Visibility = Visibility.Collapsed;
+                        afterRecordCanvas.Visibility = Visibility.Collapsed;
+                        routine.save();
+                        renderSegment(startOfSegment);
+                        return;
+                    case "CANCEL":
+                        //cancel_label.Visibility = Visibility.Visible;
+                        post_recording = false;
+                        blackBack.Visibility = Visibility.Collapsed;
+                        afterRecordCanvas.Visibility = Visibility.Collapsed;
+                        waveform.deselectSegment();
+                        routine.deleteDanceSegment(segmentToRecordTo);
+                        return;
+                    case "REDO":
+                        //redo_label.Visibility = Visibility.Visible;
+                        post_recording = false;
+                        blackBack.Visibility = Visibility.Collapsed;
+                        afterRecordCanvas.Visibility = Visibility.Collapsed;
+                        return;
+                    case "PLAY":
+                        //play_label.Visibility = Visibility.Visible;
+                        post_recording = false;
+                        blackBack.Visibility = Visibility.Collapsed;
+                        afterRecordCanvas.Visibility = Visibility.Collapsed;
+                        return;
+                    default:
+                        return;
+                }
+            }
+        }
+
+
         void sre_SpeechRecognitionRejected(object sender, SpeechRecognitionRejectedEventArgs e)
         {
             this.RejectSpeech(e.Result);
@@ -969,7 +1245,7 @@ namespace Choreoh
                 alternates_string_array[j] = alternates_string + " " + i.Text.ToString();
                 j++;
             }
-            int startOfSegment = 0;
+            //int startOfSegment = 0;
             if (annotating)
             {
                 if (e.Result.Confidence < 0.5)
@@ -985,6 +1261,7 @@ namespace Choreoh
                     return;
                 }
             }
+                /*
             else if (pre_recording)
             {
                 Debug.WriteLine("Pre-recording Speech detected: " + e.Result.Text.ToString());
@@ -1094,13 +1371,14 @@ namespace Choreoh
                     default:
                         return;
                 }
+                 
 
             }
             else
             {
                 return;
             }
-
+            */
         }
 
    
