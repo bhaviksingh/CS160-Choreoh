@@ -50,11 +50,11 @@ namespace Choreoh
             if (!canGesture)
                 return;
             Joint prevJoint = new Joint();
-            Joint firstJoint = moves.First<Skeleton>().Joints[JointType.HandRight];
-            Joint lastJoint = moves.Last<Skeleton>().Joints[JointType.HandRight];
+            Joint firstJoint = moves.First<Skeleton>().Joints[JointType.HandLeft];
+            Joint lastJoint = moves.Last<Skeleton>().Joints[JointType.HandLeft];
             foreach (Skeleton skeleton in moves)
             {
-                Joint joint = skeleton.Joints[JointType.HandRight];
+                Joint joint = skeleton.Joints[JointType.HandLeft];
                 //Checking if pushing
                 if (prevJoint.Position.Z == 0.0)
                 {
@@ -69,8 +69,8 @@ namespace Choreoh
                 return;
             }
             if ((Math.Abs(lastJoint.Position.Z - firstJoint.Position.Z) > .25) &&
-                Math.Abs(lastJoint.Position.X - firstJoint.Position.X) < .10 &&
-                Math.Abs(lastJoint.Position.Y - firstJoint.Position.Y) < .10)
+                Math.Abs(lastJoint.Position.X - firstJoint.Position.X) < .20 &&
+                Math.Abs(lastJoint.Position.Y - firstJoint.Position.Y) < .20)
             {
                 canGesture = false;
                 lastGesture = "Pushed";
