@@ -172,9 +172,8 @@ namespace Choreoh
 
         public void setCursorPosition(HandCursor hand, Joint joint)
         {
-
             Joint scaledJoint = joint.ScaleTo((int)Global.windowWidth, (int)Global.windowHeight, (float)0.3, (float)0.4);
-            if ((scaledJoint.Position.X > radialX + 40 || scaledJoint.Position.X < radialX - 40) &&
+            if ((scaledJoint.Position.X > radialX + 100 || scaledJoint.Position.X < radialX - 100) &&
                 (Math.Abs(scaledJoint.Position.Y - radialY) < Math.Abs(scaledJoint.Position.X - radialX)))
             {
                 cursorX = (double)Math.Max(radialX - ActualWidth / 2 + hand.ActualWidth / 2,
@@ -196,7 +195,7 @@ namespace Choreoh
                 }
 
             }
-            else if ((scaledJoint.Position.Y < radialY - 40 || scaledJoint.Position.Y > radialY + 40) &&
+            else if ((scaledJoint.Position.Y < radialY - 100 || scaledJoint.Position.Y > radialY + 100) &&
                      (Math.Abs(scaledJoint.Position.Y - radialY) > Math.Abs(scaledJoint.Position.X - radialX)))
             {
                 cursorX = radialX;
