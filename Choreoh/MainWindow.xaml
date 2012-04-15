@@ -39,7 +39,7 @@
             </Border>
             <Border Style="{StaticResource UITextElement}" Name="songLabel" Canvas.Right="0" Canvas.Top="-5" Width="180" Height="50">
                 <Canvas Width="180">
-                    <Label Foreground="#FF5F5F5F" Canvas.Left="10" Canvas.Top="9" Style="{StaticResource UIText}">"Billy Jean" - MJ</Label>
+                    <Label Foreground="#FF5F5F5F" Canvas.Left="10" Canvas.Top="9" Style="{StaticResource UIText}">"Beat It" - MJ</Label>
                 </Canvas>
             </Border>
             <local:HoverButton x:Name="backButton" Text="BACK" Canvas.Top="-4" Width="180" Height="50" Click="button_Clicked"  Canvas.Left="-6"  HorizontalTextAlignment="Center" VerticalTextAlignment="Center" CornerRadius="2" RenderTransformOrigin="0.5,0.5" BackgroundColor="#FF414141" TextColor="#EEEEEE" TextSize="19"/>
