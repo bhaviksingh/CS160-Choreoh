@@ -115,8 +115,14 @@ namespace Choreoh
 
         private void renderSegments()
         {
-
+            // first, remove everything from the segmentCanvas
+            for (int elementIndex = segmentCanvas.Children.Count - 1; elementIndex >= 0; elementIndex--)
+            {
+                var child = segmentCanvas.Children[elementIndex];
+                segmentCanvas.Children.Remove(child);
+            }
             buttonSegments = new Dictionary<HoverButton, DanceSegment>();
+            segmentList = new LinkedList<HoverButton>();
             foreach (int frame in routine.segments.Keys)
             {
                 
@@ -724,9 +730,27 @@ namespace Choreoh
             isPlaying = true;
             
         }
+
         private void segmentRadialMenu_rightClick(object sender, EventArgs e)
         {
+            if (selectedSegment != null)
+            {
+                var menu = (RadialMenu)sender;
+                menu.Visibility = Visibility.Collapsed;
+                Debug.WriteLine("Deleting segment: " + selectedSegment);
+                routine.deleteDanceSegment(selectedSegment);
+                selectedSegment = null;
+                Debug.WriteLine("Segment should have been deleted");
+                Debug.WriteLine("Now saving routine");
+                routine.save();
+                Debug.WriteLine("Should have finished saving routine");
 
+                renderSegments();
+            }
+            else
+            {
+                Debug.WriteLine("Tried to delete already deleted segment. Maybe radial menu clicking too many times?");
+            }
         }
         private void segmentRadialMenu_topClick(object sender, EventArgs e)
         {
@@ -1181,14 +1205,13 @@ namespace Choreoh
 
         void sre_PostSpeechRecognized(object sender, SpeechRecognizedEventArgs e)
         {
-
-
             if (post_recording)
             {
                 Debug.WriteLine("Post-recording Speech detected: " + e.Result.Text.ToString());
                 int startOfSegment = 0;
                 switch (e.Result.Text.ToString().ToUpperInvariant())
                 {
+                    default:
                     case "SAVE":
                         //keep_label.Visibility = Visibility.Visible;
                         hideMode();
@@ -1219,8 +1242,8 @@ namespace Choreoh
                         blackBack.Visibility = Visibility.Collapsed;
                         afterRecordCanvas.Visibility = Visibility.Collapsed;
                         return;
-                    default:
-                        return;
+                    //default:
+                     //   return;
                 }
             }
         }
