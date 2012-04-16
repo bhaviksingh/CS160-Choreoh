@@ -1531,6 +1531,9 @@ namespace Choreoh
 
         private void hideAllRadialMenus()
         {
+
+            blackBack.Visibility = Visibility.Collapsed;
+            hand.menuOpened = false;
             waveformRadialMenu.Visibility = Visibility.Collapsed;
             selectionRadialMenu.Visibility = Visibility.Collapsed;
             segmentRadialMenu.Visibility = Visibility.Collapsed;
