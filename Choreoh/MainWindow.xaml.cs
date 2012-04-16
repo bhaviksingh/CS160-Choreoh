@@ -209,7 +209,6 @@ namespace Choreoh
             if (sender.ToString() == "Choreoh.HoverButton")
             {
                 Debug.WriteLine("Waveform Button clicked");
-                
 
                 HoverButton waveButton = (HoverButton)sender;
                 buttonSegments.TryGetValue(waveButton, out selectedSegment);
@@ -338,7 +337,11 @@ namespace Choreoh
                         moves.RemoveFirst();
                     }
                     Joint handJoint = skeleton.Joints[JointType.HandRight];
-                    hand.checkGestures(moves);
+
+                    if (blackBack.Visibility != Visibility.Visible)
+                    {
+                        hand.checkGestures(moves);
+                    }
                     buttonUpdater(handJoint);
                     if (!Global.initPosOverlay)
                     {
@@ -359,9 +362,9 @@ namespace Choreoh
         private void buttonUpdater(Joint handJoint)
         {
             hand.SetPosition(handJoint);
-            backButton.Check(hand);
-
-            
+            if (blackBack.Visibility == Visibility.Visible)
+                return;
+            backButton.Check(hand);            
             waveButton.Check(hand);
             song1.Check(hand);
             songBeat.Check(hand);

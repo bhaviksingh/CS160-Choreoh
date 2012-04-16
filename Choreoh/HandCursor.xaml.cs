@@ -43,7 +43,7 @@ namespace Choreoh
                     
                     //in Global check if z moving forward by some amount then increase 0.3 and 0.4 so hand moves less
                     Joint scaledJoint = joint.ScaleTo((int)Global.windowWidth, (int)Global.windowHeight, (float)0.25, (float)0.25);
-                    
+                    cursorX = cursorX + 519;
                     cursorX = (double)Math.Max(0, Math.Min(scaledJoint.Position.X, Global.windowWidth - hand.Width));
                     cursorY = (double)Math.Max(0, Math.Min(scaledJoint.Position.Y, Global.windowHeight - hand.Height));
                     Canvas.SetLeft(this, cursorX);
