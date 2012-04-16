@@ -107,6 +107,7 @@ namespace Choreoh
 
         void radialAnimate_CompleteChanged(object sender, EventArgs e)
         {
+            Global.canGesture = true;
             switch (lastHovering)
             {
                 case ("Left"):
@@ -172,6 +173,7 @@ namespace Choreoh
 
         public void setCursorPosition(HandCursor hand, Joint joint)
         {
+            Global.canGesture = false;
             Joint scaledJoint = joint.ScaleTo((int)Global.windowWidth, (int)Global.windowHeight, (float)0.3, (float)0.4);
             if ((scaledJoint.Position.X > radialX + 100 || scaledJoint.Position.X < radialX - 100) &&
                 (Math.Abs(scaledJoint.Position.Y - radialY) < Math.Abs(scaledJoint.Position.X - radialX)))

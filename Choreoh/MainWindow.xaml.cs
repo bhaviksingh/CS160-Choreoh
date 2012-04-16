@@ -90,6 +90,7 @@ namespace Choreoh
             this.Cursor = Cursors.None;      
             moves = new LinkedList<Skeleton>();
             Global.canGestureTimer.Elapsed += new System.Timers.ElapsedEventHandler(Global.canGestureTimer_Elapsed);
+            Global.initializeTimer.Elapsed += new System.Timers.ElapsedEventHandler(Global.initializeTimer_Elapsed);
             Global.windowWidth = containerCanvas.ActualWidth;
             Global.windowHeight = containerCanvas.ActualHeight;
 
@@ -113,9 +114,10 @@ namespace Choreoh
             renderSegments();
         }
 
+
         private void renderSegments()
         {
-
+            
             buttonSegments = new Dictionary<HoverButton, DanceSegment>();
             foreach (int frame in routine.segments.Keys)
             {
@@ -134,9 +136,11 @@ namespace Choreoh
                 pos = frame / 30 * waveform.getPixelsPerSecond();
                 HoverButton hb = new HoverButton();
                 var img = new System.Windows.Controls.Image();
+                img.Width = segment.length / 30 * waveform.getPixelsPerSecond() * 1 / 3;
                 img.Source = segment.getFrameSource(0);
                 hb.leftImageName.Source = img.Source;
                 var img2 = new System.Windows.Controls.Image();
+                img2.Width = segment.length / 30 * waveform.getPixelsPerSecond() * 1 / 3;
                 img2.Source = segment.getFrameSource(segment.length-1);
                 hb.rightImageName.Source = img2.Source;
                 hb.dotDot.Visibility = Visibility.Visible;
@@ -329,6 +333,15 @@ namespace Choreoh
                     Joint handJoint = skeleton.Joints[JointType.HandRight];
                     hand.checkGestures(moves);
                     buttonUpdater(handJoint);
+                    if (!Global.initPosOverlay)
+                    {
+                        initOverlay.Visibility = Visibility.Collapsed;
+                        
+                    }
+                    else
+                    {
+                        initOverlay.Visibility = Visibility.Visible;
+                    }
                     //temporary to clear gestureText
                    
                 }

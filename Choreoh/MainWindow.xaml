@@ -47,7 +47,7 @@
 
             <Canvas Name="timelineCanvas" Canvas.Top="450" Height="320" Width="1800" Canvas.Left="0" Background="White">
                 <local:HoverButton x:Name="waveButton" Width="1800" Height="160" Click="waveform_Clicked"  BackgroundColor="White"/>
-                <Canvas Name="segmentCanvas" Width="1800" Height="160" Canvas.Top="160"></Canvas>
+                <Canvas Name="segmentCanvas" Width="1800" Height="160" Canvas.Top="160" Background="BlanchedAlmond"></Canvas>
             </Canvas>
 
             <TextBox Name="commentBox" FontSize="24" FontFamily="..\img\ui\#Nevis" Canvas.Top="75" Canvas.Left="300" Height="250" Width="400" Panel.ZIndex="5000" Visibility="Hidden" />
@@ -78,7 +78,7 @@
                 <TextBlock Height="568" Width="824" FontSize="50" FontFamily="..\img\ui\#Nevis"  Background="White" TextWrapping="Wrap" Padding ="15">Say "SAVE" to keep the recording.<LineBreak />Say "CANCEL" to discard the recording.<LineBreak />Say "REDO" to redo the dance.<LineBreak />Say "PLAY" to play what you just recorded.</TextBlock>
             </Canvas>
         </Canvas>
-
+        
         <Canvas Height="768" Width="1024" Name="homeCanvas"  VerticalAlignment="Top" HorizontalAlignment="Left" Background="#EEEEEE">
             <TextBlock Canvas.Left="3" Canvas.Top="24" Text="Choreoh!"  Height="70" Name="label1" Width="1024" TextAlignment="Center" FontFamily="..\img\ui\#Nevis" FontSize="50" Foreground="DarkGray"/>
             <TextBlock Canvas.Left="0" Canvas.Top="24" Text="Choreoh!"  Height="70" Name="label2" Width="1024" TextAlignment="Center" FontFamily="..\img\ui\#Nevis" FontSize="50" />
@@ -88,8 +88,12 @@
             <local:HoverButton Canvas.Left="88" Canvas.Top="412" Height="250" x:Name="song4" Width="250" BackgroundColor="#FF1F73B7" Text="Hot Interface &#10; - 160 cent" VerticalTextAlignment="Top" HorizontalTextAlignment="Left" HorizontalAlignment="Left" CornerRadius="2"/>
             <local:HoverButton Canvas.Left="372" Canvas.Top="412" Height="250" x:Name="song5" Width="250" BackgroundColor="#FF1F73B7" Text="Wonderwall &#10; - Oasis"  VerticalTextAlignment="Top" HorizontalTextAlignment="Left" HorizontalAlignment="Left" CornerRadius="2"/>
         </Canvas>
+        <Canvas Name="initOverlay" Background="Black" Opacity=".95" Visibility="Collapsed" Width="1024" Height="768">
+            <TextBlock Canvas.Left="100" Canvas.Top="300" Foreground="#00a2ff" FontSize="80" Width="650" TextWrapping="Wrap">Place hands above head to begin</TextBlock>
+            <Image Source="img/ui/handsUp.png" Width="150" Canvas.Left="800" Canvas.Top="300"/>
+        </Canvas>
 
-        
+
         <my:KinectSensorChooser Canvas.Left="384" Canvas.Top="201" Name="kinectSensorChooser1" Width="328" DataContext="{Binding ElementName=kinectSensorChooser, Path=Kinect}" />
         <local:HandCursor x:Name="hand" Canvas.Top="79" Canvas.Left="256" GestureEvent="hand_GestureEvent" />
             

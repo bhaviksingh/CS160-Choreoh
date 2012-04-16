@@ -19,19 +19,31 @@ namespace Choreoh
         //public static bool housed = false;
         public static bool canGesture = true;
         //public static bool swiped = false;
+        public static bool initPosOverlay = false;
         public static System.Timers.Timer canGestureTimer = new System.Timers.Timer()
         {
             Interval = 2000,
             Enabled = true,
             AutoReset = false
         };//event handler added by call in MainWindow
+
         public static Skeleton[] allSkeletons = new Skeleton[6];
 
         public static void canGestureTimer_Elapsed(object sender, System.Timers.ElapsedEventArgs e)
         {
             canGesture = true;
         }
+        public static System.Timers.Timer initializeTimer = new System.Timers.Timer()
+        {
+            Interval = 8000,
+            Enabled = true,
+            AutoReset = false
+        };//Instantiated in MainWindow
 
+        public static void initializeTimer_Elapsed(object sender, System.Timers.ElapsedEventArgs e)
+        {
+            Global.initPosOverlay = true;
+        }
         public static String checkMoves(LinkedList<Skeleton> moves)
         {
             lastGesture = "";
@@ -131,6 +143,15 @@ namespace Choreoh
                     canGesture = false;
                     lastGesture = "Initialized";
                     canGestureTimer.Start();
+                    if (initPos == false)
+                    {
+                        initializeTimer.Start();
+                    }
+                    else
+                    {
+                        initPosOverlay = false;
+                        initializeTimer.Stop();
+                    }
                 }
             }
         }

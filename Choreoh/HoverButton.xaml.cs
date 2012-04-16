@@ -241,7 +241,7 @@ namespace Choreoh
                 //Button location
                 Point buttonTopLeft = this.PointToScreen(new Point());
                 double buttonLeft = buttonTopLeft.X;
-                double buttonRight = buttonLeft + this.Width;
+                double buttonRight = buttonLeft + this.ActualWidth;
                 double buttonTop = buttonTopLeft.Y;
                 double buttonBottom = buttonTop + this.ActualHeight;
 

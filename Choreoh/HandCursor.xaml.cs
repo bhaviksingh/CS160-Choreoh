@@ -29,6 +29,7 @@ namespace Choreoh
         private static String gesture = "";
         public bool menuOpened = false;
         public RadialMenu radialMenu;
+        
         public HandCursor()
         {
             InitializeComponent();
@@ -39,6 +40,7 @@ namespace Choreoh
             {
                 if (Global.initPos)
                 {
+                    
                     //in Global check if z moving forward by some amount then increase 0.3 and 0.4 so hand moves less
                     Joint scaledJoint = joint.ScaleTo((int)Global.windowWidth, (int)Global.windowHeight, (float)0.25, (float)0.25);
                     
@@ -49,6 +51,7 @@ namespace Choreoh
                 }
                 else
                 {
+
                     Canvas.SetLeft(this, Global.windowWidth - hand.Width);
                     Canvas.SetTop(this, Global.windowHeight - hand.Height);
                 }
