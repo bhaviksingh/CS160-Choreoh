@@ -117,8 +117,15 @@ namespace Choreoh
 
         private void renderSegments()
         {
-            
+
+            // first, remove everything from the segmentCanvas
+            for (int elementIndex = segmentCanvas.Children.Count - 1; elementIndex >= 0; elementIndex--)
+            {
+                var child = segmentCanvas.Children[elementIndex];
+                segmentCanvas.Children.Remove(child);
+            }
             buttonSegments = new Dictionary<HoverButton, DanceSegment>();
+            segmentList = new LinkedList<HoverButton>();
             foreach (int frame in routine.segments.Keys)
             {
                 
@@ -374,7 +381,7 @@ namespace Choreoh
             RadialMenu menu = (RadialMenu)sender;
             String direction = menu.getLastHovering();
             blackBack.Visibility = Visibility.Collapsed;
-            menu.Visibility = Visibility.Collapsed;
+            hideAllRadialMenus();
             hand.menuOpened = false;
 
             waveform.deselectSegment();
@@ -648,7 +655,7 @@ namespace Choreoh
             RadialMenu menu = (RadialMenu)sender;
 
             blackBack.Visibility = Visibility.Collapsed;
-            menu.Visibility = Visibility.Collapsed;
+            hideAllRadialMenus();
             var videoPlayerTimer = new DispatcherTimer();
             int videoCounter = 0;
 
@@ -737,9 +744,27 @@ namespace Choreoh
             isPlaying = true;
             
         }
+
         private void segmentRadialMenu_rightClick(object sender, EventArgs e)
         {
+            if (selectedSegment != null)
+            {
+                var menu = (RadialMenu)sender;
+                hideAllRadialMenus();
+                Debug.WriteLine("Deleting segment: " + selectedSegment);
+                routine.deleteDanceSegment(selectedSegment);
+                selectedSegment = null;
+                Debug.WriteLine("Segment should have been deleted");
+                Debug.WriteLine("Now saving routine");
+                routine.save();
+                Debug.WriteLine("Should have finished saving routine");
 
+                renderSegments();
+            }
+            else
+            {
+                Debug.WriteLine("Tried to delete already deleted segment. Maybe radial menu clicking too many times?");
+            }
         }
         private void segmentRadialMenu_topClick(object sender, EventArgs e)
         {
@@ -751,7 +776,7 @@ namespace Choreoh
             handX = handX + hand.ActualWidth / 2;
 
             blackBack.Visibility = Visibility.Collapsed;
-            menu.Visibility = Visibility.Collapsed;
+            hideAllRadialMenus();
             Debug.WriteLine(menu.ToString());
 
             Point handPosition = hand.TransformToAncestor(containerCanvas).Transform(new Point(0, 0));
@@ -798,7 +823,7 @@ namespace Choreoh
             handX = handX + hand.ActualWidth / 2;
 
             blackBack.Visibility = Visibility.Collapsed;
-            menu.Visibility = Visibility.Collapsed;
+            hideAllRadialMenus();
             Debug.WriteLine(menu.ToString());
 
             int pos = (int)((handPointX+waveform.getOffset()) / waveform.getPixelsPerSecond() * 30);
@@ -1194,14 +1219,13 @@ namespace Choreoh
 
         void sre_PostSpeechRecognized(object sender, SpeechRecognizedEventArgs e)
         {
-
-
             if (post_recording)
             {
                 Debug.WriteLine("Post-recording Speech detected: " + e.Result.Text.ToString());
                 int startOfSegment = 0;
                 switch (e.Result.Text.ToString().ToUpperInvariant())
                 {
+                    default:
                     case "SAVE":
                         //keep_label.Visibility = Visibility.Visible;
                         hideMode();
@@ -1232,8 +1256,8 @@ namespace Choreoh
                         blackBack.Visibility = Visibility.Collapsed;
                         afterRecordCanvas.Visibility = Visibility.Collapsed;
                         return;
-                    default:
-                        return;
+                    //default:
+                     //   return;
                 }
             }
         }
@@ -1465,7 +1489,7 @@ namespace Choreoh
             Debug.WriteLine("selected start of the waveform");
 
             blackBack.Visibility = Visibility.Collapsed;
-            menu.Visibility = Visibility.Collapsed;
+            hideAllRadialMenus();
             Debug.WriteLine(menu.ToString());
 
             isSelectingSegment = true;
@@ -1479,7 +1503,7 @@ namespace Choreoh
             hand.menuOpened = false;
             RadialMenu menu = (RadialMenu)sender;
             blackBack.Visibility = Visibility.Collapsed;
-            menu.Visibility = Visibility.Collapsed;
+            hideAllRadialMenus();
             blackBack.Visibility = Visibility.Visible;
             beforeRecordCanvas.Visibility = Visibility.Visible;
             
@@ -1518,5 +1542,13 @@ namespace Choreoh
         }
 
         #endregion
+
+        private void hideAllRadialMenus()
+        {
+            waveformRadialMenu.Visibility = Visibility.Collapsed;
+            selectionRadialMenu.Visibility = Visibility.Collapsed;
+            segmentRadialMenu.Visibility = Visibility.Collapsed;
+            commentRadialMenu.Visibility = Visibility.Collapsed;
+        }
     }
 }
