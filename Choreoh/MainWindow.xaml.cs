@@ -750,6 +750,7 @@ namespace Choreoh
             if (selectedSegment != null)
             {
                 var menu = (RadialMenu)sender;
+                blackBack.Visibility = Visibility.Collapsed;
                 hideAllRadialMenus();
                 Debug.WriteLine("Deleting segment: " + selectedSegment);
                 routine.deleteDanceSegment(selectedSegment);

@@ -47,7 +47,7 @@
 
             <Canvas Name="timelineCanvas" Canvas.Top="450" Height="320" Width="1800" Canvas.Left="0" Background="White">
                 <local:HoverButton x:Name="waveButton" Width="1800" Height="160" Click="waveform_Clicked"  BackgroundColor="White"/>
-                <Canvas Name="segmentCanvas" Width="1800" Height="160" Canvas.Top="160" Background="BlanchedAlmond"></Canvas>
+                <Canvas Name="segmentCanvas" Width="1800" Height="160" Canvas.Top="160"></Canvas>
             </Canvas>
 
             <TextBox Name="commentBox" FontSize="24" FontFamily="..\img\ui\#Nevis" Canvas.Top="75" Canvas.Left="300" Height="250" Width="400" Panel.ZIndex="5000" Visibility="Hidden" />
