@@ -15,11 +15,11 @@ using Microsoft.Kinect;
 using Microsoft.Samples.Kinect.WpfViewers;
 using Coding4Fun.Kinect.Wpf;
 using System.Diagnostics;
-using Microsoft.Speech.AudioFormat;
-using Microsoft.Speech.Recognition;
 using System.Windows.Threading;
 using System.Threading;
 using System.IO;
+using System.Speech.AudioFormat;
+using System.Speech.Recognition;
 
 
 namespace Choreoh
@@ -485,9 +485,9 @@ namespace Choreoh
             newSensor.ColorStream.Enable(ColorImageFormat.RgbResolution640x480Fps30);
             newSensor.DepthStream.Enable(DepthImageFormat.Resolution640x480Fps30);
             newSensor.SkeletonStream.Enable();
-            this.speechRecognizer = this.CreateSpeechRecognizer();
-            this.preSpeechRecognizer = this.CreateSpeechRecognizerPreRecording();
-            this.postSpeechRecognizer = this.CreateSpeechRecognizerPostRecording();
+            
+            this.preSpeechRecognizer = this.CreateSpeechRecognizerPreRecording(); //
+            this.postSpeechRecognizer = this.CreateSpeechRecognizerPostRecording(); //
             
             try
             {
@@ -499,7 +499,7 @@ namespace Choreoh
             }
 
 
-            if (this.speechRecognizer != null && this.preSpeechRecognizer != null && this.postSpeechRecognizer != null && sensor != null)
+            if (sensor != null)
             {
                 // NOTE: Need to wait 4 seconds for device to be ready to stream audio right after initialization
                 this.readyTimer = new DispatcherTimer();
@@ -537,12 +537,10 @@ namespace Choreoh
                         sensor.AudioSource.Stop();
                     }
 
-                    if (this.preSpeechRecognizer != null && this.speechRecognizer != null && this.postSpeechRecognizer != null && sensor != null)
+                    if (sensor != null)
                     {
                         sensor.AudioSource.Stop();
                         sensor.Stop();
-                        this.speechRecognizer.RecognizeAsyncCancel();
-                        this.speechRecognizer.RecognizeAsyncStop();
                         this.preSpeechRecognizer.RecognizeAsyncCancel();
                         this.preSpeechRecognizer.RecognizeAsyncStop();
                         this.postSpeechRecognizer.RecognizeAsyncCancel();
@@ -843,16 +841,22 @@ namespace Choreoh
         #region audio config and control
 
         private DispatcherTimer readyTimer;
-        private SpeechRecognitionEngine speechRecognizer;
+
         private SpeechRecognitionEngine preSpeechRecognizer;
         private SpeechRecognitionEngine postSpeechRecognizer;
-        private String wordsForGrammar;
-        private String[] wordsArray;
         private String comment;
 
         private bool pre_recording = false;
         private bool post_recording = false;
         private bool annotating = false;
+
+        KinectAudioSource source;
+        System.Speech.Recognition.RecognizerInfo ri;
+        System.Speech.Recognition.SpeechRecognitionEngine recoEngine;
+        System.Speech.Recognition.DictationGrammar customDictationGrammar;
+        Stream s;
+
+        #region Speech recognizer setup
 
         private void startAudio()
         {
@@ -861,12 +865,8 @@ namespace Choreoh
 
             // This should be off by default, but just to be explicit, this MUST be set to false.
             audioSource.AutomaticGainControlEnabled = false;
-
             var kinectStream = audioSource.Start();
-            this.speechRecognizer.SetInputToAudioStream(
-                kinectStream, new SpeechAudioFormatInfo(EncodingFormat.Pcm, 16000, 16, 1, 32000, 2, null));
-            // Keep recognizing speech until window closes
-            this.speechRecognizer.RecognizeAsync(RecognizeMode.Multiple);
+
             this.preSpeechRecognizer.SetInputToAudioStream(
                 kinectStream, new SpeechAudioFormatInfo(EncodingFormat.Pcm, 16000, 16, 1, 32000, 2, null));
             // Keep recognizing speech until window closes
@@ -875,49 +875,39 @@ namespace Choreoh
                 kinectStream, new SpeechAudioFormatInfo(EncodingFormat.Pcm, 16000, 16, 1, 32000, 2, null));
             // Keep recognizing speech until window closes
             this.postSpeechRecognizer.RecognizeAsync(RecognizeMode.Multiple);
+
+            sensor = (from sensorToCheck in KinectSensor.KinectSensors where sensorToCheck.Status == KinectStatus.Connected select sensorToCheck).FirstOrDefault();
+            sensor.Start();
+
+            source = sensor.AudioSource;
+            source.EchoCancellationMode = EchoCancellationMode.None; // No AEC for this sample
+            source.AutomaticGainControlEnabled = false; // Important to turn this off for speech recognition
+
+            ri = System.Speech.Recognition.SpeechRecognitionEngine.InstalledRecognizers().FirstOrDefault();
+
+            recoEngine = new System.Speech.Recognition.SpeechRecognitionEngine(ri.Id);
+
+            customDictationGrammar = new System.Speech.Recognition.DictationGrammar();
+            customDictationGrammar.Name = "Dictation";
+            customDictationGrammar.Enabled = true;
+
+            recoEngine.LoadGrammar(customDictationGrammar);
+
+            recoEngine.SpeechRecognized += new EventHandler<System.Speech.Recognition.SpeechRecognizedEventArgs>(recoEngine_SpeechRecognized);
+
+            s = source.Start();
+            recoEngine.SetInputToAudioStream(s, new System.Speech.AudioFormat.SpeechAudioFormatInfo(System.Speech.AudioFormat.EncodingFormat.Pcm, 16000, 16, 1, 32000, 2, null));
+            recoEngine.RecognizeAsync(System.Speech.Recognition.RecognizeMode.Multiple);
         }
 
-         #region Speech recognizer setup
+       
 
         private static RecognizerInfo GetKinectRecognizer()
         {
-            Func<RecognizerInfo, bool> matchingFunc = r =>
-            {
-                string value;
-                r.AdditionalInfo.TryGetValue("Kinect", out value);
-                return "True".Equals(value, StringComparison.InvariantCultureIgnoreCase) && "en-US".Equals(r.Culture.Name, StringComparison.InvariantCultureIgnoreCase);
-            };
-            return SpeechRecognitionEngine.InstalledRecognizers().Where(matchingFunc).FirstOrDefault();
+            var ri = System.Speech.Recognition.SpeechRecognitionEngine.InstalledRecognizers().FirstOrDefault();
+            return ri;
         }
 
-        //takes vocabulary of words from text file, puts it into a string array
-        private void LoadWords()
-        {
-            var path = System.IO.Path.GetFullPath("english_words.txt");
-            if (File.Exists(path))
-            {
-                wordsForGrammar = File.ReadAllText(path);
-            }
-            else
-            {
-                wordsForGrammar = "";
-            }
-            wordsForGrammar += "start\nkeep\ncancel\nredo\nplay";
-            wordsArray = wordsForGrammar.Split('\n');
-
-            for (int i = 0; i < wordsArray.Length; i++)
-            {
-                wordsArray[i] = wordsArray[i].Trim();
-            }
-
-        }
-
-        private void CreateSpeechRecognizers()
-        {
-            CreateSpeechRecognizer();
-            CreateSpeechRecognizerPreRecording();
-            CreateSpeechRecognizerPostRecording();
-        }
 
         private SpeechRecognitionEngine CreateSpeechRecognizerPreRecording()
         {
@@ -970,11 +960,7 @@ namespace Choreoh
 
                 #region Hook up events
                 sre.SpeechRecognized += new EventHandler<SpeechRecognizedEventArgs>(sre_PreSpeechRecognized);
-                sre.SpeechRecognitionRejected += new EventHandler<SpeechRecognitionRejectedEventArgs>(sre_PreSpeechRecognitionRejected);
-                /*
-                sre.SpeechHypothesized += this.SreSpeechHypothesized;
-                sre.SpeechRecognitionRejected += this.SreSpeechRecognitionRejected;
-                */
+              
                 #endregion
 
                 return sre;
@@ -1032,116 +1018,17 @@ namespace Choreoh
 
                 #region Hook up events
                 sre.SpeechRecognized += new EventHandler<SpeechRecognizedEventArgs>(sre_PostSpeechRecognized);
-                sre.SpeechRecognitionRejected += new EventHandler<SpeechRecognitionRejectedEventArgs>(sre_PostSpeechRecognitionRejected);
-                /*
-                sre.SpeechHypothesized += this.SreSpeechHypothesized;
-                sre.SpeechRecognitionRejected += this.SreSpeechRecognitionRejected;
-                */
+    
                 #endregion
 
                 return sre;
             }
         }
-        
-        private SpeechRecognitionEngine CreateSpeechRecognizer()
-        {
-            #region Initialization
-            RecognizerInfo ri = GetKinectRecognizer();
-            if (ri == null)
-            {
-                MessageBox.Show(
-                    @"There was a problem initializing Speech Recognition.
-                    Ensure you have the Microsoft Speech SDK installed.",
-                    "Failed to load Speech SDK",
-                    MessageBoxButton.OK,
-                    MessageBoxImage.Error);
-                this.Close();
-                return null;
-            }
-
-            SpeechRecognitionEngine sre;
-            try
-            {
-                sre = new SpeechRecognitionEngine(ri.Id);
-            }
-            catch
-            {
-                MessageBox.Show(
-                    @"There was a problem initializing Speech Recognition.
-                    Ensure you have the Microsoft Speech SDK installed and configured.",
-                    "Failed to load Speech SDK",
-                    MessageBoxButton.OK,
-                    MessageBoxImage.Error);
-                this.Close();
-                return null;
-            }
-            #endregion
-
-            #region Build grammar
-
-            //takes vocabulary of words from text file, puts it into a string array
-            LoadWords();
-
-            var wordChoices = new Choices(wordsArray);
-
-            /*
-            var gb_1 = new GrammarBuilder { Culture = ri.Culture };
-            gb_1.Append(wordChoices);
-
-            var gb_2 = new GrammarBuilder { Culture = ri.Culture };
-            gb_2.Append(wordChoices);
-
-            var gb_3 = new GrammarBuilder { Culture = ri.Culture };
-            gb_3.Append(wordChoices);
-
-            var gb_4 = new GrammarBuilder { Culture = ri.Culture };
-            gb_4.Append(wordChoices);
-            */
-
-            var gb = new GrammarBuilder { Culture = ri.Culture };
-            gb.Append(wordChoices);
-            /*
-            //gb.Append(new SemanticResultKey("Words0", wordChoices));
-            gb.Append(gb_1, 0, 1);
-            gb.Append(gb_2, 0, 1);
-            gb.Append(gb_3, 0, 1);
-            gb.Append(gb_4, 0, 1);
-
-            */
-
-            // Create the actual Grammar instance, and then load it into the speech recognizer.
-            var g = new Grammar(gb);
-
-
-            sre.LoadGrammar(g);
-
-            #endregion
-
-            #region Hook up events
-            sre.SpeechRecognized += new EventHandler<SpeechRecognizedEventArgs>(sre_SpeechRecognized);
-            sre.SpeechRecognitionRejected += new EventHandler<SpeechRecognitionRejectedEventArgs>(sre_SpeechRecognitionRejected);
-            /*
-            sre.SpeechHypothesized += this.SreSpeechHypothesized;
-            sre.SpeechRecognitionRejected += this.SreSpeechRecognitionRejected;
-            */
-            #endregion
-
-            return sre;
-        }
+  
          #endregion
 
         #region Speech recognition events
 
-
-        void sre_PreSpeechRecognitionRejected(object sender, SpeechRecognitionRejectedEventArgs e)
-        {
-            this.RejectSpeech(e.Result);
-        }
-
-        void sre_PostSpeechRecognitionRejected(object sender, SpeechRecognitionRejectedEventArgs e)
-        {
-            this.RejectSpeech(e.Result);
-        }
 
         void sre_PreSpeechRecognized(object sender, SpeechRecognizedEventArgs e)
         {
@@ -1266,18 +1153,12 @@ namespace Choreoh
             }
         }
 
-
-        void sre_SpeechRecognitionRejected(object sender, SpeechRecognitionRejectedEventArgs e)
+        void recoEngine_SpeechRecognized(object sender, System.Speech.Recognition.SpeechRecognizedEventArgs e)
         {
-            this.RejectSpeech(e.Result);
-        }
-
-        void sre_SpeechRecognized(object sender, SpeechRecognizedEventArgs e)
-        {
-
             var alternates = e.Result.Alternates;
             String alternates_string = "";
             String[] alternates_string_array = new String[alternates.Count];
+            string[] isolate_result_array;
 
             foreach (RecognizedPhrase i in alternates)
             {
@@ -1286,6 +1167,37 @@ namespace Choreoh
                 alternates_string_array[j] = alternates_string + " " + i.Text.ToString();
                 j++;
             }
+
+            string[] recognizableCommands = { "START", "SAVE", "REDO", "CANCEL", "PLAY" };
+
+            string recognizedResult = e.Result.Text.ToString().Trim();
+            string recognizedResultUpper = recognizedResult.ToUpperInvariant();
+            bool found = false;
+
+            //isolates key word from multi word recognition, finding a keyword in a phrase of words.
+            if (recognizedResultUpper.Contains(' '))
+            {
+                isolate_result_array = recognizedResultUpper.Split(' ');
+
+                for (int i = 0; i < isolate_result_array.Length; i++)
+                {
+                   for (int j = 0; j < recognizableCommands.Length; j++)
+                       if (isolate_result_array[i].Equals(recognizableCommands[j]))
+                       {
+                           recognizedResultUpper = recognizableCommands[j];
+                           found = true;
+                           break;
+                       }
+                    if(found)
+                    {
+                        break;
+                    }
+                }
+            }
+  
+            
+
+
             //int startOfSegment = 0;
             if (annotating)
             {
@@ -1302,13 +1214,23 @@ namespace Choreoh
                     return;
                 }
             }
-                /*
-            else if (pre_recording)
+            if (pre_recording)
             {
                 Debug.WriteLine("Pre-recording Speech detected: " + e.Result.Text.ToString());
-                switch (e.Result.Text.ToString().ToUpperInvariant())
+                int startOfSegment = 0;
+                switch (recognizedResultUpper)
                 {
                     case "START":
+                    case "STARTS":
+                    case "STARTED":
+                    case "TARTS":
+                    case "DART":
+                    case "TART":
+                    case "CART":
+                    case "HEART":
+                    case "PART":
+                    case "RESTART":
+                    case "UPSTART":
                         //start_label.Visibility = Visibility.Visible;
                         blackBack.Visibility = Visibility.Collapsed;
                         beforeRecordCanvas.Visibility = Visibility.Collapsed;
@@ -1319,8 +1241,8 @@ namespace Choreoh
 
                         double duration = endSecondsIntoWaveform - startSecondsIntoWaveform;
 
-                        TimeSpan startTime = new TimeSpan(0,0,(int) startSecondsIntoWaveform);
-                        TimeSpan durationTime = new TimeSpan(0,0,(int) duration);
+                        TimeSpan startTime = new TimeSpan(0, 0, (int)startSecondsIntoWaveform);
+                        TimeSpan durationTime = new TimeSpan(0, 0, (int)duration);
 
                         Debug.WriteLine("Start Time: " + startTime.ToString());
                         Debug.WriteLine("Duration Time: " + durationTime.ToString());
@@ -1345,20 +1267,20 @@ namespace Choreoh
                         Debug.WriteLine("Ticks: " + ticks);
                         waveformTicker.Interval = new TimeSpan(ticks);
 
-                        
+
                         var recordingTimer = new DispatcherTimer();
                         recordingTimer.Tick += new EventHandler((object localsender, EventArgs locale) =>
-                            {
-                                waveform.endPlay();
-                                waveformTicker.Stop();
-                                StopRecording();
-                                (localsender as DispatcherTimer).Stop();
-                                post_recording = true;
-                                blackBack.Visibility = Visibility.Visible;
-                                afterRecordCanvas.Visibility = Visibility.Visible;
-                                switchModeToPlayback();
-                                renderSegment(startOfSegment);
-                            });
+                        {
+                            waveform.endPlay();
+                            waveformTicker.Stop();
+                            StopRecording();
+                            (localsender as DispatcherTimer).Stop();
+                            post_recording = true;
+                            blackBack.Visibility = Visibility.Visible;
+                            afterRecordCanvas.Visibility = Visibility.Visible;
+                            switchModeToPlayback();
+                            renderSegment(startOfSegment);
+                        });
                         recordingTimer.Interval = durationTime;
 
 
@@ -1374,12 +1296,21 @@ namespace Choreoh
                         return;
                 }
             }
-            else if (post_recording)
+            if (post_recording)
             {
                 Debug.WriteLine("Post-recording Speech detected: " + e.Result.Text.ToString());
-                switch (e.Result.Text.ToString().ToUpperInvariant())
+                int startOfSegment = 0;
+                switch (recognizedResultUpper)
                 {
                     case "SAVE":
+                    case "SAVES":
+                    case "SAVED":
+                    case "SAVING":
+                    case "SLAVE":
+                    case "WAVE":
+                    case "STAY":
+                    case "SAFE":
+                    case "SHAVE":
                         //keep_label.Visibility = Visibility.Visible;
                         hideMode();
                         waveform.deselectSegment();
@@ -1389,7 +1320,16 @@ namespace Choreoh
                         routine.save();
                         renderSegment(startOfSegment);
                         return;
+
                     case "CANCEL":
+                    case "CANCELED":
+                    case "CANCELS":
+                    case "CHANCEL":
+                    case "CHANCELLOR":
+                    case "CATTLE":
+                    case "SCANDAL":
+                    case "COUNCIL":
+                    case "CANCER":
                         //cancel_label.Visibility = Visibility.Visible;
                         post_recording = false;
                         blackBack.Visibility = Visibility.Collapsed;
@@ -1397,36 +1337,47 @@ namespace Choreoh
                         waveform.deselectSegment();
                         routine.deleteDanceSegment(segmentToRecordTo);
                         return;
+
                     case "REDO":
+                    case "REDOES":
+                    case "REVIEW":
+                    case "ACCRUE":
+                    case "ASKEW":
+                    case "OUTDO":
+                    case "RENEW":
+                    case "UNDO":
+                    case "CANOE":
+                    case "IMBUE":
                         //redo_label.Visibility = Visibility.Visible;
                         post_recording = false;
-                            blackBack.Visibility = Visibility.Collapsed;
+                        blackBack.Visibility = Visibility.Collapsed;
                         afterRecordCanvas.Visibility = Visibility.Collapsed;
                         return;
+
                     case "PLAY":
+                    case "PLAYS":
+                    case "PLAYED":
+                    case "BAY":
+                    case "A":
+                    case "PAY":
+                    case "DISPLAY":
+                    case "LAY":
+                    case "DELAY":
                         //play_label.Visibility = Visibility.Visible;
                         post_recording = false;
-                          blackBack.Visibility = Visibility.Collapsed;
+                        blackBack.Visibility = Visibility.Collapsed;
                         afterRecordCanvas.Visibility = Visibility.Collapsed;
                         return;
-                    default:
-                        return;
+                    //default:
+                    //   return;
                 }
-                 
-
             }
-            else
-            {
-                return;
-            }
-            */
         }
-
-   
+ 
         private void RecognizeSpeech(RecognitionResult result)
         {
-            string status = "Recognzied: " + (result == null ? string.Empty : result.Text + " " + result.Confidence);
-            this.ReportStatus(status);
+            //string status = "Recognzied: " + (result == null ? string.Empty : result.Text + " " + result.Confidence);
+            //this.ReportStatus(status);
             string newText = result.Text.ToString();
             this.UpdateText(newText);
             this.comment = this.comment + result.Text.ToString();
@@ -1460,6 +1411,7 @@ namespace Choreoh
         }
         #endregion
         #endregion
+
         #region timeline radial menu clicks
         private void waveformRadialMenu_leftClick(object sender, EventArgs e)
         {
