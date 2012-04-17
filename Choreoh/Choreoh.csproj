@@ -64,6 +64,7 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </ApplicationDefinition>
+    <Compile Include="AudioPlay.cs" />
     <Compile Include="ButtonAnimate.cs" />
     <Compile Include="DanceRoutine.cs" />
     <Compile Include="DanceSegment.cs" />
@@ -160,6 +161,15 @@
   </ItemGroup>
   <ItemGroup>
     <Resource Include="english_words.txt" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="img\ui\Hand.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="img\waveform\playslider.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="img\ui\handsUp.png" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

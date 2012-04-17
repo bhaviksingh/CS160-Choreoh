@@ -33,7 +33,19 @@ namespace Choreoh
             InitializeComponent();
             radialAnimate = new RadialAnimate();
             this.Effect = shadowEffect;
+            setSize(300);
         }
+
+        private void setSize(int diameter)
+        {
+
+        }
+
+        public int getDiameter()
+        {
+            return 319;
+        }
+
 
         #region Properties
         public static readonly DependencyProperty TopTextProperty = DependencyProperty.Register(
@@ -95,6 +107,7 @@ namespace Choreoh
 
         void radialAnimate_CompleteChanged(object sender, EventArgs e)
         {
+            Global.canGesture = true;
             switch (lastHovering)
             {
                 case ("Left"):
@@ -160,9 +173,9 @@ namespace Choreoh
 
         public void setCursorPosition(HandCursor hand, Joint joint)
         {
-
+            Global.canGesture = false;
             Joint scaledJoint = joint.ScaleTo((int)Global.windowWidth, (int)Global.windowHeight, (float)0.3, (float)0.4);
-            if ((scaledJoint.Position.X > radialX + 40 || scaledJoint.Position.X < radialX - 40) &&
+            if ((scaledJoint.Position.X > radialX + 100 || scaledJoint.Position.X < radialX - 100) &&
                 (Math.Abs(scaledJoint.Position.Y - radialY) < Math.Abs(scaledJoint.Position.X - radialX)))
             {
                 cursorX = (double)Math.Max(radialX - ActualWidth / 2 + hand.ActualWidth / 2,
@@ -184,7 +197,7 @@ namespace Choreoh
                 }
 
             }
-            else if ((scaledJoint.Position.Y < radialY - 40 || scaledJoint.Position.Y > radialY + 40) &&
+            else if ((scaledJoint.Position.Y < radialY - 100 || scaledJoint.Position.Y > radialY + 100) &&
                      (Math.Abs(scaledJoint.Position.Y - radialY) > Math.Abs(scaledJoint.Position.X - radialX)))
             {
                 cursorX = radialX;

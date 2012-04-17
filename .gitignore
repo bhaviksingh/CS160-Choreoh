@@ -6,3 +6,9 @@
 *.baml
 *.cache
 *.resources
+KinectWpfViewers/obj/
+KinectWpfViewers/bin/
+Choreoh/obj/
+Choreoh/bin/
+*.suo
+Choreoh.suo

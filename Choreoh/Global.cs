@@ -19,19 +19,31 @@ namespace Choreoh
         //public static bool housed = false;
         public static bool canGesture = true;
         //public static bool swiped = false;
+        public static bool initPosOverlay = false;
         public static System.Timers.Timer canGestureTimer = new System.Timers.Timer()
         {
             Interval = 2000,
             Enabled = true,
             AutoReset = false
         };//event handler added by call in MainWindow
+
         public static Skeleton[] allSkeletons = new Skeleton[6];
 
         public static void canGestureTimer_Elapsed(object sender, System.Timers.ElapsedEventArgs e)
         {
             canGesture = true;
         }
+        public static System.Timers.Timer initializeTimer = new System.Timers.Timer()
+        {
+            Interval = 8000,
+            Enabled = true,
+            AutoReset = false
+        };//Instantiated in MainWindow
 
+        public static void initializeTimer_Elapsed(object sender, System.Timers.ElapsedEventArgs e)
+        {
+            Global.initPosOverlay = true;
+        }
         public static String checkMoves(LinkedList<Skeleton> moves)
         {
             lastGesture = "";
@@ -50,11 +62,11 @@ namespace Choreoh
             if (!canGesture)
                 return;
             Joint prevJoint = new Joint();
-            Joint firstJoint = moves.First<Skeleton>().Joints[JointType.HandRight];
-            Joint lastJoint = moves.Last<Skeleton>().Joints[JointType.HandRight];
+            Joint firstJoint = moves.First<Skeleton>().Joints[JointType.HandLeft];
+            Joint lastJoint = moves.Last<Skeleton>().Joints[JointType.HandLeft];
             foreach (Skeleton skeleton in moves)
             {
-                Joint joint = skeleton.Joints[JointType.HandRight];
+                Joint joint = skeleton.Joints[JointType.HandLeft];
                 //Checking if pushing
                 if (prevJoint.Position.Z == 0.0)
                 {
@@ -69,8 +81,8 @@ namespace Choreoh
                 return;
             }
             if ((Math.Abs(lastJoint.Position.Z - firstJoint.Position.Z) > .25) &&
-                Math.Abs(lastJoint.Position.X - firstJoint.Position.X) < .10 &&
-                Math.Abs(lastJoint.Position.Y - firstJoint.Position.Y) < .10)
+                Math.Abs(lastJoint.Position.X - firstJoint.Position.X) < .20 &&
+                Math.Abs(lastJoint.Position.Y - firstJoint.Position.Y) < .20)
             {
                 canGesture = false;
                 lastGesture = "Pushed";
@@ -131,6 +143,15 @@ namespace Choreoh
                     canGesture = false;
                     lastGesture = "Initialized";
                     canGestureTimer.Start();
+                    if (initPos == false)
+                    {
+                        initializeTimer.Start();
+                    }
+                    else
+                    {
+                        initPosOverlay = false;
+                        initializeTimer.Stop();
+                    }
                 }
             }
         }

@@ -11,6 +11,7 @@ using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
+using System.Diagnostics;
 
 namespace Choreoh
 {
@@ -21,7 +22,10 @@ namespace Choreoh
         private Rectangle selectRect;
         private double timeInc;
         private Image startSlider;
+        private Image playSlider;
         private Image stopSlider;
+        private double offset;
+        private bool playing = false;
         /**
          * Takes in the width of a waveform image, the length of a song in seconds, a properly formatted string for an image, and the Canvas this all needs to be drawn in.
          * 
@@ -52,19 +56,22 @@ namespace Choreoh
             {
                 TextBlock nextTimestamp = new TextBlock();
                 nextTimestamp.Foreground = Brushes.Black;
+                nextTimestamp.FontFamily = new FontFamily(new Uri(@"pack://application:,,,/"), "./img/ui/#nevis");
                 waveformCanvas.Children.Add(nextTimestamp);
                 Canvas.SetLeft(nextTimestamp, i * timeInc * 30);
+                Canvas.SetTop(nextTimestamp, -20);
                 nextTimestamp.Text = numToTime(i * 30);
+                nextTimestamp.FontSize = 36;
                 Rectangle timeTick = new Rectangle();
                 timeTick.Height = waveformCanvas.Height - 15;
-                timeTick.Width = 1;
+                timeTick.Width = 2;
                 timeTick.Stroke = Brushes.Black;
                 waveformCanvas.Children.Add(timeTick);
                 Canvas.SetLeft(timeTick, 30 * i * timeInc + 8);
                 Canvas.SetTop(timeTick, 15);
                 Rectangle timeTick2 = new Rectangle();
                 timeTick2.Height = waveformCanvas.Height - 25;
-                timeTick2.Width = 1;
+                timeTick2.Width = 2;
                 timeTick2.Stroke = Brushes.Black;
                 waveformCanvas.Children.Add(timeTick2);
                 Canvas.SetLeft(timeTick2, 30 * i * timeInc + 8 + (30 * timeInc / 2));
@@ -83,27 +90,38 @@ namespace Choreoh
             waveformCanvas.Children.Add(selectRect);
             startSlider = new Image
             {
-                Height = 240,
-                Width = 60,
+                Height = 190,
+                Width = 54,
                 Stretch = Stretch.Fill,
                 Source = new BitmapImage(new Uri(@"pack://application:,,,/Choreoh;component/img/waveform/startslider.png", UriKind.RelativeOrAbsolute)),
                 Visibility = Visibility.Hidden
             };
             waveformCanvas.Children.Add(startSlider);
             Canvas.SetLeft(startSlider, 0);
-            Canvas.SetTop(startSlider, -80);
+            Canvas.SetTop(startSlider, -20);
             stopSlider = new Image
             {
-                Height = 240,
-                Width = 60,
+                Height = 190,
+                Width = 54,
                 Stretch = Stretch.Fill,
                 Source = new BitmapImage(new Uri(@"pack://application:,,,/Choreoh;component/img/waveform/stopslider.png", UriKind.RelativeOrAbsolute)),
                 Visibility = Visibility.Hidden
             };
             waveformCanvas.Children.Add(stopSlider);
             Canvas.SetLeft(stopSlider, 0);
-            Canvas.SetTop(stopSlider, -80);
-
+            Canvas.SetTop(stopSlider, -20);
+            offset = 0.0;
+            playSlider = new Image
+            {
+                Height = 190,
+                Width = 54,
+                Stretch = Stretch.Fill,
+                Source = new BitmapImage(new Uri(@"pack://application:,,,/Choreoh;component/img/waveform/playslider.png", UriKind.RelativeOrAbsolute)),
+                Visibility = Visibility.Hidden
+            };
+            waveformCanvas.Children.Add(playSlider);
+            Canvas.SetLeft(playSlider, 0);
+            Canvas.SetTop(playSlider, -20);
         }
 
         public void selectStart(double start)
@@ -126,6 +144,39 @@ namespace Choreoh
             Canvas.SetTop(selectRect, 0);
             selectRect.Width = length;
             selectRect.Visibility = Visibility.Visible;
+        }
+        
+        public void startPlay()
+        {
+            Debug.WriteLine("Starting playing waveform");
+            Canvas.SetLeft(playSlider, Canvas.GetLeft(startSlider));
+            playing = true;
+            playSlider.Visibility = Visibility.Visible;
+        }
+
+        public void movePlay()
+        {
+            if ((Canvas.GetLeft(playSlider) + 1) >= Canvas.GetLeft(stopSlider))
+            {
+                Debug.WriteLine("Stopping playing waveform");
+                endPlay();
+                return;
+            }
+            Debug.WriteLine("Moving playing waveform");
+            Canvas.SetLeft(playSlider, Canvas.GetLeft(playSlider) + 1);
+        }
+
+        public void endPlay()
+        {
+            Debug.WriteLine("Ending playing waveform");
+            playing = false;
+            Canvas.SetLeft(playSlider, -20);
+            playSlider.Visibility = Visibility.Hidden;
+        }
+
+        public bool isPlaying()
+        {
+            return playing;
         }
 
         public void deselectSegment()
@@ -170,7 +221,7 @@ namespace Choreoh
                 {
                     //textBlock1.Text = "" + waveformOnEdge(canvas);
                     Canvas.SetLeft(canvas, Canvas.GetLeft(canvas) + inc);
-
+                    offset -= inc;
                 }
                 else
                 {
@@ -186,8 +237,8 @@ namespace Choreoh
         public int waveformOnEdge(Canvas waveformCanvas)
         {
 
-            if (Canvas.GetLeft(waveformCanvas) == 0) return -1;
-            if (Canvas.GetLeft(waveformCanvas) + waveformCanvas.Width == 1024) return 1;
+            if (Canvas.GetLeft(waveformCanvas) >= 0) return -1;
+            if (Canvas.GetLeft(waveformCanvas) + waveformCanvas.Width <= 1024) return 1;
             return 0;
         }
 
@@ -195,5 +246,16 @@ namespace Choreoh
         {
             return waveformCanvas;
         }
+
+        public double getOffset()
+        {
+            return offset;
+        }
+
+        public double getPixelsPerSecond()
+        {
+            return timeInc;
+        }
+
     }
 }

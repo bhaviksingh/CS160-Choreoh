@@ -34,7 +34,6 @@ namespace Choreoh
         LinkedList<Skeleton> moves;
         private double menuX = 0;
         private double menuY = 0;
-        private int i = 0;
         private KinectSensor sensor;
         private DanceSegment segmentToRecordTo;
         private DanceRoutine routine;
@@ -50,50 +49,271 @@ namespace Choreoh
          * dance segment buttons so when click event takes place
          * iterate throw the linkedlist calling listElement.check(handCursor);
             HoverButton hb = new HoverButton();
-            hb.LeftImage = "Images/RadialHighLeft.png";
-            hb.RightImage = "Images/RadialHighRight.png";
+            hb.leftImage = DanceSegment.getFirstFrame();
+            hb.rightImage = "Images/RadialHighRight.png";
             hb.dotDot.Visibility = Visibility.Visible;
             hb.Height = 100;
             hb.Width = 200;
             Canvas.SetTop(hb, 100);
             Canvas.SetLeft(hb, 0);
             mainCanvas.Children.Add(hb);
+            hb.Click += new HoverButton.ClickHandler(button_Clicked);
             */
 
-        
+
         /*
          * delete these testing vars when done
          * */
         DanceSegment newSegment;
         bool isRecording = false;
         int framesLeft = 30 * 3;
+        Point timelineMenuOpenedPosition;
+        bool isSelectingSegment = false;
+        double startSecondsIntoWaveform;
+        double endSecondsIntoWaveform;
+        String songFilename = "beatit.wav";
+        LinkedList<HoverButton> segmentList = new LinkedList<HoverButton>();
+        Dictionary<HoverButton, DanceSegment> buttonSegments;
 
         //Load window
         private void Window_Loaded(object sender, RoutedEventArgs e)
         {
+            homeCanvas.Visibility = Visibility.Visible;
+            mainCanvas.Visibility = Visibility.Collapsed;
+            blackBack.Visibility = Visibility.Collapsed;
+
+            hideMode();
+            Canvas.SetTop(playbackMode, 0);
+            Canvas.SetTop(recordMode, 0);
 
             kinectSensorChooser1.KinectSensorChanged += new DependencyPropertyChangedEventHandler(kinectSensorChooser1_KinectSensorChanged);
             this.Cursor = Cursors.None;      
             moves = new LinkedList<Skeleton>();
             Global.canGestureTimer.Elapsed += new System.Timers.ElapsedEventHandler(Global.canGestureTimer_Elapsed);
-            Global.windowWidth = mainCanvas.ActualWidth;
-            Global.windowHeight = mainCanvas.ActualHeight;
+            Global.initializeTimer.Elapsed += new System.Timers.ElapsedEventHandler(Global.initializeTimer_Elapsed);
+            Global.windowWidth = containerCanvas.ActualWidth;
+            Global.windowHeight = containerCanvas.ActualHeight;
 
-            if (DanceRoutine.saveAlreadyExists("fakeSong.wav"))
+            if (DanceRoutine.saveAlreadyExists(songFilename))
             {
-                routine = DanceRoutine.load("fakeSong.wav");
+                routine = DanceRoutine.load(DanceRoutine.getSaveDestinationName(songFilename));
             } else  {
-                routine = new DanceRoutine("fakeSong.wav");
+                routine = new DanceRoutine(songFilename);
             }
             routine.deleteDanceSegmentAt(0);
             showRecordingCanvas();
 
-            newSegment = routine.addDanceSegment(0);
-            waveform = new Waveform(1800, 259, wfcanvas);
+            Canvas wfcanvas = new Canvas();
+            wfcanvas.Width = 3600;
+            wfcanvas.Height = 160;
+            Canvas.SetTop(wfcanvas, 0);
+            Canvas.SetLeft(wfcanvas, 0);
+            waveButton.hoverCanvas.Children.Add(wfcanvas);
+            waveButton.enableExpandAnimation = false;
+            waveform = new Waveform(3600, 259, wfcanvas);
+            renderSegments();
+        }
+
+
+        private void renderSegments()
+        {
+
+            // first, remove everything from the segmentCanvas
+            for (int elementIndex = segmentCanvas.Children.Count - 1; elementIndex >= 0; elementIndex--)
+            {
+                var child = segmentCanvas.Children[elementIndex];
+                segmentCanvas.Children.Remove(child);
+            }
+            buttonSegments = new Dictionary<HoverButton, DanceSegment>();
+            segmentList = new LinkedList<HoverButton>();
+            foreach (int frame in routine.segments.Keys)
+            {
+                
+                renderSegment(frame);
+            }
+        }
+
+        private void renderSegment(int frame)
+        {
+            double pos;
+            DanceSegment segment;
+            if (routine.segments.TryGetValue(frame, out segment))
+            {
+                if (segment == null || segment.length == 0) return;
+                pos = frame / 30 * waveform.getPixelsPerSecond();
+                HoverButton hb = new HoverButton();
+                var img = new System.Windows.Controls.Image();
+                img.Width = segment.length / 30 * waveform.getPixelsPerSecond() * 1 / 3;
+                img.Source = segment.getFrameSource(0);
+                hb.leftImageName.Source = img.Source;
+                var img2 = new System.Windows.Controls.Image();
+                img2.Width = segment.length / 30 * waveform.getPixelsPerSecond() * 1 / 3;
+                img2.Source = segment.getFrameSource(segment.length-1);
+                hb.rightImageName.Source = img2.Source;
+                hb.dotDot.Visibility = Visibility.Visible;
+                hb.Height = 160;
+                hb.Width = (segment.length/30 * waveform.getPixelsPerSecond());
+                hb.BackgroundColor = Brushes.LightYellow;
+                hb.BorderBrush = Brushes.DarkGray;
+                hb.BorderThickness = new Thickness(2);
+                segmentCanvas.Children.Add(hb);
+                Canvas.SetTop(hb, 0);
+                Canvas.SetLeft(hb, pos);
+                hb.Click += new HoverButton.ClickHandler(segment_Clicked);
+                segmentList.AddLast(hb);
+
+                buttonSegments.Add(hb, segment);
+            }
+            renderComment(frame);
+        }
+
+        private void renderComment(int frame)
+        {
+            double pos;
+            String comment;
+            if (routine.comments.TryGetValue(frame, out comment))
+            {
+                if (comment == null) return;
+                pos = frame / 30 * waveform.getPixelsPerSecond();
+                Image cImg = new Image
+                {
+                    Height = 160,
+                    Width = 40,
+                };
+                cImg.Source = new BitmapImage(new Uri(@"pack://application:,,,/Choreoh;component/img/waveform/Speech_bubble.png",UriKind.RelativeOrAbsolute));
+                HoverButton commentImg = new HoverButton
+                {
+                    Height = 50,
+                    Width = 50,
+                    Visibility = Visibility.Visible,
+                    BackgroundColor = Brushes.LavenderBlush
+                };
+                commentImg.leftImageName.Source = cImg.Source;
+                segmentCanvas.Children.Add(commentImg);
+                Canvas.SetTop(commentImg, 0);
+                Canvas.SetLeft(commentImg, pos);
+                commentImg.Click += new HoverButton.ClickHandler(comment_Clicked);
+                segmentList.AddLast(commentImg);
+            }
+        }
+
+        private void comment_Clicked(object sender, EventArgs e)
+        {
+
+        }
+
+        double handPointX;
+        DanceSegment selectedSegment;
+        private void segment_Clicked(object sender, EventArgs e)
+        {
+            if (sender.ToString() == "Choreoh.HoverButton")
+            {
+                Debug.WriteLine("Waveform Button clicked");
+
+                HoverButton waveButton = (HoverButton)sender;
+                buttonSegments.TryGetValue(waveButton, out selectedSegment);
+                Point handPosition = hand.TransformToAncestor(containerCanvas).Transform(new Point(0, 0));
+                handPointX = handPosition.X + hand.ActualWidth / 2;
+                timelineMenuOpenedPosition = handPosition;
+
+                RadialMenu menu = segmentRadialMenu;
+                menuY = handPosition.Y;
+                menuY = menuY + hand.ActualHeight / 2 - menu.getDiameter() / 2;
+                menuX = handPosition.X;
+                menuX = menuX + hand.ActualWidth / 2 - menu.getDiameter() / 2;
+                Canvas.SetLeft(menu, menuX);
+                Canvas.SetTop(menu, menuY);
+
+                hand.menuOpened = true;
+                hand.SetRadialMenu(handPosition.X, handPosition.Y, menu);
+
+                blackBack.Visibility = Visibility.Visible;
+                menu.Visibility = Visibility.Visible;
+            }
+            else
+            {
+                debug.Text = "I have made a huge mistake";
+            }
+        }
+
+        private void waveform_Clicked(object sender, EventArgs e)
+        {
+            if (sender.ToString() == "Choreoh.HoverButton")
+            {
+                Debug.WriteLine("Waveform Button clicked");
+
+
+                HoverButton waveButton = (HoverButton)sender;
+                Point handPosition = hand.TransformToAncestor(containerCanvas).Transform(new Point(0, 0));
+                timelineMenuOpenedPosition = handPosition;
+
+                RadialMenu menu;
+                if (isSelectingSegment)
+                {
+
+                    Debug.WriteLine("Selecting end segment");
+
+                    double handX = hand.TransformToAncestor(containerCanvas).Transform(new Point(0, 0)).X;
+                    handX = handX + hand.ActualWidth / 2;
+
+                    double timelineX = Canvas.GetLeft(timelineCanvas);
+
+                    double pixelsIntoWaveform = -1 * timelineX + handX;
+                    Debug.WriteLine("Hand is " + pixelsIntoWaveform + " pixels into the waveform");
+
+                    endSecondsIntoWaveform = (pixelsIntoWaveform - 8) / waveform.getPixelsPerSecond();
+                    Debug.WriteLine("This means we are " + endSecondsIntoWaveform + " seconds into the waveform");
+
+                    if (endSecondsIntoWaveform > startSecondsIntoWaveform)
+                    {
+                        Debug.WriteLine("End time is greater than start time");
+                        waveform.selectEnd(endSecondsIntoWaveform);
+
+                        Debug.WriteLine("selected start of the waveform");
+                    }
+                    else
+                    {
+                        Debug.WriteLine("End time is BEFORE start time!");
+                    }
+
+                    isSelectingSegment = false;
+
+
+                    Debug.WriteLine("Opening selection radial menu");
+                    menu = selectionRadialMenu;
+                }
+                else
+                {
+                    Debug.WriteLine("Opening timeline radial menu");
+
+                    menu = waveformRadialMenu;
+                    
+                }
+                menuY = handPosition.Y;
+                menuY = menuY + hand.ActualHeight / 2 - menu.getDiameter() / 2;
+                menuX = handPosition.X;
+                menuX = menuX + hand.ActualWidth / 2 - menu.getDiameter() / 2;
+                Canvas.SetLeft(menu, menuX);
+                Canvas.SetTop(menu, menuY);
+
+                hand.menuOpened = true;
+                hand.SetRadialMenu(handPosition.X, handPosition.Y, menu);
+
+                blackBack.Visibility = Visibility.Visible;
+                menu.Visibility = Visibility.Visible;
+            }
+            else
+            {
+                debug.Text = "I have made a huge mistake";
+            }
         }
 
         void newSensor_AllFramesReady(object sender, AllFramesReadyEventArgs e)
         {
+            if (isRecording)
+            {
+                return;
+            }
 
             if (closing)
             {
@@ -117,11 +337,23 @@ namespace Choreoh
                         moves.RemoveFirst();
                     }
                     Joint handJoint = skeleton.Joints[JointType.HandRight];
-                    hand.checkGestures(moves);
+
+                    if (blackBack.Visibility != Visibility.Visible)
+                    {
+                        hand.checkGestures(moves);
+                    }
                     buttonUpdater(handJoint);
+                    if (!Global.initPosOverlay)
+                    {
+                        initOverlay.Visibility = Visibility.Collapsed;
+                        
+                    }
+                    else
+                    {
+                        initOverlay.Visibility = Visibility.Visible;
+                    }
                     //temporary to clear gestureText
-                    if (Global.canGesture)
-                        gestureText.Text = "";
+                   
                 }
             }
 
@@ -130,23 +362,19 @@ namespace Choreoh
         private void buttonUpdater(Joint handJoint)
         {
             hand.SetPosition(handJoint);
-            backButton.Check(hand);
-
-            radialCreator.Check(hand);
-            //HoverButton hb = new HoverButton();
-            //hb.Text = "SDjf";
-            //Panel.SetZIndex(hb, 1020);
-            //SolidColorBrush sb = new SolidColorBrush();
-            //sb.Color = Color.FromArgb(255, 255, 0, 0);
-            //hb.BackgroundColor = sb;
-            //hb.Width = 500;
-            //hb.Height = 500;
-            //hb.Click += new HoverButton.ClickHandler(button_Clicked);
-            //Canvas.SetLeft(hb, 60);
-            //Canvas.SetTop(hb, 30);
-
-            //mainCanvas.Children.Add(hb);
-           
+            if (blackBack.Visibility == Visibility.Visible)
+                return;
+            backButton.Check(hand);            
+            waveButton.Check(hand);
+            song1.Check(hand);
+            songBeat.Check(hand);
+            song3.Check(hand);
+            song4.Check(hand);
+            song5.Check(hand);
+            foreach (HoverButton hb in segmentList)
+            {
+                hb.Check(hand);
+            }
         }
 
        
@@ -155,8 +383,13 @@ namespace Choreoh
         {
             RadialMenu menu = (RadialMenu)sender;
             String direction = menu.getLastHovering();
-            radialMenu.Visibility = Visibility.Hidden;
+            blackBack.Visibility = Visibility.Collapsed;
+            hideAllRadialMenus();
             hand.menuOpened = false;
+
+            waveform.deselectSegment();
+            annotating = false;
+            comment = "";
         }
         
         private void button_Clicked(object sender, EventArgs e)
@@ -170,20 +403,22 @@ namespace Choreoh
                 debug.Text += "hover button" + temp.Name;
                 if (temp.Name == "backButton")
                 {
-                    debug.Text = "go back homeeeee";
+                    homeCanvas.Visibility = Visibility.Visible;
+                    mainCanvas.Visibility = Visibility.Collapsed;
                 }
                 else
                 {
                     debug.Text = debug.Text + "radial menu";
-                    Point handPosition = hand.TransformToAncestor(mainCanvas).Transform(new Point(0, 0));
+                    Point handPosition = hand.TransformToAncestor(containerCanvas).Transform(new Point(0, 0));
                     menuY = handPosition.Y;
                     menuY = menuY + hand.ActualHeight / 2;
                     menuX = handPosition.X;
                     menuX = menuX + hand.ActualWidth / 2;
-                    Canvas.SetLeft(radialMenu, menuX - radialMenu.ActualWidth / 2);
-                    Canvas.SetTop(radialMenu, menuY - radialMenu.ActualHeight / 2);
+                    Canvas.SetLeft(radialMenu, menuX - radialMenu.getDiameter() / 2);
+                    Canvas.SetTop(radialMenu, menuY - radialMenu.getDiameter() / 2);
                     hand.menuOpened = true;
                     hand.SetRadialMenu(handPosition.X, handPosition.Y, radialMenu);
+                    //blackBack.Visibility = Visibility.Visible;
                     radialMenu.Visibility = Visibility.Visible;
                 }
                
@@ -240,15 +475,20 @@ namespace Choreoh
                 MaxDeviationRadius = 0.04f
             };
 
+
             newSensor.SkeletonStream.Enable(parameters);
+           
             newSensor.AllFramesReady += new EventHandler<AllFramesReadyEventArgs>(newSensor_AllFramesReady);
             // DELETE THIS TEMPRECORD
-            newSensor.AllFramesReady += new EventHandler<AllFramesReadyEventArgs>(tempRecord);
+            // newSensor.AllFramesReady += new EventHandler<AllFramesReadyEventArgs>(tempRecord);
 
             newSensor.ColorStream.Enable(ColorImageFormat.RgbResolution640x480Fps30);
             newSensor.DepthStream.Enable(DepthImageFormat.Resolution640x480Fps30);
             newSensor.SkeletonStream.Enable();
             this.speechRecognizer = this.CreateSpeechRecognizer();
+            this.preSpeechRecognizer = this.CreateSpeechRecognizerPreRecording();
+            this.postSpeechRecognizer = this.CreateSpeechRecognizerPostRecording();
+            
             try
             {
                 newSensor.Start();
@@ -258,8 +498,8 @@ namespace Choreoh
                 kinectSensorChooser1.AppConflictOccurred();
             }
 
-            
-            if (this.speechRecognizer != null && sensor != null)
+
+            if (this.speechRecognizer != null && this.preSpeechRecognizer != null && this.postSpeechRecognizer != null && sensor != null)
             {
                 // NOTE: Need to wait 4 seconds for device to be ready to stream audio right after initialization
                 this.readyTimer = new DispatcherTimer();
@@ -297,12 +537,16 @@ namespace Choreoh
                         sensor.AudioSource.Stop();
                     }
 
-                    if (this.speechRecognizer != null && sensor != null)
+                    if (this.preSpeechRecognizer != null && this.speechRecognizer != null && this.postSpeechRecognizer != null && sensor != null)
                     {
                         sensor.AudioSource.Stop();
                         sensor.Stop();
                         this.speechRecognizer.RecognizeAsyncCancel();
                         this.speechRecognizer.RecognizeAsyncStop();
+                        this.preSpeechRecognizer.RecognizeAsyncCancel();
+                        this.preSpeechRecognizer.RecognizeAsyncStop();
+                        this.postSpeechRecognizer.RecognizeAsyncCancel();
+                        this.postSpeechRecognizer.RecognizeAsyncStop();
                     }
                 }
             }
@@ -322,23 +566,23 @@ namespace Choreoh
 
         private void hideRecordingCanvas()
         {
-            recordingCanvas.Visibility = Visibility.Hidden;
+            recordingCanvas.Visibility = Visibility.Collapsed;
         }
 
         public void StartRecording(DanceSegment s)
         {
             Debug.WriteLine("Setting recording canvas's segment to destination segment");
             segmentToRecordTo = s;
-            //pre_recording = false;
+            isRecording = true;
 
             sensor.AllFramesReady += newSensor_AllFramesReady_Record;
         }
 
         public void StopRecording()
         {
-            segmentToRecordTo = null;
             Debug.WriteLine("Set recording canvas's segment to null");
             //post_recording = true;
+            isRecording = false;
 
             sensor.AllFramesReady -= newSensor_AllFramesReady_Record;
         }
@@ -373,7 +617,9 @@ namespace Choreoh
 
         BitmapSource GetBitmap()
         {
-            RenderTargetBitmap renderBitmap = new RenderTargetBitmap((int)recordingCanvas.ActualWidth, (int)recordingCanvas.ActualHeight, 96d, 96d, PixelFormats.Pbgra32);
+            int width = (int)recordingCanvas.ActualWidth;
+            int height = (int)recordingCanvas.ActualHeight;
+            RenderTargetBitmap renderBitmap = new RenderTargetBitmap(width > 0? width: 680, height > 0 ? height: 480, 96d, 96d, PixelFormats.Pbgra32);
             renderBitmap.Render(recordingColorViewer);
             return renderBitmap;
         }
@@ -396,17 +642,217 @@ namespace Choreoh
             }
         }
 
+        string commentToSave;
+        bool isPlaying;
+        #region segment radial menu clicks
+        private void segmentRadialMenu_leftClick(object sender, EventArgs e)
+        {
+            // play the segment
+            if (isPlaying)
+            {
+                // for the wierd double-clicking issues...
+                return;
+            }
+            Debug.WriteLine("Segment radial menu left clicked");
+            hand.menuOpened = false;
+            RadialMenu menu = (RadialMenu)sender;
+
+            blackBack.Visibility = Visibility.Collapsed;
+            hideAllRadialMenus();
+            var videoPlayerTimer = new DispatcherTimer();
+            int videoCounter = 0;
+
+            videoPlaybackCanvas.Visibility = Visibility.Visible;
+            Image img = new System.Windows.Controls.Image();
+
+            videoPlaybackCanvas.Children.Add(img);
+
+            Canvas.SetTop(img, 0);
+            Canvas.SetLeft(img, 0);
+            videoPlayerTimer.Tick += new EventHandler((object localsender, EventArgs locale) =>
+            {
+                if (videoCounter >= selectedSegment.length)
+                {
+                    videoPlaybackCanvas.Visibility = Visibility.Collapsed;
+                    (localsender as DispatcherTimer).Stop();
+                    return;
+                }
+
+                img.Source = selectedSegment.getFrameSource(videoCounter);
+
+
+                videoCounter++;
+            });
+            videoPlayerTimer.Interval = new TimeSpan((int)((1.0 / 30) * (1000000000/100)));
+            Debug.WriteLine("Videplayer Tick Interval is " + videoPlayerTimer.Interval.TotalMilliseconds + " milliseconds");
+
+
+            int frameOfSegmentStart = 0;
+            foreach (KeyValuePair<int, DanceSegment> kvp in routine.segments)
+            {
+                if (kvp.Value == selectedSegment)
+                {
+                    frameOfSegmentStart = kvp.Key;
+                    break;
+                }
+            }
+            int frameOfSegmentEnd = frameOfSegmentStart + selectedSegment.length;
+            
+            TimeSpan startTime = new TimeSpan(0,0,(int) (frameOfSegmentStart / 30.0));
+            TimeSpan durationTime = new TimeSpan(0,0,(int) ((frameOfSegmentEnd - frameOfSegmentStart) / 30.0));
+
+            waveform.selectStart(frameOfSegmentStart / 30);
+            waveform.selectEnd(frameOfSegmentEnd / 30);
+
+            var waveformTicker = new DispatcherTimer();
+            waveformTicker.Tick += new EventHandler((object localsender, EventArgs locale) =>
+            {
+                if (waveform.isPlaying())
+                {
+                    Debug.WriteLine("waveform is playing, so tick");
+                    waveform.movePlay();
+                }
+                else
+                {
+                    Debug.WriteLine("waveform stopped playing, so stop ticking");
+                    (localsender as DispatcherTimer).Stop();
+                }
+            });
+            double secondsPerPixel = 1 / waveform.getPixelsPerSecond();
+            double nanoseconds = secondsPerPixel * 1000000000;
+            int ticks = (int) (nanoseconds / 100);
+            Debug.WriteLine("Ticks: " + ticks);
+            waveformTicker.Interval = new TimeSpan(ticks);
+
+            var playbackTimer = new DispatcherTimer();
+            playbackTimer.Tick += new EventHandler((object localsender, EventArgs locale) =>
+            {
+                (localsender as DispatcherTimer).Stop();
+                videoPlayerTimer.Stop();
+                waveformTicker.Stop();
+                waveform.endPlay();
+                waveform.deselectSegment();
+                hideMode();
+                isPlaying = false;
+                videoPlaybackCanvas.Visibility = Visibility.Collapsed;
+            });
+            playbackTimer.Interval = durationTime;
+
+            AudioPlay.playForDuration(mainCanvas, songFilename, startTime, durationTime);
+            videoPlayerTimer.Start();
+            waveformTicker.Start();
+            waveform.startPlay();
+            playbackTimer.Start();
+            switchModeToPlayback();
+            isPlaying = true;
+            
+        }
+
+        private void segmentRadialMenu_rightClick(object sender, EventArgs e)
+        {
+            if (selectedSegment != null)
+            {
+                var menu = (RadialMenu)sender;
+                blackBack.Visibility = Visibility.Collapsed;
+                hideAllRadialMenus();
+                Debug.WriteLine("Deleting segment: " + selectedSegment);
+                routine.deleteDanceSegment(selectedSegment);
+                selectedSegment = null;
+                Debug.WriteLine("Segment should have been deleted");
+                Debug.WriteLine("Now saving routine");
+                routine.save();
+                Debug.WriteLine("Should have finished saving routine");
+
+                renderSegments();
+            }
+            else
+            {
+                Debug.WriteLine("Tried to delete already deleted segment. Maybe radial menu clicking too many times?");
+            }
+        }
+        private void segmentRadialMenu_topClick(object sender, EventArgs e)
+        {
+            Debug.WriteLine("Segment radial menu top clicked");
+            hand.menuOpened = false;
+            RadialMenu menu = (RadialMenu)sender;
+
+            double handX = timelineMenuOpenedPosition.X;
+            handX = handX + hand.ActualWidth / 2;
+
+            blackBack.Visibility = Visibility.Collapsed;
+            hideAllRadialMenus();
+            Debug.WriteLine(menu.ToString());
+
+            Point handPosition = hand.TransformToAncestor(containerCanvas).Transform(new Point(0, 0));
+            handPointX = handPosition.X + hand.ActualWidth / 2;
+            timelineMenuOpenedPosition = handPosition;
+
+            RadialMenu menu2 = commentRadialMenu;
+
+            menuY = handPosition.Y;
+            menuY = menuY + hand.ActualHeight / 2 - menu2.getDiameter() / 2;
+            menuX = handPosition.X;
+            menuX = menuX + hand.ActualWidth / 2 - menu2.getDiameter() / 2;
+            Canvas.SetLeft(menu2, menuX);
+            Canvas.SetTop(menu2, menuY);
+
+            hand.menuOpened = true;
+            hand.SetRadialMenu(handPosition.X, handPosition.Y, menu2);
+            blackBack.Visibility = Visibility.Visible;
+            menu2.Visibility = Visibility.Visible;
+
+            commentBox.Visibility = Visibility.Visible;
+            annotating = true;
+            commentToSave = comment;
+            
+
+        }
+        #endregion
+
+        #region comment radial menu clicks
+        private void commentRadialMenu_leftClick(object sender, EventArgs e)
+        {
+
+        }
+        private void commentRadialMenu_rightClick(object sender, EventArgs e)
+        {
+
+        }
+        private void commentRadialMenu_topClick(object sender, EventArgs e)
+        {
+            hand.menuOpened = false;
+            RadialMenu menu = (RadialMenu)sender;
+
+            double handX = timelineMenuOpenedPosition.X;
+            handX = handX + hand.ActualWidth / 2;
+
+            blackBack.Visibility = Visibility.Collapsed;
+            hideAllRadialMenus();
+            Debug.WriteLine(menu.ToString());
+
+            int pos = (int)((handPointX+waveform.getOffset()) / waveform.getPixelsPerSecond() * 30);
+            routine.addComment(pos, commentToSave);
+            commentToSave = comment = "";
+            annotating = false;
+            commentBox.Text = "";
+            commentBox.Visibility = Visibility.Hidden;
+            renderComment(pos);
+        }
+        #endregion
+
         #region audio config and control
 
         private DispatcherTimer readyTimer;
         private SpeechRecognitionEngine speechRecognizer;
+        private SpeechRecognitionEngine preSpeechRecognizer;
+        private SpeechRecognitionEngine postSpeechRecognizer;
         private String wordsForGrammar;
         private String[] wordsArray;
         private String comment;
 
         private bool pre_recording = false;
         private bool post_recording = false;
-        private bool annotating = true;
+        private bool annotating = false;
 
         private void startAudio()
         {
@@ -421,6 +867,14 @@ namespace Choreoh
                 kinectStream, new SpeechAudioFormatInfo(EncodingFormat.Pcm, 16000, 16, 1, 32000, 2, null));
             // Keep recognizing speech until window closes
             this.speechRecognizer.RecognizeAsync(RecognizeMode.Multiple);
+            this.preSpeechRecognizer.SetInputToAudioStream(
+                kinectStream, new SpeechAudioFormatInfo(EncodingFormat.Pcm, 16000, 16, 1, 32000, 2, null));
+            // Keep recognizing speech until window closes
+            this.preSpeechRecognizer.RecognizeAsync(RecognizeMode.Multiple);
+            this.postSpeechRecognizer.SetInputToAudioStream(
+                kinectStream, new SpeechAudioFormatInfo(EncodingFormat.Pcm, 16000, 16, 1, 32000, 2, null));
+            // Keep recognizing speech until window closes
+            this.postSpeechRecognizer.RecognizeAsync(RecognizeMode.Multiple);
         }
 
          #region Speech recognizer setup
@@ -440,9 +894,15 @@ namespace Choreoh
         private void LoadWords()
         {
             var path = System.IO.Path.GetFullPath("english_words.txt");
-         
-            wordsForGrammar = File.ReadAllText(path);
-
+            if (File.Exists(path))
+            {
+                wordsForGrammar = File.ReadAllText(path);
+            }
+            else
+            {
+                wordsForGrammar = "";
+            }
+            wordsForGrammar += "start\nkeep\ncancel\nredo\nplay";
             wordsArray = wordsForGrammar.Split('\n');
 
             for (int i = 0; i < wordsArray.Length; i++)
@@ -452,6 +912,137 @@ namespace Choreoh
 
         }
 
+        private void CreateSpeechRecognizers()
+        {
+            CreateSpeechRecognizer();
+            CreateSpeechRecognizerPreRecording();
+            CreateSpeechRecognizerPostRecording();
+        }
+
+        private SpeechRecognitionEngine CreateSpeechRecognizerPreRecording()
+        {
+            {
+                #region Initialization
+                RecognizerInfo ri = GetKinectRecognizer();
+                if (ri == null)
+                {
+                    MessageBox.Show(
+                        @"There was a problem initializing Speech Recognition.
+                    Ensure you have the Microsoft Speech SDK installed.",
+                        "Failed to load Speech SDK",
+                        MessageBoxButton.OK,
+                        MessageBoxImage.Error);
+                    this.Close();
+                    return null;
+                }
+
+                SpeechRecognitionEngine sre;
+                try
+                {
+                    sre = new SpeechRecognitionEngine(ri.Id);
+                }
+                catch
+                {
+                    MessageBox.Show(
+                        @"There was a problem initializing Speech Recognition.
+                    Ensure you have the Microsoft Speech SDK installed and configured.",
+                        "Failed to load Speech SDK",
+                        MessageBoxButton.OK,
+                        MessageBoxImage.Error);
+                    this.Close();
+                    return null;
+                }
+                #endregion
+
+                #region Build grammar
+
+                var preRecordingChoices = new Choices(new string[] { "start" });
+               
+                var gb = new GrammarBuilder { Culture = ri.Culture };
+                gb.Append(preRecordingChoices);
+
+                // Create the actual Grammar instance, and then load it into the speech recognizer.
+                var g = new Grammar(gb);
+
+                sre.LoadGrammar(g);
+
+                #endregion
+
+                #region Hook up events
+                sre.SpeechRecognized += new EventHandler<SpeechRecognizedEventArgs>(sre_PreSpeechRecognized);
+                sre.SpeechRecognitionRejected += new EventHandler<SpeechRecognitionRejectedEventArgs>(sre_PreSpeechRecognitionRejected);
+                /*
+                sre.SpeechHypothesized += this.SreSpeechHypothesized;
+                sre.SpeechRecognitionRejected += this.SreSpeechRecognitionRejected;
+                */
+                #endregion
+
+                return sre;
+            }
+        }
+
+        private SpeechRecognitionEngine CreateSpeechRecognizerPostRecording()
+        {
+            {
+                #region Initialization
+                RecognizerInfo ri = GetKinectRecognizer();
+                if (ri == null)
+                {
+                    MessageBox.Show(
+                        @"There was a problem initializing Speech Recognition.
+                    Ensure you have the Microsoft Speech SDK installed.",
+                        "Failed to load Speech SDK",
+                        MessageBoxButton.OK,
+                        MessageBoxImage.Error);
+                    this.Close();
+                    return null;
+                }
+
+                SpeechRecognitionEngine sre;
+                try
+                {
+                    sre = new SpeechRecognitionEngine(ri.Id);
+                }
+                catch
+                {
+                    MessageBox.Show(
+                        @"There was a problem initializing Speech Recognition.
+                    Ensure you have the Microsoft Speech SDK installed and configured.",
+                        "Failed to load Speech SDK",
+                        MessageBoxButton.OK,
+                        MessageBoxImage.Error);
+                    this.Close();
+                    return null;
+                }
+                #endregion
+
+                #region Build grammar
+
+                var postRecordingChoices = new Choices(new string[] { "save", "cancel", "redo", "play" });
+               
+
+                var gb = new GrammarBuilder { Culture = ri.Culture };
+                gb.Append(postRecordingChoices);
+                // Create the actual Grammar instance, and then load it into the speech recognizer.
+                var g = new Grammar(gb);
+
+                sre.LoadGrammar(g);
+
+                #endregion
+
+                #region Hook up events
+                sre.SpeechRecognized += new EventHandler<SpeechRecognizedEventArgs>(sre_PostSpeechRecognized);
+                sre.SpeechRecognitionRejected += new EventHandler<SpeechRecognitionRejectedEventArgs>(sre_PostSpeechRecognitionRejected);
+                /*
+                sre.SpeechHypothesized += this.SreSpeechHypothesized;
+                sre.SpeechRecognitionRejected += this.SreSpeechRecognitionRejected;
+                */
+                #endregion
+
+                return sre;
+            }
+        }
+        
         private SpeechRecognitionEngine CreateSpeechRecognizer()
         {
             #region Initialization
@@ -493,16 +1084,10 @@ namespace Choreoh
 
             var wordChoices = new Choices(wordsArray);
 
-            var preRecordingChoices = new Choices(new string[] { "start" });
-            var gb_preR = new GrammarBuilder { Culture = ri.Culture };
-
-            var postRecordingChoices = new Choices(new string[] { "keep", "cancel", "redo", "play" });
-            var gb_postR = new GrammarBuilder { Culture = ri.Culture };
-
+            /*
             var gb_1 = new GrammarBuilder { Culture = ri.Culture };
             gb_1.Append(wordChoices);
 
-            /*
             var gb_2 = new GrammarBuilder { Culture = ri.Culture };
             gb_2.Append(wordChoices);
 
@@ -514,17 +1099,15 @@ namespace Choreoh
             */
 
             var gb = new GrammarBuilder { Culture = ri.Culture };
-
-            gb.Append(gb_preR, 0, 1);
-            gb.Append(gb_postR, 0, 1);
-
+            gb.Append(wordChoices);
+            /*
             //gb.Append(new SemanticResultKey("Words0", wordChoices));
             gb.Append(gb_1, 0, 1);
-            //gb.Append(gb_2, 0, 1);
-            //gb.Append(gb_3, 0, 1);
-            //gb.Append(gb_4, 0, 1);
+            gb.Append(gb_2, 0, 1);
+            gb.Append(gb_3, 0, 1);
+            gb.Append(gb_4, 0, 1);
 
-
+            */
 
             // Create the actual Grammar instance, and then load it into the speech recognizer.
             var g = new Grammar(gb);
@@ -549,6 +1132,141 @@ namespace Choreoh
 
         #region Speech recognition events
 
+
+        void sre_PreSpeechRecognitionRejected(object sender, SpeechRecognitionRejectedEventArgs e)
+        {
+            this.RejectSpeech(e.Result);
+        }
+
+        void sre_PostSpeechRecognitionRejected(object sender, SpeechRecognitionRejectedEventArgs e)
+        {
+            this.RejectSpeech(e.Result);
+        }
+
+        void sre_PreSpeechRecognized(object sender, SpeechRecognizedEventArgs e)
+        {
+            if (pre_recording)
+
+            {
+                Debug.WriteLine("Pre-recording Speech detected: " + e.Result.Text.ToString());
+                int startOfSegment = 0;
+                switch (e.Result.Text.ToString().ToUpperInvariant())
+                
+                {
+                    case "START":
+                        //start_label.Visibility = Visibility.Visible;
+                        blackBack.Visibility = Visibility.Collapsed;
+                        beforeRecordCanvas.Visibility = Visibility.Collapsed;
+                        pre_recording = false;
+
+                        showRecordingCanvas();
+                        switchModeToRecording();
+
+                        double duration = endSecondsIntoWaveform - startSecondsIntoWaveform;
+
+                        TimeSpan startTime = new TimeSpan(0, 0, (int)startSecondsIntoWaveform);
+                        TimeSpan durationTime = new TimeSpan(0, 0, (int)duration);
+
+                        Debug.WriteLine("Start Time: " + startTime.ToString());
+                        Debug.WriteLine("Duration Time: " + durationTime.ToString());
+
+                        var waveformTicker = new DispatcherTimer();
+                        waveformTicker.Tick += new EventHandler((object localsender, EventArgs locale) =>
+                        {
+                            if (waveform.isPlaying())
+                            {
+                                Debug.WriteLine("waveform is playing, so tick");
+                                waveform.movePlay();
+                            }
+                            else
+                            {
+                                Debug.WriteLine("waveform stopped playing, so stop ticking");
+                                (localsender as DispatcherTimer).Stop();
+                            }
+                        });
+                        double secondsPerPixel = 1 / waveform.getPixelsPerSecond();
+                        double nanoseconds = secondsPerPixel * 1000000000;
+                        int ticks = (int)nanoseconds / 100;
+                        Debug.WriteLine("Ticks: " + ticks);
+                        waveformTicker.Interval = new TimeSpan(ticks);
+
+
+                        var recordingTimer = new DispatcherTimer();
+                        recordingTimer.Tick += new EventHandler((object localsender, EventArgs locale) =>
+                        {
+                            waveform.endPlay();
+                            waveformTicker.Stop();
+                            StopRecording();
+                            (localsender as DispatcherTimer).Stop();
+                            post_recording = true;
+                            blackBack.Visibility = Visibility.Visible;
+                            afterRecordCanvas.Visibility = Visibility.Visible;
+                            switchModeToPlayback();
+                            renderSegment(startOfSegment);
+                        });
+                        recordingTimer.Interval = durationTime;
+
+
+                        AudioPlay.playForDuration(mainCanvas, songFilename, startTime, durationTime);
+                        waveformTicker.Start();
+                        waveform.startPlay();
+                        startOfSegment = (int)(startTime.TotalSeconds * 30);
+                        DanceSegment segment = routine.addDanceSegment(startOfSegment);
+                        StartRecording(segment);
+                        recordingTimer.Start();
+                        return;
+                    default:
+                        return;
+                }
+            }
+        }
+
+        void sre_PostSpeechRecognized(object sender, SpeechRecognizedEventArgs e)
+        {
+            if (post_recording)
+            {
+                Debug.WriteLine("Post-recording Speech detected: " + e.Result.Text.ToString());
+                int startOfSegment = 0;
+                switch (e.Result.Text.ToString().ToUpperInvariant())
+                {
+                    default:
+                    case "SAVE":
+                        //keep_label.Visibility = Visibility.Visible;
+                        hideMode();
+                        waveform.deselectSegment();
+                        post_recording = false;
+                        blackBack.Visibility = Visibility.Collapsed;
+                        afterRecordCanvas.Visibility = Visibility.Collapsed;
+                        routine.save();
+                        renderSegment(startOfSegment);
+                        return;
+                    case "CANCEL":
+                        //cancel_label.Visibility = Visibility.Visible;
+                        post_recording = false;
+                        blackBack.Visibility = Visibility.Collapsed;
+                        afterRecordCanvas.Visibility = Visibility.Collapsed;
+                        waveform.deselectSegment();
+                        routine.deleteDanceSegment(segmentToRecordTo);
+                        return;
+                    case "REDO":
+                        //redo_label.Visibility = Visibility.Visible;
+                        post_recording = false;
+                        blackBack.Visibility = Visibility.Collapsed;
+                        afterRecordCanvas.Visibility = Visibility.Collapsed;
+                        return;
+                    case "PLAY":
+                        //play_label.Visibility = Visibility.Visible;
+                        post_recording = false;
+                        blackBack.Visibility = Visibility.Collapsed;
+                        afterRecordCanvas.Visibility = Visibility.Collapsed;
+                        return;
+                    //default:
+                     //   return;
+                }
+            }
+        }
+
+
         void sre_SpeechRecognitionRejected(object sender, SpeechRecognitionRejectedEventArgs e)
         {
             this.RejectSpeech(e.Result);
@@ -568,7 +1286,7 @@ namespace Choreoh
                 alternates_string_array[j] = alternates_string + " " + i.Text.ToString();
                 j++;
             }
-
+            //int startOfSegment = 0;
             if (annotating)
             {
                 if (e.Result.Confidence < 0.5)
@@ -584,12 +1302,73 @@ namespace Choreoh
                     return;
                 }
             }
+                /*
             else if (pre_recording)
             {
+                Debug.WriteLine("Pre-recording Speech detected: " + e.Result.Text.ToString());
                 switch (e.Result.Text.ToString().ToUpperInvariant())
                 {
                     case "START":
                         //start_label.Visibility = Visibility.Visible;
+                        blackBack.Visibility = Visibility.Collapsed;
+                        beforeRecordCanvas.Visibility = Visibility.Collapsed;
+                        pre_recording = false;
+
+                        showRecordingCanvas();
+                        switchModeToRecording();
+
+                        double duration = endSecondsIntoWaveform - startSecondsIntoWaveform;
+
+                        TimeSpan startTime = new TimeSpan(0,0,(int) startSecondsIntoWaveform);
+                        TimeSpan durationTime = new TimeSpan(0,0,(int) duration);
+
+                        Debug.WriteLine("Start Time: " + startTime.ToString());
+                        Debug.WriteLine("Duration Time: " + durationTime.ToString());
+
+                        var waveformTicker = new DispatcherTimer();
+                        waveformTicker.Tick += new EventHandler((object localsender, EventArgs locale) =>
+                        {
+                            if (waveform.isPlaying())
+                            {
+                                Debug.WriteLine("waveform is playing, so tick");
+                                waveform.movePlay();
+                            }
+                            else
+                            {
+                                Debug.WriteLine("waveform stopped playing, so stop ticking");
+                                (localsender as DispatcherTimer).Stop();
+                            }
+                        });
+                        double secondsPerPixel = 1 / waveform.getPixelsPerSecond();
+                        double nanoseconds = secondsPerPixel * 1000000000;
+                        int ticks = (int)nanoseconds / 100;
+                        Debug.WriteLine("Ticks: " + ticks);
+                        waveformTicker.Interval = new TimeSpan(ticks);
+
+                        
+                        var recordingTimer = new DispatcherTimer();
+                        recordingTimer.Tick += new EventHandler((object localsender, EventArgs locale) =>
+                            {
+                                waveform.endPlay();
+                                waveformTicker.Stop();
+                                StopRecording();
+                                (localsender as DispatcherTimer).Stop();
+                                post_recording = true;
+                                blackBack.Visibility = Visibility.Visible;
+                                afterRecordCanvas.Visibility = Visibility.Visible;
+                                switchModeToPlayback();
+                                renderSegment(startOfSegment);
+                            });
+                        recordingTimer.Interval = durationTime;
+
+
+                        AudioPlay.playForDuration(mainCanvas, songFilename, startTime, durationTime);
+                        waveformTicker.Start();
+                        waveform.startPlay();
+                        startOfSegment = (int)(startTime.TotalSeconds * 30);
+                        DanceSegment segment = routine.addDanceSegment(startOfSegment);
+                        StartRecording(segment);
+                        recordingTimer.Start();
                         return;
                     default:
                         return;
@@ -597,31 +1376,50 @@ namespace Choreoh
             }
             else if (post_recording)
             {
-
+                Debug.WriteLine("Post-recording Speech detected: " + e.Result.Text.ToString());
                 switch (e.Result.Text.ToString().ToUpperInvariant())
                 {
-                    case "KEEP":
+                    case "SAVE":
                         //keep_label.Visibility = Visibility.Visible;
+                        hideMode();
+                        waveform.deselectSegment();
+                        post_recording = false;
+                        blackBack.Visibility = Visibility.Collapsed;
+                        afterRecordCanvas.Visibility = Visibility.Collapsed;
+                        routine.save();
+                        renderSegment(startOfSegment);
                         return;
                     case "CANCEL":
                         //cancel_label.Visibility = Visibility.Visible;
+                        post_recording = false;
+                        blackBack.Visibility = Visibility.Collapsed;
+                        afterRecordCanvas.Visibility = Visibility.Collapsed;
+                        waveform.deselectSegment();
+                        routine.deleteDanceSegment(segmentToRecordTo);
                         return;
                     case "REDO":
                         //redo_label.Visibility = Visibility.Visible;
+                        post_recording = false;
+                            blackBack.Visibility = Visibility.Collapsed;
+                        afterRecordCanvas.Visibility = Visibility.Collapsed;
                         return;
                     case "PLAY":
                         //play_label.Visibility = Visibility.Visible;
+                        post_recording = false;
+                          blackBack.Visibility = Visibility.Collapsed;
+                        afterRecordCanvas.Visibility = Visibility.Collapsed;
                         return;
                     default:
                         return;
                 }
+                 
 
             }
             else
             {
                 return;
             }
-
+            */
         }
 
    
@@ -658,11 +1456,106 @@ namespace Choreoh
         }
         private void UpdateText(string newText)
         {
-            Dispatcher.BeginInvoke(new Action(() => { debug.Text = debug.Text + " " + newText; }), DispatcherPriority.Normal);
+            Dispatcher.BeginInvoke(new Action(() => { commentBox.Text = commentBox.Text + " " + newText; }), DispatcherPriority.Normal);
+        }
+        #endregion
+        #endregion
+        #region timeline radial menu clicks
+        private void waveformRadialMenu_leftClick(object sender, EventArgs e)
+        {
+            renderSegments();
+        }
+
+        private void waveformRadialMenu_rightClick(object sender, EventArgs e)
+        {
+
+        }
+
+        private void waveformRadialMenu_topClick(object sender, EventArgs e)
+        {
+            Debug.WriteLine("Timeline radial menu top clicked");
+            hand.menuOpened = false;
+            RadialMenu menu = (RadialMenu)sender;
+
+            double handX = timelineMenuOpenedPosition.X;
+            handX = handX + hand.ActualWidth / 2;
+
+            double timelineX = Canvas.GetLeft(timelineCanvas);
+
+            double pixelsIntoWaveform = -1 * timelineX + handX;
+            Debug.WriteLine("Hand is " + pixelsIntoWaveform + " pixels into the waveform");
+
+            double secondsIntoWaveform = (pixelsIntoWaveform - 8) / waveform.getPixelsPerSecond();
+            startSecondsIntoWaveform = secondsIntoWaveform;
+            Debug.WriteLine("This means we are " + secondsIntoWaveform + " seconds into the waveform");
+            waveform.selectStart(secondsIntoWaveform);
+
+            Debug.WriteLine("selected start of the waveform");
+
+            blackBack.Visibility = Visibility.Collapsed;
+            hideAllRadialMenus();
+            Debug.WriteLine(menu.ToString());
+
+            isSelectingSegment = true;
         }
         #endregion
 
+        #region timeline selection menu clicks
+        private void selectionRadialMenu_leftClick(object sender, EventArgs e)
+        {
+            pre_recording = true;
+            hand.menuOpened = false;
+            RadialMenu menu = (RadialMenu)sender;
+            blackBack.Visibility = Visibility.Collapsed;
+            hideAllRadialMenus();
+            blackBack.Visibility = Visibility.Visible;
+            beforeRecordCanvas.Visibility = Visibility.Visible;
+            
+        }
+
+        private void selectionRadialMenu_topClick(object sender, EventArgs e)
+        {
+
+        }
+        #endregion
+
+        #region homescreen
+        private void songBeat_Click(object sender, EventArgs e)
+        {
+            homeCanvas.Visibility = Visibility.Collapsed;
+            mainCanvas.Visibility = Visibility.Visible;
+        }
+        #endregion
+
+        #region mode switching
+        private void switchModeToRecording(){
+            playbackMode.Visibility = Visibility.Collapsed;
+            recordMode.Visibility = Visibility.Visible;
+        }
+        private void switchModeToPlayback()
+        {
+
+            recordMode.Visibility = Visibility.Collapsed;
+            playbackMode.Visibility = Visibility.Visible;
+        }
+
+        private void hideMode()
+        {
+            recordMode.Visibility = Visibility.Collapsed;
+            playbackMode.Visibility = Visibility.Collapsed;
+        }
 
         #endregion
+
+        private void hideAllRadialMenus()
+        {
+
+            blackBack.Visibility = Visibility.Collapsed;
+            hand.menuOpened = false;
+            waveformRadialMenu.Visibility = Visibility.Collapsed;
+            selectionRadialMenu.Visibility = Visibility.Collapsed;
+            segmentRadialMenu.Visibility = Visibility.Collapsed;
+            commentRadialMenu.Visibility = Visibility.Collapsed;
+        }
     }
 }

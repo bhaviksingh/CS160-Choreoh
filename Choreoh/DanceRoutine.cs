@@ -101,6 +101,7 @@ namespace Choreoh
 
         public String addComment(int frame, String comment)
         {
+            if (comments.ContainsKey(frame)) comments.Remove(frame);
             comments.Add(frame, comment);
             return comment;
         }
@@ -111,10 +112,14 @@ namespace Choreoh
             {
                 if (kvp.Value == segment)
                 {
+                    Debug.WriteLine("Deleting of segment, target segment found at frame " + kvp.Key.ToString());
                     segments.Remove(kvp.Key);
+                    Debug.WriteLine("Is the segment still in the segments list? " + segments.ContainsKey(kvp.Key).ToString());
+                    segment.deleteFiles();
                     return;
                 }
             }
+            Debug.WriteLine("Exited deleteDanceSegment without actually deleting anything");
         }
 
         public void deleteDanceSegmentAt(int frame)
