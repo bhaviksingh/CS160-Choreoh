@@ -39,6 +39,11 @@ namespace Choreoh
         private Waveform waveform;
         private int oldButtonZIndex;
         private int oldDanceSegmentIndex;
+        private int oldCommentBoxIndex;
+        bool isPlaying;
+        double handPointX;
+        DanceSegment selectedSegment;
+        string commentToSave;
 
         public MainWindow()
         {
@@ -122,9 +127,12 @@ namespace Choreoh
             renderSegments();
         }
 
+        #region add buttons to list and update
         #region add buttons to list
         private void addButtonsToList()
         {
+            addButtonToList(saveCommentButton, buttonList);
+            addButtonToList(cancelCommentButton, buttonList);
             addButtonToList(recordSegmentButton, buttonList);
             addButtonToList(playSegmentButton, buttonList);
             addButtonToList(playSelectedSegmentButton, buttonList);
@@ -147,7 +155,84 @@ namespace Choreoh
         }
         #endregion
 
-        #region render dance segment
+        private void buttonUpdater(Joint handJoint)
+        {
+            hand.SetPosition(handJoint);
+
+            foreach (HoverButton hb in buttonList)
+            {
+                if (blackBack.Visibility == Visibility.Visible)
+                {
+                    if (Canvas.GetZIndex(blackBack) >= Canvas.GetZIndex(hb) && Canvas.GetZIndex(blackBack) >= Canvas.GetZIndex((Canvas)hb.Parent))
+                        continue;
+                }
+                hb.Check(hand);
+            }
+
+
+            foreach (HoverButton hb in segmentList)
+            {
+                hb.Check(hand);
+            }
+        }
+        #endregion
+
+        #region waveform Click
+        private void waveform_Clicked(object sender, EventArgs e)
+        {
+            HoverButton waveButton = (HoverButton)sender;
+            Point handPosition = hand.TransformToAncestor(containerCanvas).Transform(new Point(0, 0));
+            if (isSelectingStartSegment)
+            {
+                double handX = hand.TransformToAncestor(containerCanvas).Transform(new Point(0, 0)).X;
+                handX = handX + hand.ActualWidth / 2;
+                double timelineX = Canvas.GetLeft(timelineCanvas);
+                double pixelsIntoWaveform = -1 * timelineX + handX;
+                startSecondsIntoWaveform = (pixelsIntoWaveform - 8) / waveform.getPixelsPerSecond();
+                isSelectingStartSegment = false;
+                isSelectingEndSegment = true;
+                makeSelectionPrompt.Visibility = Visibility.Collapsed;
+                makeEndSelectionPrompt.Visibility = Visibility.Visible;
+                waveform.selectStart(startSecondsIntoWaveform);
+            }
+            else if (isSelectingEndSegment)
+            {
+                double handX = hand.TransformToAncestor(containerCanvas).Transform(new Point(0, 0)).X;
+                handX = handX + hand.ActualWidth / 2;
+                double timelineX = Canvas.GetLeft(timelineCanvas);
+                double pixelsIntoWaveform = -1 * timelineX + handX;
+                endSecondsIntoWaveform = (pixelsIntoWaveform - 8) / waveform.getPixelsPerSecond();
+                if (endSecondsIntoWaveform > startSecondsIntoWaveform)
+                {
+                    waveform.selectEnd(endSecondsIntoWaveform);
+                }
+                isSelectingEndSegment = false;
+
+
+                if (isSelectingRecordSegment)
+                {
+                    Canvas.SetZIndex(timelineCanvas, oldButtonZIndex);
+                    blackBack.Visibility = Visibility.Collapsed;
+                    //bring up start recording dialog
+                    isSelectingRecordSegment = false;
+                    makeEndSelectionPrompt.Visibility = Visibility.Collapsed;
+                    recordSegment();
+                }
+                else if (isSelectingPlaySegment)
+                {
+                    Canvas.SetZIndex(timelineCanvas, oldButtonZIndex);
+                    blackBack.Visibility = Visibility.Collapsed;
+                    playSegment();
+                    isSelectingPlaySegment = false;
+                    makeEndSelectionPrompt.Visibility = Visibility.Collapsed;
+                }
+            }
+        }
+        #endregion 
+
+        #region dance segment 
+
+            #region render dance segment
         private void renderSegments()
         {
 
@@ -230,9 +315,7 @@ namespace Choreoh
         }
         #endregion
 
-        #region dance segment clicked
-        double handPointX;
-        DanceSegment selectedSegment;
+            #region segment Click
         private void segment_Clicked(object sender, EventArgs e)
         {
             if (sender.ToString() == "Choreoh.HoverButton")
@@ -256,7 +339,9 @@ namespace Choreoh
                 debug.Text = "I have made a huge mistake";
             }
         }
+        #endregion
 
+            #region showing and hiding segment helpers
         private void onlyShowThisSegment(HoverButton danceSegment) 
         {
             foreach (HoverButton hb in segmentList)
@@ -275,175 +360,72 @@ namespace Choreoh
         private void fixSegmentIndices()
         {
             Canvas.SetZIndex(segmentButtonCanvas, oldButtonZIndex);
+            segmentButtonCanvas.Visibility = Visibility.Collapsed;
             Canvas.SetZIndex(segmentCanvas, oldDanceSegmentIndex);
             showAllSegments();
             blackBack.Visibility = Visibility.Collapsed;
             segmentButtonCanvas.Visibility = Visibility.Collapsed;
         }
+        #endregion
+
+            #region play comment delete cancel segment buttons
         private void playSelectedSegmentButton_Clicked(object sender, EventArgs e)
         {
             blackBack.Visibility = Visibility.Collapsed;
-            var videoPlayerTimer = new DispatcherTimer();
-            int videoCounter = 0;
-
-            videoPlaybackCanvas.Visibility = Visibility.Visible;
-            Image img = new System.Windows.Controls.Image();
-
-            videoPlaybackCanvas.Children.Add(img);
-
-            Canvas.SetTop(img, 0);
-            Canvas.SetLeft(img, 0);
-            videoPlayerTimer.Tick += new EventHandler((object localsender, EventArgs locale) =>
-            {
-                if (videoCounter >= selectedSegment.length)
-                {
-                    videoPlaybackCanvas.Visibility = Visibility.Collapsed;
-                    (localsender as DispatcherTimer).Stop();
-                    return;
-                }
-
-                img.Source = selectedSegment.getFrameSource(videoCounter);
-
-
-                videoCounter++;
-            });
-            videoPlayerTimer.Interval = new TimeSpan((int)((1.0 / 30) * (1000000000 / 100)));
-            Debug.WriteLine("Videplayer Tick Interval is " + videoPlayerTimer.Interval.TotalMilliseconds + " milliseconds");
-
-
-            int frameOfSegmentStart = 0;
-            foreach (KeyValuePair<int, DanceSegment> kvp in routine.segments)
-            {
-                if (kvp.Value == selectedSegment)
-                {
-                    frameOfSegmentStart = kvp.Key;
-                    break;
-                }
-            }
-            int frameOfSegmentEnd = frameOfSegmentStart + selectedSegment.length;
-
-            TimeSpan startTime = new TimeSpan(0, 0, (int)(frameOfSegmentStart / 30.0));
-            TimeSpan durationTime = new TimeSpan(0, 0, (int)((frameOfSegmentEnd - frameOfSegmentStart) / 30.0));
-
-            waveform.selectStart(frameOfSegmentStart / 30);
-            waveform.selectEnd(frameOfSegmentEnd / 30);
-
-            var waveformTicker = new DispatcherTimer();
-            waveformTicker.Tick += new EventHandler((object localsender, EventArgs locale) =>
-            {
-                if (waveform.isPlaying())
-                {
-                    Debug.WriteLine("waveform is playing, so tick");
-                    waveform.movePlay();
-                }
-                else
-                {
-                    Debug.WriteLine("waveform stopped playing, so stop ticking");
-                    (localsender as DispatcherTimer).Stop();
-                }
-            });
-            double secondsPerPixel = 1 / waveform.getPixelsPerSecond();
-            double nanoseconds = secondsPerPixel * 1000000000;
-            int ticks = (int)(nanoseconds / 100);
-            Debug.WriteLine("Ticks: " + ticks);
-            waveformTicker.Interval = new TimeSpan(ticks);
-
-            var playbackTimer = new DispatcherTimer();
-            playbackTimer.Tick += new EventHandler((object localsender, EventArgs locale) =>
-            {
-                (localsender as DispatcherTimer).Stop();
-                videoPlayerTimer.Stop();
-                waveformTicker.Stop();
-                waveform.endPlay();
-                waveform.deselectSegment();
-                hideMode();
-                isPlaying = false;
-                videoPlaybackCanvas.Visibility = Visibility.Collapsed;
-            });
-            playbackTimer.Interval = durationTime;
-
-            AudioPlay.playForDuration(mainCanvas, songFilename, startTime, durationTime);
-            videoPlayerTimer.Start();
-            waveformTicker.Start();
-            waveform.startPlay();
-            playbackTimer.Start();
-            switchModeToPlayback();
-            isPlaying = true;
-            
+            playSegment();
             fixSegmentIndices();
         }
         private void addCommentSegmentButton_Clicked(object sender, EventArgs e)
         {
-
-            fixSegmentIndices();
+            commentSegment();
+            Canvas.SetZIndex(segmentButtonCanvas, oldButtonZIndex);
+            segmentButtonCanvas.Visibility = Visibility.Hidden;
+            oldCommentBoxIndex = Canvas.GetZIndex(commentBox);
+            Canvas.SetZIndex(commentBox, Canvas.GetZIndex(blackBack) + 1);
+            //fixSegmentIndices();
+            Canvas.SetZIndex(commentButtonCanvas, Canvas.GetZIndex(blackBack) + 1);
+            commentButtonCanvas.Visibility = Visibility.Visible;
         }
         private void deleteSegmentButton_Clicked(object sender, EventArgs e)
         {
-
+            deleteSegment();
             fixSegmentIndices();
         }
         private void cancelSegmentButton_Clicked(object sender, EventArgs e)
         {
-
+            waveform.deselectSegment();
             fixSegmentIndices();
         }
 
 
-        #endregion
+        #endregion        
 
+            #region play record delete comment segment actions
 
-
-
-        bool isPlaying;
-        private void waveform_Clicked(object sender, EventArgs e)
+        private void commentSegment()
         {
-                HoverButton waveButton = (HoverButton)sender;
-                Point handPosition = hand.TransformToAncestor(containerCanvas).Transform(new Point(0, 0));
-                if (isSelectingStartSegment)
-                {
-                    double handX = hand.TransformToAncestor(containerCanvas).Transform(new Point(0, 0)).X;
-                    handX = handX + hand.ActualWidth / 2;
-                    double timelineX = Canvas.GetLeft(timelineCanvas);
-                    double pixelsIntoWaveform = -1 * timelineX + handX;
-                    startSecondsIntoWaveform = (pixelsIntoWaveform - 8) / waveform.getPixelsPerSecond();
-                    isSelectingStartSegment = false;                  
-                    isSelectingEndSegment = true;
-                    makeSelectionPrompt.Visibility = Visibility.Collapsed;
-                    makeEndSelectionPrompt.Visibility = Visibility.Visible;
-                    waveform.selectStart(startSecondsIntoWaveform);
-                }
-                else if (isSelectingEndSegment)
-                {
-                    double handX = hand.TransformToAncestor(containerCanvas).Transform(new Point(0, 0)).X;
-                    handX = handX + hand.ActualWidth / 2;
-                    double timelineX = Canvas.GetLeft(timelineCanvas);
-                    double pixelsIntoWaveform = -1 * timelineX + handX;
-                    endSecondsIntoWaveform = (pixelsIntoWaveform - 8) / waveform.getPixelsPerSecond();
-                    if (endSecondsIntoWaveform > startSecondsIntoWaveform)
-                    {
-                        waveform.selectEnd(endSecondsIntoWaveform);
-                    }
-                    isSelectingEndSegment = false;
-                    
+            double handX = timelineMenuOpenedPosition.X;
+            handX = handX + hand.ActualWidth / 2;
 
-                    if (isSelectingRecordSegment)
-                    {
-                        Canvas.SetZIndex(timelineCanvas, oldButtonZIndex);
-                        blackBack.Visibility = Visibility.Collapsed;
-                        //bring up start recording dialog
-                        isSelectingRecordSegment = false;
-                        makeEndSelectionPrompt.Visibility = Visibility.Collapsed;
-                        recordSegment();
-                    }
-                    else if (isSelectingPlaySegment)
-                    {
-                        Canvas.SetZIndex(timelineCanvas, oldButtonZIndex);
-                        blackBack.Visibility = Visibility.Collapsed;
-                        playSegment();
-                        isSelectingPlaySegment = false;
-                        makeEndSelectionPrompt.Visibility = Visibility.Collapsed;
-                    }
-                }
+            Point handPosition = hand.TransformToAncestor(containerCanvas).Transform(new Point(0, 0));
+            handPointX = handPosition.X + hand.ActualWidth / 2;
+            timelineMenuOpenedPosition = handPosition;
+
+            commentBox.Visibility = Visibility.Visible;
+            annotating = true;
+            commentToSave = comment;
+        }
+
+        private void deleteSegment()
+        {
+            if (selectedSegment != null)
+            {
+                blackBack.Visibility = Visibility.Collapsed;
+                routine.deleteDanceSegment(selectedSegment);
+                selectedSegment = null;
+                routine.save();
+                renderSegments();
+            }
         }
 
         private void recordSegment()
@@ -551,6 +533,8 @@ namespace Choreoh
             isPlaying = true;
         }
         #endregion
+        #endregion
+        #endregion
 
         #region kinect AllFramesReady
         void newSensor_AllFramesReady(object sender, AllFramesReadyEventArgs e)
@@ -605,43 +589,35 @@ namespace Choreoh
         }
         #endregion
 
-        private void buttonUpdater(Joint handJoint)
-        {
-            hand.SetPosition(handJoint);
-
-            foreach (HoverButton hb in buttonList)
-            {
-                if (blackBack.Visibility == Visibility.Visible)
-                {
-                    if (Canvas.GetZIndex(blackBack) >= Canvas.GetZIndex(hb) && Canvas.GetZIndex(blackBack) >= Canvas.GetZIndex((Canvas)hb.Parent))
-                        continue;
-                }
-                hb.Check(hand);
-            }
-
-            
-            foreach (HoverButton hb in segmentList)
-            {
-                hb.Check(hand);
-            }
-        }
-
-        private void bottom_Click(object sender, EventArgs e)
-        {
-
-            blackBack.Visibility = Visibility.Collapsed;
-
-
-            waveform.deselectSegment();
-            annotating = false;
-            comment = "";
-        }
-
+        #region main page navigation
         private void back_Clicked(object sender, EventArgs e)
         {
             homeCanvas.Visibility = Visibility.Visible;
             mainCanvas.Visibility = Visibility.Collapsed;
         }
+
+        private void RecordSegmentButton_Click(object sender, EventArgs e)
+        {
+            isSelectingRecordSegment = true;
+            isSelectingStartSegment = true;
+            blackBack.Visibility = Visibility.Visible;
+            oldButtonZIndex = Canvas.GetZIndex(timelineCanvas);
+            Canvas.SetZIndex(timelineCanvas, Canvas.GetZIndex(blackBack) + 10);
+            makeSelectionPrompt.Visibility = Visibility.Visible;
+        }
+
+        private void PlaySegmentButton_Click(object sender, EventArgs e)
+        {
+            isSelectingPlaySegment = true;
+            isSelectingStartSegment = true;
+            blackBack.Visibility = Visibility.Visible;
+            oldButtonZIndex = Canvas.GetZIndex(timelineCanvas);
+            Canvas.SetZIndex(timelineCanvas, Canvas.GetZIndex(blackBack) + 1);
+            makeSelectionPrompt.Visibility = Visibility.Visible;
+        }
+
+        #endregion
+
         #region helper functions
         Skeleton GetFirstSkeleton(AllFramesReadyEventArgs e)
         {
@@ -856,70 +832,24 @@ namespace Choreoh
         }
         #endregion
 
-        string commentToSave;
-        #region segment radial menu clicks
-        private void segmentRadialMenu_rightClick(object sender, EventArgs e)
-        {
-            if (selectedSegment != null)
-            {
-                var menu = (RadialMenu)sender;
-                blackBack.Visibility = Visibility.Collapsed;
-                Debug.WriteLine("Deleting segment: " + selectedSegment);
-                routine.deleteDanceSegment(selectedSegment);
-                selectedSegment = null;
-                Debug.WriteLine("Segment should have been deleted");
-                Debug.WriteLine("Now saving routine");
-                routine.save();
-                Debug.WriteLine("Should have finished saving routine");
 
-                renderSegments();
-            }
-            else
-            {
-                Debug.WriteLine("Tried to delete already deleted segment. Maybe radial menu clicking too many times?");
-            }
+        #region comment buttons
+
+        private void cancelCommentButton_Clicked(object sender, EventArgs e)
+        {
+            waveform.deselectSegment();
+            commentButtonCanvas.Visibility = Visibility.Collapsed;
+            blackBack.Visibility = Visibility.Collapsed;
+            commentBox.Text = "";
+            commentBox.Visibility = Visibility.Collapsed;
+            showAllSegments();
         }
-        private void segmentRadialMenu_topClick(object sender, EventArgs e)
+        private void saveCommentButton_Clicked(object sender, EventArgs e)
         {
-            Debug.WriteLine("Segment radial menu top clicked");
-
-
             double handX = timelineMenuOpenedPosition.X;
             handX = handX + hand.ActualWidth / 2;
 
             blackBack.Visibility = Visibility.Collapsed;
-
-            Point handPosition = hand.TransformToAncestor(containerCanvas).Transform(new Point(0, 0));
-            handPointX = handPosition.X + hand.ActualWidth / 2;
-            timelineMenuOpenedPosition = handPosition;
-
-            commentBox.Visibility = Visibility.Visible;
-            annotating = true;
-            commentToSave = comment;
-
-
-        }
-        #endregion
-
-        #region comment radial menu clicks
-        private void commentRadialMenu_leftClick(object sender, EventArgs e)
-        {
-
-        }
-        private void commentRadialMenu_rightClick(object sender, EventArgs e)
-        {
-
-        }
-        private void commentRadialMenu_topClick(object sender, EventArgs e)
-        {
-            hand.menuOpened = false;
-            RadialMenu menu = (RadialMenu)sender;
-
-            double handX = timelineMenuOpenedPosition.X;
-            handX = handX + hand.ActualWidth / 2;
-
-            blackBack.Visibility = Visibility.Collapsed;
-            Debug.WriteLine(menu.ToString());
 
             int pos = (int)((handPointX + waveform.getOffset()) / waveform.getPixelsPerSecond() * 30);
             routine.addComment(pos, commentToSave);
@@ -928,7 +858,11 @@ namespace Choreoh
             commentBox.Text = "";
             commentBox.Visibility = Visibility.Hidden;
             renderComment(pos);
+            waveform.deselectSegment();
+            commentButtonCanvas.Visibility = Visibility.Collapsed;
+            showAllSegments();
         }
+
         #endregion
 
         #region audio config and control
@@ -1471,25 +1405,7 @@ namespace Choreoh
 
         #endregion
 
-        private void RecordSegmentButton_Click(object sender, EventArgs e)
-        {
-            isSelectingRecordSegment = true;
-            isSelectingStartSegment = true;
-            blackBack.Visibility = Visibility.Visible;
-            oldButtonZIndex = Canvas.GetZIndex(timelineCanvas);
-            Canvas.SetZIndex(timelineCanvas, Canvas.GetZIndex(blackBack)+10);
-            makeSelectionPrompt.Visibility = Visibility.Visible;
-        }
-
-        private void PlaySegmentButton_Click(object sender, EventArgs e)
-        {
-            isSelectingPlaySegment = true;
-            isSelectingStartSegment = true;
-            blackBack.Visibility = Visibility.Visible;
-            oldButtonZIndex = Canvas.GetZIndex(timelineCanvas);
-            Canvas.SetZIndex(timelineCanvas, Canvas.GetZIndex(blackBack) + 1);
-            makeSelectionPrompt.Visibility = Visibility.Visible;
-        }
+        
 
     }
 }
