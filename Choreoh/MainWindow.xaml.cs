@@ -237,7 +237,8 @@ namespace Choreoh
         {
             if (sender.ToString() == "Choreoh.HoverButton")
             {
-                buttonSegments.TryGetValue(waveButton, out selectedSegment);
+                HoverButton segmentButton = (HoverButton)sender;
+                buttonSegments.TryGetValue(segmentButton, out selectedSegment);
                 Point handPosition = hand.TransformToAncestor(containerCanvas).Transform(new Point(0, 0));
                 handPointX = handPosition.X + hand.ActualWidth / 2;
                 timelineMenuOpenedPosition = handPosition;
@@ -248,6 +249,7 @@ namespace Choreoh
                 oldDanceSegmentIndex = Canvas.GetZIndex((HoverButton)sender);
                 Canvas.SetZIndex(segmentCanvas, Canvas.GetZIndex(blackBack) + 1);   
                 onlyShowThisSegment((HoverButton)sender);
+                segmentButtonCanvas.Visibility = Visibility.Visible;
             }
             else
             {
@@ -267,7 +269,7 @@ namespace Choreoh
         {
             foreach (HoverButton hb in segmentList)
             {
-                hb.Visibility = Visibility.Hidden;
+                hb.Visibility = Visibility.Visible;
             }
         }
         private void fixSegmentIndices()
@@ -276,10 +278,98 @@ namespace Choreoh
             Canvas.SetZIndex(segmentCanvas, oldDanceSegmentIndex);
             showAllSegments();
             blackBack.Visibility = Visibility.Collapsed;
+            segmentButtonCanvas.Visibility = Visibility.Collapsed;
         }
         private void playSelectedSegmentButton_Clicked(object sender, EventArgs e)
         {
+            blackBack.Visibility = Visibility.Collapsed;
+            var videoPlayerTimer = new DispatcherTimer();
+            int videoCounter = 0;
 
+            videoPlaybackCanvas.Visibility = Visibility.Visible;
+            Image img = new System.Windows.Controls.Image();
+
+            videoPlaybackCanvas.Children.Add(img);
+
+            Canvas.SetTop(img, 0);
+            Canvas.SetLeft(img, 0);
+            videoPlayerTimer.Tick += new EventHandler((object localsender, EventArgs locale) =>
+            {
+                if (videoCounter >= selectedSegment.length)
+                {
+                    videoPlaybackCanvas.Visibility = Visibility.Collapsed;
+                    (localsender as DispatcherTimer).Stop();
+                    return;
+                }
+
+                img.Source = selectedSegment.getFrameSource(videoCounter);
+
+
+                videoCounter++;
+            });
+            videoPlayerTimer.Interval = new TimeSpan((int)((1.0 / 30) * (1000000000 / 100)));
+            Debug.WriteLine("Videplayer Tick Interval is " + videoPlayerTimer.Interval.TotalMilliseconds + " milliseconds");
+
+
+            int frameOfSegmentStart = 0;
+            foreach (KeyValuePair<int, DanceSegment> kvp in routine.segments)
+            {
+                if (kvp.Value == selectedSegment)
+                {
+                    frameOfSegmentStart = kvp.Key;
+                    break;
+                }
+            }
+            int frameOfSegmentEnd = frameOfSegmentStart + selectedSegment.length;
+
+            TimeSpan startTime = new TimeSpan(0, 0, (int)(frameOfSegmentStart / 30.0));
+            TimeSpan durationTime = new TimeSpan(0, 0, (int)((frameOfSegmentEnd - frameOfSegmentStart) / 30.0));
+
+            waveform.selectStart(frameOfSegmentStart / 30);
+            waveform.selectEnd(frameOfSegmentEnd / 30);
+
+            var waveformTicker = new DispatcherTimer();
+            waveformTicker.Tick += new EventHandler((object localsender, EventArgs locale) =>
+            {
+                if (waveform.isPlaying())
+                {
+                    Debug.WriteLine("waveform is playing, so tick");
+                    waveform.movePlay();
+                }
+                else
+                {
+                    Debug.WriteLine("waveform stopped playing, so stop ticking");
+                    (localsender as DispatcherTimer).Stop();
+                }
+            });
+            double secondsPerPixel = 1 / waveform.getPixelsPerSecond();
+            double nanoseconds = secondsPerPixel * 1000000000;
+            int ticks = (int)(nanoseconds / 100);
+            Debug.WriteLine("Ticks: " + ticks);
+            waveformTicker.Interval = new TimeSpan(ticks);
+
+            var playbackTimer = new DispatcherTimer();
+            playbackTimer.Tick += new EventHandler((object localsender, EventArgs locale) =>
+            {
+                (localsender as DispatcherTimer).Stop();
+                videoPlayerTimer.Stop();
+                waveformTicker.Stop();
+                waveform.endPlay();
+                waveform.deselectSegment();
+                hideMode();
+                isPlaying = false;
+                videoPlaybackCanvas.Visibility = Visibility.Collapsed;
+            });
+            playbackTimer.Interval = durationTime;
+
+            AudioPlay.playForDuration(mainCanvas, songFilename, startTime, durationTime);
+            videoPlayerTimer.Start();
+            waveformTicker.Start();
+            waveform.startPlay();
+            playbackTimer.Start();
+            switchModeToPlayback();
+            isPlaying = true;
+            
             fixSegmentIndices();
         }
         private void addCommentSegmentButton_Clicked(object sender, EventArgs e)
