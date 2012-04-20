@@ -37,7 +37,8 @@ namespace Choreoh
         private DanceSegment segmentToRecordTo;
         private DanceRoutine routine;
         private Waveform waveform;
-        private int oldTimelineIndex;
+        private int oldButtonZIndex;
+        private int oldDanceSegmentIndex;
 
         public MainWindow()
         {
@@ -124,6 +125,12 @@ namespace Choreoh
         #region add buttons to list
         private void addButtonsToList()
         {
+            addButtonToList(recordSegmentButton, buttonList);
+            addButtonToList(playSegmentButton, buttonList);
+            addButtonToList(playSelectedSegmentButton, buttonList);
+            addButtonToList(addCommentSegmentButton, buttonList);
+            addButtonToList(deleteSegmentButton, buttonList);
+            addButtonToList(cancelSegmentButton, buttonList);
             addButtonToList(backButton, buttonList);
             addButtonToList(waveButton, buttonList);
             addButtonToList(song1, buttonList);
@@ -131,8 +138,7 @@ namespace Choreoh
             addButtonToList(song3, buttonList);
             addButtonToList(song4, buttonList);
             addButtonToList(song5, buttonList);
-            addButtonToList(recordSegmentButton, buttonList);
-            addButtonToList(playSegmentButton, buttonList);
+            
         }
 
         private void addButtonToList(HoverButton button, LinkedList<HoverButton> list)
@@ -231,26 +237,72 @@ namespace Choreoh
         {
             if (sender.ToString() == "Choreoh.HoverButton")
             {
-                Debug.WriteLine("Waveform Button clicked");
-
-                HoverButton waveButton = (HoverButton)sender;
                 buttonSegments.TryGetValue(waveButton, out selectedSegment);
                 Point handPosition = hand.TransformToAncestor(containerCanvas).Transform(new Point(0, 0));
                 handPointX = handPosition.X + hand.ActualWidth / 2;
                 timelineMenuOpenedPosition = handPosition;
-
-                hand.menuOpened = true;
-
-
                 blackBack.Visibility = Visibility.Visible;
-
+                oldButtonZIndex = Canvas.GetZIndex(segmentButtonCanvas);
+                Canvas.SetZIndex(segmentButtonCanvas, Canvas.GetZIndex(blackBack) + 1);
+                Canvas.SetZIndex(playSelectedSegmentButton, Canvas.GetZIndex(blackBack) + 1);
+                oldDanceSegmentIndex = Canvas.GetZIndex((HoverButton)sender);
+                Canvas.SetZIndex(segmentCanvas, Canvas.GetZIndex(blackBack) + 1);   
+                onlyShowThisSegment((HoverButton)sender);
             }
             else
             {
                 debug.Text = "I have made a huge mistake";
             }
         }
+
+        private void onlyShowThisSegment(HoverButton danceSegment) 
+        {
+            foreach (HoverButton hb in segmentList)
+            {
+                if (hb != danceSegment)
+                    hb.Visibility = Visibility.Hidden;
+            }      
+        }
+        private void showAllSegments()
+        {
+            foreach (HoverButton hb in segmentList)
+            {
+                hb.Visibility = Visibility.Hidden;
+            }
+        }
+        private void fixSegmentIndices()
+        {
+            Canvas.SetZIndex(segmentButtonCanvas, oldButtonZIndex);
+            Canvas.SetZIndex(segmentCanvas, oldDanceSegmentIndex);
+            showAllSegments();
+            blackBack.Visibility = Visibility.Collapsed;
+        }
+        private void playSelectedSegmentButton_Clicked(object sender, EventArgs e)
+        {
+
+            fixSegmentIndices();
+        }
+        private void addCommentSegmentButton_Clicked(object sender, EventArgs e)
+        {
+
+            fixSegmentIndices();
+        }
+        private void deleteSegmentButton_Clicked(object sender, EventArgs e)
+        {
+
+            fixSegmentIndices();
+        }
+        private void cancelSegmentButton_Clicked(object sender, EventArgs e)
+        {
+
+            fixSegmentIndices();
+        }
+
+
         #endregion
+
+
+
 
         bool isPlaying;
         private void waveform_Clicked(object sender, EventArgs e)
@@ -264,9 +316,11 @@ namespace Choreoh
                     double timelineX = Canvas.GetLeft(timelineCanvas);
                     double pixelsIntoWaveform = -1 * timelineX + handX;
                     startSecondsIntoWaveform = (pixelsIntoWaveform - 8) / waveform.getPixelsPerSecond();
-                    isSelectingStartSegment = false;
-                    waveform.selectStart(startSecondsIntoWaveform);
+                    isSelectingStartSegment = false;                  
                     isSelectingEndSegment = true;
+                    makeSelectionPrompt.Visibility = Visibility.Collapsed;
+                    makeEndSelectionPrompt.Visibility = Visibility.Visible;
+                    waveform.selectStart(startSecondsIntoWaveform);
                 }
                 else if (isSelectingEndSegment)
                 {
@@ -280,23 +334,24 @@ namespace Choreoh
                         waveform.selectEnd(endSecondsIntoWaveform);
                     }
                     isSelectingEndSegment = false;
-
-                    //collapse what ever the black canvas is called
+                    
 
                     if (isSelectingRecordSegment)
                     {
-                        Canvas.SetZIndex(timelineCanvas, oldTimelineIndex);
+                        Canvas.SetZIndex(timelineCanvas, oldButtonZIndex);
                         blackBack.Visibility = Visibility.Collapsed;
                         //bring up start recording dialog
                         isSelectingRecordSegment = false;
+                        makeEndSelectionPrompt.Visibility = Visibility.Collapsed;
                         recordSegment();
                     }
                     else if (isSelectingPlaySegment)
                     {
-                        Canvas.SetZIndex(timelineCanvas, oldTimelineIndex);
+                        Canvas.SetZIndex(timelineCanvas, oldButtonZIndex);
                         blackBack.Visibility = Visibility.Collapsed;
                         playSegment();
                         isSelectingPlaySegment = false;
+                        makeEndSelectionPrompt.Visibility = Visibility.Collapsed;
                     }
                 }
         }
@@ -468,7 +523,7 @@ namespace Choreoh
             {
                 if (blackBack.Visibility == Visibility.Visible)
                 {
-                    if (Canvas.GetZIndex(blackBack) > Canvas.GetZIndex(hb))
+                    if (Canvas.GetZIndex(blackBack) >= Canvas.GetZIndex(hb) && Canvas.GetZIndex(blackBack) >= Canvas.GetZIndex((Canvas)hb.Parent))
                         continue;
                 }
                 hb.Check(hand);
@@ -483,10 +538,9 @@ namespace Choreoh
 
         private void bottom_Click(object sender, EventArgs e)
         {
-            RadialMenu menu = (RadialMenu)sender;
-            String direction = menu.getLastHovering();
+
             blackBack.Visibility = Visibility.Collapsed;
-            hand.menuOpened = false;
+
 
             waveform.deselectSegment();
             annotating = false;
@@ -738,14 +792,12 @@ namespace Choreoh
         private void segmentRadialMenu_topClick(object sender, EventArgs e)
         {
             Debug.WriteLine("Segment radial menu top clicked");
-            hand.menuOpened = false;
-            RadialMenu menu = (RadialMenu)sender;
+
 
             double handX = timelineMenuOpenedPosition.X;
             handX = handX + hand.ActualWidth / 2;
 
             blackBack.Visibility = Visibility.Collapsed;
-            Debug.WriteLine(menu.ToString());
 
             Point handPosition = hand.TransformToAncestor(containerCanvas).Transform(new Point(0, 0));
             handPointX = handPosition.X + hand.ActualWidth / 2;
@@ -1334,8 +1386,9 @@ namespace Choreoh
             isSelectingRecordSegment = true;
             isSelectingStartSegment = true;
             blackBack.Visibility = Visibility.Visible;
-            oldTimelineIndex = Canvas.GetZIndex(timelineCanvas);
-            Canvas.SetZIndex(timelineCanvas, Canvas.GetZIndex(blackBack)+10); 
+            oldButtonZIndex = Canvas.GetZIndex(timelineCanvas);
+            Canvas.SetZIndex(timelineCanvas, Canvas.GetZIndex(blackBack)+10);
+            makeSelectionPrompt.Visibility = Visibility.Visible;
         }
 
         private void PlaySegmentButton_Click(object sender, EventArgs e)
@@ -1343,9 +1396,10 @@ namespace Choreoh
             isSelectingPlaySegment = true;
             isSelectingStartSegment = true;
             blackBack.Visibility = Visibility.Visible;
-            oldTimelineIndex = Canvas.GetZIndex(timelineCanvas);
-            Canvas.SetZIndex(timelineCanvas, Canvas.GetZIndex(blackBack) + 1); 
-        } 
+            oldButtonZIndex = Canvas.GetZIndex(timelineCanvas);
+            Canvas.SetZIndex(timelineCanvas, Canvas.GetZIndex(blackBack) + 1);
+            makeSelectionPrompt.Visibility = Visibility.Visible;
+        }
 
     }
 }
