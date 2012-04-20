@@ -131,6 +131,7 @@ namespace Choreoh
         #region add buttons to list
         private void addButtonsToList()
         {
+            addButtonToList(cancelActionButton, buttonList);
             addButtonToList(saveCommentButton, buttonList);
             addButtonToList(cancelCommentButton, buttonList);
             addButtonToList(recordSegmentButton, buttonList);
@@ -217,6 +218,7 @@ namespace Choreoh
                     isSelectingRecordSegment = false;
                     makeEndSelectionPrompt.Visibility = Visibility.Collapsed;
                     recordSegment();
+                    cancelActionCanvas.Visibility = Visibility.Collapsed;
                 }
                 else if (isSelectingPlaySegment)
                 {
@@ -225,6 +227,7 @@ namespace Choreoh
                     playSegment();
                     isSelectingPlaySegment = false;
                     makeEndSelectionPrompt.Visibility = Visibility.Collapsed;
+                    cancelActionCanvas.Visibility = Visibility.Collapsed;
                 }
             }
         }
@@ -602,8 +605,10 @@ namespace Choreoh
             isSelectingStartSegment = true;
             blackBack.Visibility = Visibility.Visible;
             oldButtonZIndex = Canvas.GetZIndex(timelineCanvas);
-            Canvas.SetZIndex(timelineCanvas, Canvas.GetZIndex(blackBack) + 10);
+            Canvas.SetZIndex(timelineCanvas, Canvas.GetZIndex(blackBack) + 1);
             makeSelectionPrompt.Visibility = Visibility.Visible;
+            Canvas.SetZIndex(cancelActionCanvas, Canvas.GetZIndex(blackBack) + 1);
+            cancelActionCanvas.Visibility = Visibility.Visible;
         }
 
         private void PlaySegmentButton_Click(object sender, EventArgs e)
@@ -614,6 +619,8 @@ namespace Choreoh
             oldButtonZIndex = Canvas.GetZIndex(timelineCanvas);
             Canvas.SetZIndex(timelineCanvas, Canvas.GetZIndex(blackBack) + 1);
             makeSelectionPrompt.Visibility = Visibility.Visible;
+            Canvas.SetZIndex(cancelActionCanvas, Canvas.GetZIndex(blackBack) + 1);
+            cancelActionCanvas.Visibility = Visibility.Visible;
         }
 
         #endregion
@@ -1367,15 +1374,6 @@ namespace Choreoh
         #endregion
         #endregion
 
-        #region timeline selection menu clicks
-        private void selectionRadialMenu_leftClick(object sender, EventArgs e)
-        {
-            pre_recording = true;
-            blackBack.Visibility = Visibility.Visible;
-            beforeRecordCanvas.Visibility = Visibility.Visible;
-        }
-        #endregion
-
         #region homescreen
         private void songBeat_Click(object sender, EventArgs e)
         {
@@ -1405,7 +1403,15 @@ namespace Choreoh
 
         #endregion
 
-        
+        private void cancelActionButton_Clicked(object sender, EventArgs e)
+        {
+            blackBack.Visibility = Visibility.Collapsed;
+            makeEndSelectionPrompt.Visibility = Visibility.Hidden;
+            makeSelectionPrompt.Visibility = Visibility.Hidden;
+            showAllSegments();
+            cancelActionCanvas.Visibility = Visibility.Collapsed;
+            Canvas.SetZIndex(timelineCanvas, oldButtonZIndex);
+        }
 
     }
 }

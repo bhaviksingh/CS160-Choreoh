@@ -42,7 +42,7 @@
             </Border>
             <Border Style="{StaticResource UITextElement}" Name="recordMode" Canvas.Left="844" Canvas.Top="69" Width="268" Height="50" BorderBrush="#FFDEDEDE">
                 <Canvas Width="256">
-                    <Label  Foreground="#FF812A2F" Canvas.Left="50" Canvas.Top="9" Style="{StaticResource UIText}">RECORDING MODE</Label>
+                    <Label  Foreground="#FF812A2F" Canvas.Left="45" Canvas.Top="9" Style="{StaticResource UIText}">RECORDING MODE</Label>
                     <Image Canvas.Left="6" Canvas.Top="8" Height="34" Name="recordModeImage" Stretch="Fill" Width="30" Source="img/ui/recordbutton.png" />
                 </Canvas>
             </Border>
@@ -66,6 +66,9 @@
                 <local:HoverButton x:Name="saveCommentButton"       Text="Save" Canvas.Left="500" Canvas.Top="480" Style="{StaticResource UIButton}"  Click="saveCommentButton_Clicked"/>
                 <local:HoverButton x:Name="cancelCommentButton"     Text="Cancel" Canvas.Left="700" Canvas.Top="480" Style="{StaticResource UIButton}"  Click="cancelCommentButton_Clicked"/>      
             </Canvas>
+            <Canvas x:Name="cancelActionCanvas" Visibility="Collapsed">
+                <local:HoverButton x:Name="cancelActionButton"     Text="Cancel" Canvas.Left="-6" Canvas.Top="270" Style="{StaticResource UIButton}"  Click="cancelActionButton_Clicked"/>
+            </Canvas>
             <Canvas Name="timelineCanvas" Canvas.Top="450" Height="160" Width="1800" Canvas.Left="0" Background="White">
                 <local:HoverButton x:Name="waveButton" Width="1800" Height="160" Click="waveform_Clicked"  BackgroundColor="White"/>
                 
@@ -87,11 +90,11 @@
             <Canvas Width="1024" Height="768" Background="Black" Name="blackBack" Opacity=".85">
                 <Canvas Name="makeSelectionPrompt" Visibility="Collapsed" >
                     <Image Source="img/ui/downArrow.png" Canvas.Left="320" Height="90" Canvas.Top="350"/>
-                    <TextBlock Canvas.Left="100" Canvas.Top="260" Foreground="#00a2ff" FontSize="40" Width="650" TextWrapping="Wrap">Push to mark beginning of segment</TextBlock>
+                    <TextBlock Canvas.Left="300" Canvas.Top="200" Foreground="#00a2ff" FontSize="40" Width="400" TextWrapping="Wrap">Push to mark beginning of segment</TextBlock>
                 </Canvas>
                 <Canvas Name="makeEndSelectionPrompt" Visibility="Collapsed" >
                     <Image Source="img/ui/downArrow.png" Canvas.Left="450" Height="90" Canvas.Top="320"/>
-                    <TextBlock Canvas.Left="200" Canvas.Top="260" Foreground="#00a2ff" FontSize="40" Width="650" TextWrapping="Wrap">Push to mark end of segment</TextBlock>
+                    <TextBlock Canvas.Left="400" Canvas.Top="200" Foreground="#00a2ff" FontSize="40" Width="400" TextWrapping="Wrap">Push to mark end of segment</TextBlock>
                 </Canvas>
             </Canvas>
 
