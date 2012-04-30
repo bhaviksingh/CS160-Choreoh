@@ -148,7 +148,6 @@ namespace Choreoh
             addButtonToList(song3, buttonList);
             addButtonToList(song4, buttonList);
             addButtonToList(song5, buttonList);
-
         }
 
         private void addButtonToList(HoverButton button, LinkedList<HoverButton> list)
@@ -434,6 +433,7 @@ namespace Choreoh
         }
         private void cancelSegmentButton_Clicked(object sender, EventArgs e)
         {
+            cancelActionButton_Clicked(sender, e);
             waveform.deselectSegment();
             fixSegmentIndices();
         }
@@ -920,6 +920,7 @@ namespace Choreoh
 
         private void cancelCommentButton_Clicked(object sender, EventArgs e)
         {
+            cancelActionButton_Clicked(sender, e);
             waveform.deselectSegment();
             commentButtonCanvas.Visibility = Visibility.Collapsed;
             blackBack.Visibility = Visibility.Collapsed;
