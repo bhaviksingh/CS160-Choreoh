@@ -24,3 +24,5 @@ D:\Samuel\Downloads\sjzhu-CS-160-Waveform-3c753f9\sjzhu-CS-160-Waveform-3c753f9\
 D:\Samuel\Downloads\sjzhu-CS-160-Waveform-3c753f9\sjzhu-CS-160-Waveform-3c753f9\WaveformStuff\obj\x86\Debug\WaveformStuff.Properties.Resources.resources
 D:\Samuel\Downloads\sjzhu-CS-160-Waveform-3c753f9\sjzhu-CS-160-Waveform-3c753f9\WaveformStuff\obj\x86\Debug\GenerateResource.read.1.tlog
 D:\Samuel\Downloads\sjzhu-CS-160-Waveform-3c753f9\sjzhu-CS-160-Waveform-3c753f9\WaveformStuff\obj\x86\Debug\GenerateResource.write.1.tlog
+C:\Users\Samuel\Documents\WaveformStuff\WaveformStuff\obj\x86\Debug\WaveformStuff.exe
+C:\Users\Samuel\Documents\WaveformStuff\WaveformStuff\obj\x86\Debug\WaveformStuff.pdb
