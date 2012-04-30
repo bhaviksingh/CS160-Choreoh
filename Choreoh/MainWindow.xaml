@@ -1,0 +1,130 @@
+﻿<Window x:Class="Choreoh.MainWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:local="clr-namespace:Choreoh"
+        Title="Choreoh!" Height="806" Width="1038" Background="Red" 
+        xmlns:my="clr-namespace:Microsoft.Samples.Kinect.WpfViewers;assembly=Microsoft.Samples.Kinect.WpfViewers" 
+        Loaded="Window_Loaded">
+    <Window.Resources>
+        <Style x:Key="UITextElement" TargetType="Border">
+            <Setter Property="Background" Value="White"/>
+            <Setter Property="CornerRadius" Value="4,4,4,4"/>
+            <Setter Property="BorderBrush" Value="LightGray"/>
+            <Setter Property="BorderThickness" Value="1,1,1,1"/>
+            <Setter Property="Visibility" Value="Visible"/>
+        </Style>
+        <Style x:Key="UITextElement_hidden" TargetType="Border">
+            <Setter Property="Visibility" Value="Collapsed"/>
+        </Style>
+        <Style x:Key="UIText" TargetType="Label">
+            <Setter Property="FontFamily" Value="..\img\ui\#Nevis"/>
+            <Setter Property="FontSize" Value="19"/>
+        </Style>
+        <Style x:Key="UIButton" TargetType="local:HoverButton">
+            <Setter Property="FontFamily" Value="..\img\ui\#Nevis"/>
+            <Setter Property="TextSize" Value="25"/>
+            <Setter Property="TextColor" Value="#EEEEEE"/>
+            <Setter Property="BackgroundColor" Value="#FF1F73B7"/>
+            <Setter Property="CornerRadius" Value="2"/>
+            <Setter Property="Width" Value="180"/>
+            <Setter Property="Height" Value="120"/>
+        </Style>
+    </Window.Resources>
+
+
+    <Canvas Height="768" Width="1024" Background="Blue" Name="containerCanvas">
+        <Canvas  Height="768" HorizontalAlignment="Left" Name="mainCanvas" VerticalAlignment="Top" Width="1024" Background="#FFEEEEEE" >
+            <Border Style="{StaticResource UITextElement}" Name="playbackMode" Canvas.Left="844" Canvas.Top="-5" Width="268" Height="50">
+                <Canvas Width="256">
+                    <Label  Foreground="#FF1A9D1A" Canvas.Left="50" Canvas.Top="9" Style="{StaticResource UIText}" >PLAYBACK MODE</Label>
+                    <Image Canvas.Left="6" Canvas.Top="8" Height="34" Name="playbackModeImage" Stretch="Fill" Width="24" Source="img/ui/playbutton.png" />
+                </Canvas>
+            </Border>
+            <Border Style="{StaticResource UITextElement}" Name="recordMode" Canvas.Left="844" Canvas.Top="69" Width="268" Height="50" BorderBrush="#FFDEDEDE">
+                <Canvas Width="256">
+                    <Label  Foreground="#FF812A2F" Canvas.Left="45" Canvas.Top="9" Style="{StaticResource UIText}">RECORDING MODE</Label>
+                    <Image Canvas.Left="6" Canvas.Top="8" Height="34" Name="recordModeImage" Stretch="Fill" Width="30" Source="img/ui/recordbutton.png" />
+                </Canvas>
+            </Border>
+            <!--<Border Style="{StaticResource UITextElement}" Name="songLabel" Canvas.Right="0" Canvas.Top="-5" Width="180" Height="50">
+                <Canvas Width="180">
+                    <Label Foreground="#FF5F5F5F" Canvas.Left="10" Canvas.Top="9" Style="{StaticResource UIText}">"Beat It" - MJ</Label>
+                </Canvas>
+            </Border>-->
+            <local:HoverButton x:Name="backButton"          Text="BACK" Canvas.Top="-4" Canvas.Left="-6"  Width="180" HorizontalTextAlignment="Center"          Click="back_Clicked" VerticalTextAlignment="Center" CornerRadius="2" RenderTransformOrigin="0.5,0.5" BackgroundColor="#FF414141" TextColor="#EEEEEE" TextSize="19"/>
+            <local:HoverButton x:Name="recordSegmentButton" Text="Record Segment"  Canvas.Left="-6" Canvas.Top="100"  Style="{StaticResource UIButton}"         Click="RecordSegmentButton_Click"/>
+            <local:HoverButton x:Name="playSegmentButton"   Text="Play Segment" Canvas.Left="844" Canvas.Top="100" Style="{StaticResource UIButton}"            Click="PlaySegmentButton_Click"/>
+            <local:HoverButton x:Name="playBeginningButton" Text="Play From Beginning"  Canvas.Left="844" Canvas.Top="270" Style="{StaticResource UIButton}"/>
+            <!-- Dance Segment Buttons -->
+            <Canvas x:Name="segmentButtonCanvas" Visibility="Collapsed">
+                <local:HoverButton x:Name="playSelectedSegmentButton"   Text="Play" Canvas.Left="100" Canvas.Top="480" Style="{StaticResource UIButton}"            Click="playSelectedSegmentButton_Clicked"/>
+                <local:HoverButton x:Name="addCommentSegmentButton"     Text="Add Comment" Canvas.Left="300" Canvas.Top="480" Style="{StaticResource UIButton}"     Click="addCommentSegmentButton_Clicked"/>
+                <local:HoverButton x:Name="deleteSegmentButton"         Text="Delete" Canvas.Left="500" Canvas.Top="480" Style="{StaticResource UIButton}"          Click="deleteSegmentButton_Clicked"/>
+                <local:HoverButton x:Name="cancelSegmentButton"         Text="Cancel" Canvas.Left="700" Canvas.Top="480" Style="{StaticResource UIButton}"          Click="cancelSegmentButton_Clicked"/>
+            </Canvas>
+            <Canvas x:Name="commentButtonCanvas" Visibility="Collapsed">
+                <local:HoverButton x:Name="saveCommentButton"       Text="Save" Canvas.Left="500" Canvas.Top="480" Style="{StaticResource UIButton}"  Click="saveCommentButton_Clicked"/>
+                <local:HoverButton x:Name="cancelCommentButton"     Text="Cancel" Canvas.Left="700" Canvas.Top="480" Style="{StaticResource UIButton}"  Click="cancelCommentButton_Clicked"/>      
+            </Canvas>
+            <Canvas x:Name="cancelActionCanvas" Visibility="Collapsed">
+                <local:HoverButton x:Name="cancelActionButton"     Text="Cancel" Canvas.Left="-6" Canvas.Top="270" Style="{StaticResource UIButton}"  Click="cancelActionButton_Clicked"/>
+            </Canvas>
+            <Canvas Name="timelineCanvas" Canvas.Top="450" Height="160" Width="1800" Canvas.Left="0" Background="White">
+                <local:HoverButton x:Name="waveButton" Width="1800" Height="160" Click="waveform_Clicked"  BackgroundColor="White"/>
+                
+            </Canvas>
+            <Canvas Name="segmentCanvas" Width="1800" Height="160" Canvas.Top="610"></Canvas>
+            
+            <TextBox Name="commentBox" FontSize="24" FontFamily="..\img\ui\#Nevis" Canvas.Top="75" Canvas.Left="300" Height="250" Width="400" Panel.ZIndex="5000" Visibility="Hidden" />
+            <Border Canvas.Left="235" Canvas.Top="10" Height="420" Width="550" Background="White" BorderBrush="#676767" BorderThickness="1" CornerRadius="2"/>
+            <Canvas Name="recordingCanvas" Canvas.Top="20" Canvas.Left="245" Height="400" Width="530"  Visibility="Hidden" Background="White">
+                <my:KinectColorViewer Canvas.Left ="0" Width="530" Height="400" Name="recordingColorViewer" Kinect="{Binding ElementName=kinectSensorChooser1, Path=Kinect}" Panel.ZIndex="100"></my:KinectColorViewer>
+                <my:KinectSkeletonViewer Canvas.Left="0" Name="recordingSkeletonViewer" Width="530" Height="400" Kinect="{Binding ElementName=kinectSensorChooser1, Path=Kinect}" Panel.ZIndex="100"></my:KinectSkeletonViewer>
+            </Canvas>
+
+            <Canvas Name="videoPlaybackCanvas" Canvas.Top="20" Canvas.Left="245" Height="400" Width="530" Visibility="Collapsed" Background="White">
+
+            </Canvas>
+
+            <TextBox Canvas.Left="12" Canvas.Top="697" Height="59"  Width="986" Name="debug" FontSize="20" Visibility="Collapsed" />
+            <Canvas Width="1024" Height="768" Background="Black" Name="blackBack" Opacity=".85">
+                <Canvas Name="makeSelectionPrompt" Visibility="Collapsed" >
+                    <Image Source="img/ui/downArrow.png" Canvas.Left="320" Height="90" Canvas.Top="350"/>
+                    <TextBlock Canvas.Left="300" Canvas.Top="200" Foreground="#00a2ff" FontSize="40" Width="400" TextWrapping="Wrap">Push to mark beginning of segment</TextBlock>
+                </Canvas>
+                <Canvas Name="makeEndSelectionPrompt" Visibility="Collapsed" >
+                    <Image Source="img/ui/downArrow.png" Canvas.Left="450" Height="90" Canvas.Top="320"/>
+                    <TextBlock Canvas.Left="400" Canvas.Top="200" Foreground="#00a2ff" FontSize="40" Width="400" TextWrapping="Wrap">Push to mark end of segment</TextBlock>
+                </Canvas>
+            </Canvas>
+
+            <Canvas Visibility="Collapsed" Name="beforeRecordCanvas" Canvas.Top="100" Canvas.Left="100" Panel.ZIndex="1000">
+                <TextBlock Height="568" Width="824" FontSize="50" Background="White" FontFamily="..\img\ui\#Nevis"   TextWrapping="Wrap" Padding ="15">Say "START" to begin recording.</TextBlock>
+            </Canvas>
+
+            <Canvas Visibility="Collapsed" Name="afterRecordCanvas" Canvas.Top="100" Canvas.Left="100" Panel.ZIndex="1009">
+                <TextBlock Height="568" Width="824" FontSize="50" FontFamily="..\img\ui\#Nevis"  Background="White" TextWrapping="Wrap" Padding ="15">Say "SAVE" to keep the recording.<LineBreak />Say "CANCEL" to discard the recording.<LineBreak />Say "REDO" to redo the dance.<LineBreak />Say "PLAY" to play what you just recorded.</TextBlock>
+            </Canvas>
+        </Canvas>
+
+        <Canvas Height="768" Width="1024" Name="homeCanvas"  VerticalAlignment="Top" HorizontalAlignment="Left" Background="#EEEEEE">
+            <TextBlock Canvas.Left="3" Canvas.Top="24" Text="Choreoh!"  Height="70" Name="label1" Width="1024" TextAlignment="Center" FontFamily="..\img\ui\#Nevis" FontSize="50" Foreground="DarkGray"/>
+            <TextBlock Canvas.Left="0" Canvas.Top="24" Text="Choreoh!"  Height="70" Name="label2" Width="1024" TextAlignment="Center" FontFamily="..\img\ui\#Nevis" FontSize="50" />
+            <local:HoverButton Canvas.Left="88" Canvas.Top="132" Height="250" x:Name="song1" Width="250" BackgroundColor="#FF1F73B7" Text="Dont stop till you get enough &#10; - MJ" VerticalTextAlignment="Top" HorizontalTextAlignment="Left" HorizontalAlignment="Left" CornerRadius="2"/>
+            <local:HoverButton Canvas.Left="372" Canvas.Top="132" Height="250" x:Name="songBeat" Width="250" BackgroundColor="#FF1F73B7" Text="Beat it &#10; - MJ"  VerticalTextAlignment="Top" HorizontalTextAlignment="Left" HorizontalAlignment="Left" CornerRadius="2" Click="songBeat_Click" />
+            <local:HoverButton Canvas.Left="659" Canvas.Top="132" Height="250" x:Name="song3" Width="250" BackgroundColor="#FF1F73B7" Text="Friday &#10; - Rebecca Black"  VerticalTextAlignment="Top" HorizontalTextAlignment="Left" HorizontalAlignment="Left" CornerRadius="2"/>
+            <local:HoverButton Canvas.Left="88" Canvas.Top="412" Height="250" x:Name="song4" Width="250" BackgroundColor="#FF1F73B7" Text="Hot Interface &#10; - 160 cent" VerticalTextAlignment="Top" HorizontalTextAlignment="Left" HorizontalAlignment="Left" CornerRadius="2"/>
+            <local:HoverButton Canvas.Left="372" Canvas.Top="412" Height="250" x:Name="song5" Width="250" BackgroundColor="#FF1F73B7" Text="Wonderwall &#10; - Oasis"  VerticalTextAlignment="Top" HorizontalTextAlignment="Left" HorizontalAlignment="Left" CornerRadius="2"/>
+        </Canvas>
+        <Canvas Name="initOverlay" Background="Black" Opacity=".95" Visibility="Collapsed" Width="1024" Height="768">
+            <TextBlock Canvas.Left="100" Canvas.Top="300" Foreground="#00a2ff" FontSize="80" Width="650" TextWrapping="Wrap">Place hands above head to begin</TextBlock>
+            <Image Source="img/ui/handsUp.png" Width="150" Canvas.Left="800" Canvas.Top="300"/>
+        </Canvas>
+        
+        
+        <my:KinectSensorChooser Canvas.Left="384" Canvas.Top="201" Name="kinectSensorChooser1" Width="328" DataContext="{Binding ElementName=kinectSensorChooser, Path=Kinect}" />
+        <local:HandCursor x:Name="hand" Canvas.Top="79" Canvas.Left="256" GestureEvent="hand_GestureEvent" />
+
+    </Canvas>
+
+</Window>

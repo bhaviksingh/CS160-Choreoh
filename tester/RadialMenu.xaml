@@ -1,0 +1,26 @@
+﻿<UserControl x:Class="tester.RadialMenu"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             mc:Ignorable="d" 
+             x:Name="menu"
+             xmlns:local="clr-namespace:tester"
+             d:DesignHeight="221" d:DesignWidth="221" Width="221" Height="221">
+    <Canvas>
+        <Image Name="RadialLeft" Source="Images/RadialLeft.png" Width="105"  Height="150"  Canvas.Left="-7" Canvas.Top="36" Panel.ZIndex="100" />
+        <Image Name="RadialTop" Source="Images/RadialTop.png" Width="150" Height="105" Canvas.Left="35" Canvas.Top="-6" Panel.ZIndex="100" />
+        <Image Name="RadialRight" Source="Images/RadialRight.png" Width="105" Height="150" Canvas.Left="122" Canvas.Top="36" Panel.ZIndex="98"/>
+        <Image Name="RadialBottom" Source="Images/RadialBottom.png" Width="150" Height="105" Canvas.Left="35" Canvas.Top="123" Panel.ZIndex="100"/>
+        <Image Name="RadialMiddle" Source="Images/RadialMiddle.png" Width="90" Height="90" Canvas.Left="64" Canvas.Top="66" Panel.ZIndex="100"/>
+        <Image Name="RadialHighRight" Source="Images/RadialHighRight.png" Width="106" Opacity=".6" Height="150" Canvas.Left="43" Canvas.Top="36" Panel.ZIndex="99" />
+        <Image Name="RadialHighBottom" Source="Images/RadialHighBottom.png" Width="150" Opacity=".6" Height="106" Canvas.Left="35" Canvas.Top="43" Panel.ZIndex="96" />
+        <Image Name="RadialHighTop" Source="Images/RadialHighTop.png" Width="150" Opacity=".6" Height="106" Canvas.Left="35" Canvas.Top="72" Panel.ZIndex="96" />
+        <Image Name="RadialHighLeft" Source="Images/RadialHighLeft.png" Width="106" Opacity=".6" Height="150" Canvas.Left="71" Canvas.Top="36" Panel.ZIndex="96" />
+        <Ellipse Name="RadialOuter" Fill="White" Stroke="Black" StrokeThickness="3" Width="218" Height="218" Canvas.Left="1" Canvas.Top="2" Panel.ZIndex="97"/>        
+        <TextBlock Canvas.Left="51" Canvas.Top="22" Text="{Binding Path=TopText, ElementName=menu}" Width="120" Foreground="Black" Panel.ZIndex="101" FontSize="20" TextAlignment="Center" />
+        <TextBlock Canvas.Left="51" Canvas.Top="172" Text="{Binding Path=BottomText, ElementName=menu}" Width="120" Foreground="Black" Panel.ZIndex="101" FontSize="20" TextAlignment="Center" />
+        <TextBlock Canvas.Left="12" Canvas.Top="79" Text="{Binding Path=LeftText, ElementName=menu}" Width="63" Foreground="Black" Panel.ZIndex="101" FontSize="20" TextAlignment="Center" Height="70" TextWrapping="Wrap"/>
+        <TextBlock Canvas.Left="146" Canvas.Top="79" Text="{Binding Path=RightText, ElementName=menu}" FontSize="20" Foreground="Black" Height="70" Panel.ZIndex="101"  TextAlignment="Center" TextWrapping="Wrap" Width="63" />
+    </Canvas>
+</UserControl>

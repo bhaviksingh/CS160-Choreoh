@@ -1,0 +1,7 @@
+﻿lean
+back
+second
+spin
+on
+start
+save
