@@ -78,6 +78,7 @@ namespace Choreoh
         bool isSelectingStartSegment = false;
         bool isSelectingRecordSegment = false;
         bool isSelectingPlaySegment = false;
+        bool isSelectingPlaySongSelection = false;
         double startSecondsIntoWaveform;
         double endSecondsIntoWaveform;
         String songFilename = "beatit.wav";
@@ -135,7 +136,7 @@ namespace Choreoh
             addButtonToList(saveCommentButton, buttonList);
             addButtonToList(cancelCommentButton, buttonList);
             addButtonToList(recordSegmentButton, buttonList);
-            addButtonToList(playSegmentButton, buttonList);
+            addButtonToList(playSongSelectionButton, buttonList);
             addButtonToList(playSelectedSegmentButton, buttonList);
             addButtonToList(addCommentSegmentButton, buttonList);
             addButtonToList(deleteSegmentButton, buttonList);
@@ -256,6 +257,15 @@ namespace Choreoh
                     isSelectingPlaySegment = false;
                     makeEndSelectionPrompt.Visibility = Visibility.Collapsed;
                     cancelActionCanvas.Visibility = Visibility.Collapsed;
+                }
+                else if (isSelectingPlaySongSelection)
+                {
+                    Canvas.SetZIndex(timelineCanvas, oldButtonZIndex);
+                    blackBack.Visibility = Visibility.Collapsed;
+                    isSelectingPlaySongSelection = false;
+                    makeEndSelectionPrompt.Visibility = Visibility.Collapsed;
+                    cancelActionCanvas.Visibility = Visibility.Collapsed;
+                    playSongSelection(startSecondsIntoWaveform, endSecondsIntoWaveform);
                 }
             }
         }
@@ -466,6 +476,47 @@ namespace Choreoh
             beforeRecordCanvas.Visibility = Visibility.Visible;
         }
 
+        #region playSongSelection
+        private void playSongSelection(double secondsStart, double secondsEnd)
+        {
+            TimeSpan startTime = new TimeSpan((int)(secondsStart * 10000000));
+            TimeSpan durationTime = new TimeSpan((int)(secondsEnd * 10000000)) - startTime;
+
+            waveform.selectStart(secondsStart);
+            waveform.selectEnd(secondsEnd);
+
+            var waveformTicker = new DispatcherTimer();
+            waveformTicker.Tick += new EventHandler((object localsender, EventArgs locale) =>
+            {
+                if (waveform.isPlaying())
+                {
+                    Debug.WriteLine("waveform is playing, so tick");
+                    waveform.movePlay();
+                }
+                else
+                {
+                    Debug.WriteLine("waveform stopped playing, so stop ticking");
+                    isPlaying = false;
+                    waveform.endPlay();
+                    hideMode();
+                    waveform.deselectSegment();
+                    (localsender as DispatcherTimer).Stop();
+                }
+            });
+            double secondsPerPixel = 1 / waveform.getPixelsPerSecond();
+            double nanoseconds = secondsPerPixel * 1000000000;
+            int ticks = (int)(nanoseconds / 100);
+            Debug.WriteLine("Ticks: " + ticks);
+            waveformTicker.Interval = new TimeSpan(ticks);
+
+            AudioPlay.playForDuration(mainCanvas, songFilename, startTime, durationTime);
+            waveformTicker.Start();
+            waveform.startPlay();
+            switchModeToPlayback();
+            isPlaying = true;
+        }
+        #endregion 
+
         #region playSegment
         private void playSegment()
         {
@@ -639,9 +690,9 @@ namespace Choreoh
             cancelActionCanvas.Visibility = Visibility.Visible;
         }
 
-        private void PlaySegmentButton_Click(object sender, EventArgs e)
+        private void PlaySongSelectionButton_Click(object sender, EventArgs e)
         {
-            isSelectingPlaySegment = true;
+            isSelectingPlaySongSelection = true;
             isSelectingStartSegment = true;
             blackBack.Visibility = Visibility.Visible;
             oldButtonZIndex = Canvas.GetZIndex(timelineCanvas);

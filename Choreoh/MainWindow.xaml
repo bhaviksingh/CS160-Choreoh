@@ -53,7 +53,7 @@
             </Border>-->
             <local:HoverButton x:Name="backButton"          Text="BACK" Canvas.Top="-4" Canvas.Left="-6"  Width="180" HorizontalTextAlignment="Center"          Click="back_Clicked" VerticalTextAlignment="Center" CornerRadius="2" RenderTransformOrigin="0.5,0.5" BackgroundColor="#FF414141" TextColor="#EEEEEE" TextSize="19"/>
             <local:HoverButton x:Name="recordSegmentButton" Text="Record Segment"  Canvas.Left="-6" Canvas.Top="100"  Style="{StaticResource UIButton}"         Click="RecordSegmentButton_Click"/>
-            <local:HoverButton x:Name="playSegmentButton"   Text="Play Segment" Canvas.Left="844" Canvas.Top="100" Style="{StaticResource UIButton}"            Click="PlaySegmentButton_Click"/>
+            <local:HoverButton x:Name="playSongSelectionButton"   Text="Play Song Selection" Canvas.Left="844" Canvas.Top="100" Style="{StaticResource UIButton}"            Click="PlaySongSelectionButton_Click"/>
             <local:HoverButton x:Name="playBeginningButton" Text="Play From Beginning"  Canvas.Left="844" Canvas.Top="270" Style="{StaticResource UIButton}"/>
             <!-- Dance Segment Buttons -->
             <Canvas x:Name="segmentButtonCanvas" Visibility="Collapsed">
