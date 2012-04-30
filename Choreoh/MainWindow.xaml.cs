@@ -1340,6 +1340,7 @@ namespace Choreoh
                     case "STAY":
                     case "SAFE":
                     case "SHAVE":
+                    case "STATE":
                         //keep_label.Visibility = Visibility.Visible;
                         hideMode();
                         waveform.deselectSegment();
