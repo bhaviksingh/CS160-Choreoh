@@ -178,6 +178,34 @@ namespace Choreoh
         }
         #endregion
 
+        #region move canvas
+        int canvasMovement = 0;
+        /**
+         * Moves canvas in direction indicated. Direction should be -1 or 1 for left or right respectively.
+         * 
+         **/
+        private void moveCanvas(int direction)
+        {
+            var waveformTicker = new DispatcherTimer();
+            waveformTicker.Tick += new EventHandler((object localsender, EventArgs locale) =>
+            {
+                if (canvasMovement <= 900)
+                {
+                    Debug.WriteLine("waveform is moving, so tick");
+                    waveform.shiftCanvas(direction, timelineCanvas);
+                    waveform.shiftCanvas(direction, segmentCanvas);
+                    canvasMovement++;
+                }
+                else
+                {
+                    Debug.WriteLine("waveform stopped moving, so stop ticking");
+                    canvasMovement = 0;
+                    (localsender as DispatcherTimer).Stop();
+                }
+            });
+        }
+        #endregion
+
         #region waveform Click
         private void waveform_Clicked(object sender, EventArgs e)
         {
