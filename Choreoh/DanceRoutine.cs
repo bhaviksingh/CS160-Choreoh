@@ -18,7 +18,7 @@ namespace Choreoh
         public String saveDestinationFolder;
         public Guid guid;
         public Dictionary<int, DanceSegment> segments;
-        public Dictionary<int, String> comments;
+        public Dictionary<DanceSegment, String> comments;
         // private Soundtrack soundtrack;
 
         public DanceRoutine(String filename)
@@ -33,7 +33,7 @@ namespace Choreoh
             else
             {
                 segments = new Dictionary<int, DanceSegment>();
-                comments = new Dictionary<int, String>();
+                comments = new Dictionary<DanceSegment, String>();
                 guid = Guid.NewGuid();
 
                 Directory.CreateDirectory(saveDestinationFolder);
@@ -99,10 +99,10 @@ namespace Choreoh
             return segment;
         }
 
-        public String addComment(int frame, String comment)
+        public String addComment(DanceSegment segment, String comment)
         {
-            if (comments.ContainsKey(frame)) comments.Remove(frame);
-            comments.Add(frame, comment);
+            if (comments.ContainsKey(segment)) comments.Remove(segment);
+            comments.Add(segment, comment);
             return comment;
         }
 

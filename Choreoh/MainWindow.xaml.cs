@@ -321,23 +321,29 @@ namespace Choreoh
                 segmentList.AddLast(hb);
 
                 buttonSegments.Add(hb, segment);
-                for (int i = 0; i < segment.length; i++)
-                {
-                    renderComment(frame+i);
-                }
+                renderComment(segment);
             }
             
         }
 
-        private void renderComment(int frame)
+        private void renderComment(DanceSegment segment)
         {
             double pos;
             String comment;
-            if (routine.comments.TryGetValue(frame, out comment))
+            int frame = 0;
+            if (routine.comments.TryGetValue(segment, out comment))
             {
                 if (comment == null) return;
                 Debug.WriteLine(comment);
-                pos = frame / 30 * waveform.getPixelsPerSecond();
+                foreach (KeyValuePair<int, DanceSegment> kvp in routine.segments)
+                {
+                    if (kvp.Value == selectedSegment)
+                    {
+                        frame = kvp.Key;
+                        break;
+                    }
+                }
+                pos = (frame + (segment.length/2)) / 30 * waveform.getPixelsPerSecond();
                 Image cImg = new Image
                 {
                     Height = 160,
@@ -944,27 +950,13 @@ namespace Choreoh
             blackBack.Visibility = Visibility.Collapsed;
 
             int pos = (int)((handPointX + waveform.getOffset()) / waveform.getPixelsPerSecond() * 30);
-            routine.addComment(pos, commentToSave);
+            routine.addComment(selectedSegment, commentToSave);
             commentToSave = "";
             comment = "";
             annotating = false;
             commentBox.Text = "";
             commentBox.Visibility = Visibility.Hidden;
-            int frameOfSegmentStart = 0;
-            foreach (KeyValuePair<int, DanceSegment> kvp in routine.segments)
-            {
-                if (kvp.Value == selectedSegment)
-                {
-                    frameOfSegmentStart = kvp.Key;
-                    break;
-                }
-            }
-            int length = 0;
-            if (selectedSegment != null) length = selectedSegment.length;
-            for (int i = 0; i < length; i++)
-            {
-                renderComment(frameOfSegmentStart+i);
-            }
+            renderComment(selectedSegment);
             waveform.deselectSegment();
             commentButtonCanvas.Visibility = Visibility.Collapsed;
             showAllSegments();
