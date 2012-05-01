@@ -950,7 +950,21 @@ namespace Choreoh
             annotating = false;
             commentBox.Text = "";
             commentBox.Visibility = Visibility.Hidden;
-            renderComment(pos);
+            int frameOfSegmentStart = 0;
+            foreach (KeyValuePair<int, DanceSegment> kvp in routine.segments)
+            {
+                if (kvp.Value == selectedSegment)
+                {
+                    frameOfSegmentStart = kvp.Key;
+                    break;
+                }
+            }
+            int length = 0;
+            if (selectedSegment != null) length = selectedSegment.length;
+            for (int i = 0; i < length; i++)
+            {
+                renderComment(frameOfSegmentStart+i);
+            }
             waveform.deselectSegment();
             commentButtonCanvas.Visibility = Visibility.Collapsed;
             showAllSegments();
