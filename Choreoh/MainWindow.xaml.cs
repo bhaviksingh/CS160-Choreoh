@@ -321,8 +321,12 @@ namespace Choreoh
                 segmentList.AddLast(hb);
 
                 buttonSegments.Add(hb, segment);
+                for (int i = 0; i < segment.length; i++)
+                {
+                    renderComment(frame+i);
+                }
             }
-            renderComment(frame);
+            
         }
 
         private void renderComment(int frame)
@@ -332,6 +336,7 @@ namespace Choreoh
             if (routine.comments.TryGetValue(frame, out comment))
             {
                 if (comment == null) return;
+                Debug.WriteLine(comment);
                 pos = frame / 30 * waveform.getPixelsPerSecond();
                 Image cImg = new Image
                 {
@@ -350,6 +355,7 @@ namespace Choreoh
                 segmentCanvas.Children.Add(commentImg);
                 Canvas.SetTop(commentImg, 0);
                 Canvas.SetLeft(commentImg, pos);
+                Canvas.SetZIndex(commentImg, 100);
                 segmentList.AddLast(commentImg);
             }
         }
@@ -937,7 +943,8 @@ namespace Choreoh
 
             int pos = (int)((handPointX + waveform.getOffset()) / waveform.getPixelsPerSecond() * 30);
             routine.addComment(pos, commentToSave);
-            commentToSave = comment = "";
+            commentToSave = "";
+            comment = "";
             annotating = false;
             commentBox.Text = "";
             commentBox.Visibility = Visibility.Hidden;
@@ -1490,7 +1497,7 @@ namespace Choreoh
             //this.ReportStatus(status);
             string newText = result.Text.ToString();
             this.UpdateText(newText);
-            this.comment = this.comment + result.Text.ToString();
+            this.comment = this.comment + " " + newText;
         }
 
         private void RejectSpeech(RecognitionResult result)
