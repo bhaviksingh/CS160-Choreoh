@@ -440,6 +440,8 @@ namespace Choreoh
         private void cancelSegmentButton_Clicked(object sender, EventArgs e)
         {
             cancelActionButton_Clicked(sender, e);
+            waveform.selectStart(0);
+            waveform.selectEnd(1);
             waveform.deselectSegment();
             fixSegmentIndices();
         }
@@ -1567,6 +1569,15 @@ namespace Choreoh
             showAllSegments();
             cancelActionCanvas.Visibility = Visibility.Collapsed;
             Canvas.SetZIndex(timelineCanvas, oldButtonZIndex);
+
+            isSelectingEndSegment = false;
+            isSelectingPlaySegment = false;
+            isSelectingPlaySongSelection = false;
+            isSelectingRecordSegment = false;
+            isSelectingStartSegment = false;
+            waveform.selectStart(0);
+            waveform.selectEnd(1);
+            waveform.deselectSegment();
         }
 
     }
