@@ -343,7 +343,7 @@ namespace Choreoh
                     Height = 160,
                     Width = 40,
                 };
-                cImg.Source = new BitmapImage(new Uri(@"pack://application:,,,/Choreoh;component/img/ui/speech_bubble.png", UriKind.RelativeOrAbsolute));
+                cImg.Source = new BitmapImage(new Uri(@"pack://application:,,,/Choreoh;component/img/waveform/speech_bubble.png", UriKind.RelativeOrAbsolute));
                 HoverButton commentImg = new HoverButton
                 {
                     Height = 50,
