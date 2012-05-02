@@ -1168,76 +1168,81 @@ namespace Choreoh
 
         #region Speech recognition events
 
+        private void sre_PreSpeechRecognized_Start_Recognized(object sender, EventArgs e)
+        {
+            int startOfSegment = 0;
+            //start_label.Visibility = Visibility.Visible;
+            blackBack.Visibility = Visibility.Collapsed;
+            beforeRecordCanvas.Visibility = Visibility.Collapsed;
+            pre_recording = false;
 
+            showRecordingCanvas();
+            switchModeToRecording();
+
+            double duration = endSecondsIntoWaveform - startSecondsIntoWaveform;
+
+            TimeSpan startTime = new TimeSpan(0, 0, (int)startSecondsIntoWaveform);
+            TimeSpan durationTime = new TimeSpan((int)(duration * 1000000000 / 100));
+
+            Debug.WriteLine("Start Time: " + startTime.ToString());
+            Debug.WriteLine("Duration Time: " + durationTime.ToString());
+
+            var waveformTicker = new DispatcherTimer();
+            waveformTicker.Tick += new EventHandler((object localsender, EventArgs locale) =>
+            {
+                if (waveform.isPlaying())
+                {
+                    Debug.WriteLine("waveform is playing, so tick");
+                    waveform.movePlay();
+                }
+                else
+                {
+                    Debug.WriteLine("waveform stopped playing, so stop ticking");
+                    (localsender as DispatcherTimer).Stop();
+                }
+            });
+            double secondsPerPixel = 1 / waveform.getPixelsPerSecond();
+            double nanoseconds = secondsPerPixel * 1000000000;
+            int ticks = (int)nanoseconds / 100;
+            Debug.WriteLine("Ticks: " + ticks);
+            waveformTicker.Interval = new TimeSpan(ticks);
+
+
+            var recordingTimer = new DispatcherTimer();
+            recordingTimer.Tick += new EventHandler((object localsender, EventArgs locale) =>
+            {
+                waveform.endPlay();
+                waveformTicker.Stop();
+                StopRecording();
+                (localsender as DispatcherTimer).Stop();
+                post_recording = true;
+                blackBack.Visibility = Visibility.Visible;
+                afterRecordCanvas.Visibility = Visibility.Visible;
+                switchModeToPlayback();
+                renderSegment(startOfSegment);
+            });
+            recordingTimer.Interval = durationTime;
+
+
+            AudioPlay.playForDuration(mainCanvas, songFilename, startTime, durationTime);
+            waveformTicker.Start();
+            waveform.startPlay();
+            startOfSegment = (int)(startTime.TotalSeconds * 30);
+            DanceSegment segment = routine.addDanceSegment(startOfSegment);
+            StartRecording(segment);
+            recordingTimer.Start();
+
+            return;
+        }
         void sre_PreSpeechRecognized(object sender, SpeechRecognizedEventArgs e)
         {
             if (pre_recording)
             {
                 Debug.WriteLine("Pre-recording Speech detected: " + e.Result.Text.ToString());
-                int startOfSegment = 0;
                 switch (e.Result.Text.ToString().ToUpperInvariant())
                 {
                     case "START":
-                        //start_label.Visibility = Visibility.Visible;
-                        blackBack.Visibility = Visibility.Collapsed;
-                        beforeRecordCanvas.Visibility = Visibility.Collapsed;
-                        pre_recording = false;
-
-                        showRecordingCanvas();
-                        switchModeToRecording();
-
-                        double duration = endSecondsIntoWaveform - startSecondsIntoWaveform;
-
-                        TimeSpan startTime = new TimeSpan(0, 0, (int)startSecondsIntoWaveform);
-                        TimeSpan durationTime = new TimeSpan(0, 0, (int)duration);
-
-                        Debug.WriteLine("Start Time: " + startTime.ToString());
-                        Debug.WriteLine("Duration Time: " + durationTime.ToString());
-
-                        var waveformTicker = new DispatcherTimer();
-                        waveformTicker.Tick += new EventHandler((object localsender, EventArgs locale) =>
-                        {
-                            if (waveform.isPlaying())
-                            {
-                                Debug.WriteLine("waveform is playing, so tick");
-                                waveform.movePlay();
-                            }
-                            else
-                            {
-                                Debug.WriteLine("waveform stopped playing, so stop ticking");
-                                (localsender as DispatcherTimer).Stop();
-                            }
-                        });
-                        double secondsPerPixel = 1 / waveform.getPixelsPerSecond();
-                        double nanoseconds = secondsPerPixel * 1000000000;
-                        int ticks = (int)nanoseconds / 100;
-                        Debug.WriteLine("Ticks: " + ticks);
-                        waveformTicker.Interval = new TimeSpan(ticks);
-
-
-                        var recordingTimer = new DispatcherTimer();
-                        recordingTimer.Tick += new EventHandler((object localsender, EventArgs locale) =>
-                        {
-                            waveform.endPlay();
-                            waveformTicker.Stop();
-                            StopRecording();
-                            (localsender as DispatcherTimer).Stop();
-                            post_recording = true;
-                            blackBack.Visibility = Visibility.Visible;
-                            afterRecordCanvas.Visibility = Visibility.Visible;
-                            switchModeToPlayback();
-                            renderSegment(startOfSegment);
-                        });
-                        recordingTimer.Interval = durationTime;
-
-
-                        AudioPlay.playForDuration(mainCanvas, songFilename, startTime, durationTime);
-                        waveformTicker.Start();
-                        waveform.startPlay();
-                        startOfSegment = (int)(startTime.TotalSeconds * 30);
-                        DanceSegment segment = routine.addDanceSegment(startOfSegment);
-                        StartRecording(segment);
-                        recordingTimer.Start();
+                        sre_PreSpeechRecognized_Start_Recognized(sender, e);
                         return;
                     default:
                         return;
