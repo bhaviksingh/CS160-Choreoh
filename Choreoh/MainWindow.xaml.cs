@@ -441,7 +441,7 @@ namespace Choreoh
         {
             commentSegment();
             Canvas.SetZIndex(segmentButtonCanvas, oldButtonZIndex);
-            segmentButtonCanvas.Visibility = Visibility.Hidden;
+            segmentButtonCanvas.Visibility = Visibility.Collapsed;
             oldCommentBoxIndex = Canvas.GetZIndex(commentBox);
             Canvas.SetZIndex(commentBox, Canvas.GetZIndex(blackBack) + 1);
             //fixSegmentIndices();
@@ -964,7 +964,7 @@ namespace Choreoh
             blackBack.Visibility = Visibility.Collapsed;
 
             int pos = (int)((handPointX + waveform.getOffset()) / waveform.getPixelsPerSecond() * 30);
-            Debug.WriteLine("THIS IS THE COMMENT THAT SHOULD BE SAVED: " + commentToSave);
+            Debug.WriteLine("THIS IS THE COMMENT THAT SHOULD BE SAVED: " + commentToSave + " That was the comment");
             Debug.WriteLine("THIS IS WHAT'S IN THE COMMENT BOX: " + commentBox.Text);
             routine.addComment(selectedSegment, commentToSave);
             if (selectedSegment == null) Debug.WriteLine("SELECTED SEGMENT WAS NULL! WHYYYYY?!");
@@ -978,11 +978,7 @@ namespace Choreoh
             commentButtonCanvas.Visibility = Visibility.Collapsed;
             showAllSegments();
 
-
-            Canvas.SetZIndex(segmentButtonCanvas, oldButtonZIndex);
-            segmentButtonCanvas.Visibility = Visibility.Collapsed;
             Canvas.SetZIndex(segmentCanvas, oldDanceSegmentIndex);
-            segmentButtonCanvas.Visibility = Visibility.Collapsed;
             blackBack.Visibility = Visibility.Collapsed;
             commentBox.Visibility = Visibility.Hidden;
             commentBox.Text = "";
