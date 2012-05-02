@@ -488,6 +488,7 @@ namespace Choreoh
             pre_recording = true;
             blackBack.Visibility = Visibility.Visible;
             beforeRecordCanvas.Visibility = Visibility.Visible;
+            mainCanvas.MouseUp += new MouseButtonEventHandler(sre_PreSpeechRecognized_Start_Recognized);
         }
 
         #region playSongSelection
@@ -1157,6 +1158,7 @@ namespace Choreoh
 
         private void sre_PreSpeechRecognized_Start_Recognized(object sender, EventArgs e)
         {
+            mainCanvas.MouseUp -= new MouseButtonEventHandler(sre_PreSpeechRecognized_Start_Recognized);
             int startOfSegment = 0;
             //start_label.Visibility = Visibility.Visible;
             blackBack.Visibility = Visibility.Collapsed;
@@ -1205,6 +1207,7 @@ namespace Choreoh
                 post_recording = true;
                 blackBack.Visibility = Visibility.Visible;
                 afterRecordCanvas.Visibility = Visibility.Visible;
+                mainCanvas.MouseUp += new MouseButtonEventHandler(sre_PostSpeechRecognized_Save_Recognized);
                 switchModeToPlayback();
                 renderSegment(startOfSegment);
             });
@@ -1237,24 +1240,30 @@ namespace Choreoh
             }
         }
 
+        private void sre_PostSpeechRecognized_Save_Recognized(object sender, EventArgs e)
+        {
+            mainCanvas.MouseUp -= new MouseButtonEventHandler(sre_PostSpeechRecognized_Save_Recognized);
+            int startOfSegment = 0;
+            hideMode();
+            waveform.deselectSegment();
+            post_recording = false;
+            blackBack.Visibility = Visibility.Collapsed;
+            afterRecordCanvas.Visibility = Visibility.Collapsed;
+            routine.save();
+            renderSegment(startOfSegment);
+            return;
+        }
         void sre_PostSpeechRecognized(object sender, SpeechRecognizedEventArgs e)
         {
             if (post_recording)
             {
                 Debug.WriteLine("Post-recording Speech detected: " + e.Result.Text.ToString());
-                int startOfSegment = 0;
                 switch (e.Result.Text.ToString().ToUpperInvariant())
                 {
                     default:
                     case "SAVE":
                         //keep_label.Visibility = Visibility.Visible;
-                        hideMode();
-                        waveform.deselectSegment();
-                        post_recording = false;
-                        blackBack.Visibility = Visibility.Collapsed;
-                        afterRecordCanvas.Visibility = Visibility.Collapsed;
-                        routine.save();
-                        renderSegment(startOfSegment);
+                        sre_PostSpeechRecognized_Save_Recognized(sender, e);
                         return;
                     case "CANCEL":
                         //cancel_label.Visibility = Visibility.Visible;
