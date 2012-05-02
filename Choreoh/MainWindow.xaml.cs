@@ -1217,13 +1217,16 @@ namespace Choreoh
                 waveform.endPlay();
                 waveformTicker.Stop();
                 StopRecording();
-                (localsender as DispatcherTimer).Stop();
+
+                cancelSegmentButton_Clicked(localsender, e);
                 post_recording = true;
                 blackBack.Visibility = Visibility.Visible;
                 afterRecordCanvas.Visibility = Visibility.Visible;
                 mainCanvas.MouseUp += new MouseButtonEventHandler(sre_PostSpeechRecognized_Save_Recognized);
                 switchModeToPlayback();
                 renderSegment(startOfSegment);
+
+                (localsender as DispatcherTimer).Stop();
             });
             recordingTimer.Interval = durationTime;
 
