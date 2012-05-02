@@ -1218,12 +1218,12 @@ namespace Choreoh
                 waveformTicker.Stop();
                 StopRecording();
 
-                cancelSegmentButton_Clicked(localsender, e);
                 post_recording = true;
+
+                mainCanvas.MouseUp += new MouseButtonEventHandler(sre_PostSpeechRecognized_Save_Recognized);
                 blackBack.Visibility = Visibility.Visible;
                 afterRecordCanvas.Visibility = Visibility.Visible;
-                mainCanvas.MouseUp += new MouseButtonEventHandler(sre_PostSpeechRecognized_Save_Recognized);
-                switchModeToPlayback();
+                hideMode();
                 renderSegment(startOfSegment);
 
                 (localsender as DispatcherTimer).Stop();
@@ -1260,6 +1260,7 @@ namespace Choreoh
         private void sre_PostSpeechRecognized_Save_Recognized(object sender, EventArgs e)
         {
             mainCanvas.MouseUp -= new MouseButtonEventHandler(sre_PostSpeechRecognized_Save_Recognized);
+            cancelSegmentButton_Clicked(sender, e);
             int startOfSegment = 0;
             hideMode();
             waveform.deselectSegment();
