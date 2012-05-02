@@ -333,8 +333,9 @@ namespace Choreoh
             int frame = 0;
             if (routine.comments.TryGetValue(segment, out comment))
             {
+                if (comment == null) Debug.WriteLine("THIS COMMENT IS NULL! WHYYYYYY?!");
                 if (comment == null) return;
-                Debug.WriteLine(comment);
+                Debug.WriteLine("THIS COMMENT SHOULD HAVE RENDERED: " + comment);
                 foreach (KeyValuePair<int, DanceSegment> kvp in routine.segments)
                 {
                     if (kvp.Value == selectedSegment)
@@ -385,6 +386,12 @@ namespace Choreoh
                 Canvas.SetZIndex(segmentCanvas, Canvas.GetZIndex(blackBack) + 1);
                 onlyShowThisSegment((HoverButton)sender);
                 segmentButtonCanvas.Visibility = Visibility.Visible;
+                String comment;
+                if(routine.comments.TryGetValue(selectedSegment, out comment))
+                {
+                    commentBox.Visibility = Visibility.Visible;
+                    commentBox.Text = comment;
+                }
             }
             else
             {
@@ -417,6 +424,8 @@ namespace Choreoh
             showAllSegments();
             blackBack.Visibility = Visibility.Collapsed;
             segmentButtonCanvas.Visibility = Visibility.Collapsed;
+            commentBox.Visibility = Visibility.Hidden;
+            commentBox.Text = "";
         }
         #endregion
 
@@ -468,7 +477,7 @@ namespace Choreoh
 
             commentBox.Visibility = Visibility.Visible;
             annotating = true;
-            commentToSave = comment;
+            commentToSave = commentBox.Text;
         }
 
         private void deleteSegment()
@@ -939,6 +948,9 @@ namespace Choreoh
             commentButtonCanvas.Visibility = Visibility.Collapsed;
             blackBack.Visibility = Visibility.Collapsed;
             commentBox.Text = "";
+            commentToSave = "";
+            comment = "";
+            annotating = false;
             commentBox.Visibility = Visibility.Collapsed;
             showAllSegments();
         }
@@ -951,6 +963,7 @@ namespace Choreoh
 
             int pos = (int)((handPointX + waveform.getOffset()) / waveform.getPixelsPerSecond() * 30);
             routine.addComment(selectedSegment, commentToSave);
+            if (selectedSegment == null) Debug.WriteLine("SELECTED SEGMENT WAS NULL! WHYYYYY?!");
             commentToSave = "";
             comment = "";
             annotating = false;
