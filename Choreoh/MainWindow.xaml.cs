@@ -211,6 +211,8 @@ namespace Choreoh
         {
             HoverButton waveButton = (HoverButton)sender;
             Point handPosition = hand.TransformToAncestor(containerCanvas).Transform(new Point(0, 0));
+            Debug.WriteLine("WAVEFORM WAS CLICKED!");
+
             if (isSelectingStartSegment)
             {
                 double handX = hand.TransformToAncestor(containerCanvas).Transform(new Point(0, 0)).X;
@@ -1608,6 +1610,7 @@ namespace Choreoh
 
         private void cancelActionButton_Clicked(object sender, EventArgs e)
         {
+            Debug.WriteLine("CANCEL BUTTON WAS CLICKED!");
             blackBack.Visibility = Visibility.Collapsed;
             makeEndSelectionPrompt.Visibility = Visibility.Hidden;
             makeSelectionPrompt.Visibility = Visibility.Hidden;
