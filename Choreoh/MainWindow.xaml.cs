@@ -389,6 +389,7 @@ namespace Choreoh
                 String comment;
                 if(routine.comments.TryGetValue(selectedSegment, out comment))
                 {
+                    Debug.WriteLine(comment);
                     commentBox.Visibility = Visibility.Visible;
                     commentBox.Text = comment;
                 }
@@ -1593,7 +1594,7 @@ namespace Choreoh
             showAllSegments();
             cancelActionCanvas.Visibility = Visibility.Collapsed;
             Canvas.SetZIndex(timelineCanvas, oldButtonZIndex);
-
+            segmentButtonCanvas.Visibility = Visibility.Collapsed;
             isSelectingEndSegment = false;
             isSelectingPlaySegment = false;
             isSelectingPlaySongSelection = false;
