@@ -424,7 +424,7 @@ namespace Choreoh
             Canvas.SetZIndex(segmentCanvas, oldDanceSegmentIndex);
             showAllSegments();
             blackBack.Visibility = Visibility.Collapsed;
-            segmentButtonCanvas.Visibility = Visibility.Collapsed;
+            //segmentButtonCanvas.Visibility = Visibility.Collapsed;
             commentBox.Visibility = Visibility.Hidden;
             commentBox.Text = "";
         }
@@ -975,6 +975,14 @@ namespace Choreoh
             waveform.deselectSegment();
             commentButtonCanvas.Visibility = Visibility.Collapsed;
             showAllSegments();
+
+
+            Canvas.SetZIndex(segmentButtonCanvas, oldButtonZIndex);
+            segmentButtonCanvas.Visibility = Visibility.Collapsed;
+            Canvas.SetZIndex(segmentCanvas, oldDanceSegmentIndex);
+            blackBack.Visibility = Visibility.Collapsed;
+            commentBox.Visibility = Visibility.Hidden;
+            commentBox.Text = "";
         }
 
         #endregion
