@@ -89,7 +89,7 @@ namespace Choreoh
         //Load window
         private void Window_Loaded(object sender, RoutedEventArgs e)
         {
-            homeCanvas.Visibility = Visibility.Collapsed;
+            homeCanvas.Visibility = Visibility.Visible;
             mainCanvas.Visibility = Visibility.Visible;
             blackBack.Visibility = Visibility.Collapsed;
 
