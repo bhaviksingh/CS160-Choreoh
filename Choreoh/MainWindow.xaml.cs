@@ -156,6 +156,9 @@ namespace Choreoh
         }
         #endregion
 
+        int framesIntoScrollingLeft = 0;
+        int framesIntoScrollingRight = 0;
+        int framesNeededToScroll = 4 * 30;
         private void buttonUpdater(Joint handJoint)
         {
             hand.SetPosition(handJoint);
@@ -175,6 +178,51 @@ namespace Choreoh
             {
                 hb.Check(hand);
             }
+
+            if (isSelectingEndSegment || isSelectingPlaySegment || isSelectingPlaySongSelection || isSelectingRecordSegment
+                || isSelectingStartSegment)
+            {
+                framesIntoScrollingLeft = 0;
+                framesIntoScrollingRight = 0;
+                return;
+            }
+
+            double topPos = Canvas.GetTop(hand);
+            if (topPos < 450 || topPos > (450 + 160))
+            {
+               // Debug.WriteLine(DateTime.Now.ToString() + " - hand not in scrolling range");
+                framesIntoScrollingLeft = 0;
+                framesIntoScrollingRight = 0;
+                return;
+            }
+
+            double leftPos = Canvas.GetLeft(hand);
+            if (leftPos >= (964 - 100))
+            {
+                framesIntoScrollingRight++;
+               // Debug.WriteLine("Inc scroll right counter: " + framesIntoScrollingRight);
+            }
+            else if (leftPos <= 100)
+            {
+                framesIntoScrollingLeft++;
+               // Debug.WriteLine("Inc scroll left counter: " + framesIntoScrollingLeft);
+            }
+            else
+            {
+                framesIntoScrollingLeft = 0;
+                framesIntoScrollingRight = 0;
+            }
+            if (framesIntoScrollingRight > framesNeededToScroll)
+            {
+                moveCanvas(1);
+                framesIntoScrollingLeft = 0;
+                framesIntoScrollingRight = 0;
+            } else if (framesIntoScrollingLeft > framesNeededToScroll)
+            {
+                moveCanvas(-1);
+                framesIntoScrollingLeft = 0;
+                framesIntoScrollingRight = 0;
+            }
         }
         #endregion
 
@@ -186,23 +234,28 @@ namespace Choreoh
          **/
         private void moveCanvas(int direction)
         {
-            var waveformTicker = new DispatcherTimer();
-            waveformTicker.Tick += new EventHandler((object localsender, EventArgs locale) =>
+            double currentLeft = Canvas.GetLeft(timelineCanvas);
+            double newLeft = 0;
+            double rightBound = -1800;
+            double leftBound = 0;
+            if (direction == -1)
             {
-                if (canvasMovement <= 900)
+                newLeft = currentLeft + 964;
+                if (newLeft > leftBound)
                 {
-                    Debug.WriteLine("waveform is moving, so tick");
-                    waveform.shiftCanvas(direction, timelineCanvas);
-                    waveform.shiftCanvas(direction, segmentCanvas);
-                    canvasMovement++;
+                    newLeft = leftBound;
                 }
-                else
+            }
+            else if (direction == 1)
+            {
+                newLeft = currentLeft - 964;
+                if (newLeft < rightBound)
                 {
-                    Debug.WriteLine("waveform stopped moving, so stop ticking");
-                    canvasMovement = 0;
-                    (localsender as DispatcherTimer).Stop();
+                    newLeft = rightBound;
                 }
-            });
+            }
+            Canvas.SetLeft(timelineCanvas, newLeft);
+            Canvas.SetLeft(segmentCanvas, newLeft);
         }
         #endregion
 
