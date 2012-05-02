@@ -964,6 +964,8 @@ namespace Choreoh
             blackBack.Visibility = Visibility.Collapsed;
 
             int pos = (int)((handPointX + waveform.getOffset()) / waveform.getPixelsPerSecond() * 30);
+            Debug.WriteLine("THIS IS THE COMMENT THAT SHOULD BE SAVED: " + commentToSave);
+            Debug.WriteLine("THIS IS WHAT'S IN THE COMMENT BOX: " + commentBox.Text);
             routine.addComment(selectedSegment, commentToSave);
             if (selectedSegment == null) Debug.WriteLine("SELECTED SEGMENT WAS NULL! WHYYYYY?!");
             commentToSave = "";
@@ -980,6 +982,7 @@ namespace Choreoh
             Canvas.SetZIndex(segmentButtonCanvas, oldButtonZIndex);
             segmentButtonCanvas.Visibility = Visibility.Collapsed;
             Canvas.SetZIndex(segmentCanvas, oldDanceSegmentIndex);
+            segmentButtonCanvas.Visibility = Visibility.Collapsed;
             blackBack.Visibility = Visibility.Collapsed;
             commentBox.Visibility = Visibility.Hidden;
             commentBox.Text = "";
