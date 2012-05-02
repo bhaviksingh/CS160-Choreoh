@@ -99,7 +99,7 @@
             </Canvas>
 
             <Canvas Visibility="Collapsed" Name="beforeRecordCanvas" Canvas.Top="100" Canvas.Left="100" Panel.ZIndex="1000">
-                <TextBlock Height="568" Width="824" FontSize="50" Background="White" FontFamily="..\img\ui\#Nevis"   TextWrapping="Wrap" Padding ="15">Say "START" to begin recording.</TextBlock>
+                <TextBlock KeyUp="sre_PreSpeechRecognized_Start_Recognized" Height="568" Width="824" FontSize="50" Background="White" FontFamily="..\img\ui\#Nevis"   TextWrapping="Wrap" Padding ="15">Say "START" to begin recording.</TextBlock>
             </Canvas>
 
             <Canvas Visibility="Collapsed" Name="afterRecordCanvas" Canvas.Top="100" Canvas.Left="100" Panel.ZIndex="1009">
