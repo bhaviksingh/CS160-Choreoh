@@ -73,9 +73,6 @@
                 <local:HoverButton x:Name="waveButton" Width="1800" Height="160" Click="waveform_Clicked"  BackgroundColor="White"/>
                 
             </Canvas>
-            <!-- hover buttons to scroll-->
-            <local:HoverButton x:Name="scrollRightButton" Width="300" Height="160" Canvas.Top="610" Canvas.Right="0" />
-            <local:HoverButton x:Name="scrollLeftButton" Width="300" Height="160" Canvas.Top="610" Canvas.Left="0" />
             <Canvas Name="segmentCanvas" Width="1800" Height="160" Canvas.Top="610"></Canvas>
             
             <TextBox Name="commentBox" FontSize="24" FontFamily="..\img\ui\#Nevis" Canvas.Top="75" Canvas.Left="300" Height="250" Width="400" Panel.ZIndex="5000" Visibility="Hidden" TextWrapping="Wrap" />
