@@ -966,7 +966,7 @@ namespace Choreoh
             int pos = (int)((handPointX + waveform.getOffset()) / waveform.getPixelsPerSecond() * 30);
             Debug.WriteLine("THIS IS THE COMMENT THAT SHOULD BE SAVED: " + commentToSave + " That was the comment");
             Debug.WriteLine("THIS IS WHAT'S IN THE COMMENT BOX: " + commentBox.Text);
-            routine.addComment(selectedSegment, commentToSave);
+            routine.addComment(selectedSegment, commentBox.Text);
             if (selectedSegment == null) Debug.WriteLine("SELECTED SEGMENT WAS NULL! WHYYYYY?!");
             commentToSave = "";
             comment = "";
