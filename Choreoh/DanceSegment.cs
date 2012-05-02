@@ -107,9 +107,23 @@ namespace Choreoh
         {
             for (int i = 0; i < length; i++)
             {
-                File.Delete(imageFramePath(i));
+                try
+                {
+                    File.Delete(imageFramePath(i));
+                }
+                catch
+                {
+                    Debug.WriteLine("Couldn't delete file: " + imageFramePath(i));
+                }
             }
-            Directory.Delete(saveDestinationFolder);
+            try
+            {
+                Directory.Delete(saveDestinationFolder);
+            }
+            catch
+            {
+                Debug.WriteLine("Coudln't delete folder: " + saveDestinationFolder);
+            }
         }
     }
 }
