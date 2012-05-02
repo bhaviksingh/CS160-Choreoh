@@ -445,6 +445,8 @@ namespace Choreoh
                 if(routine.comments.TryGetValue(selectedSegment, out comment))
                 {
                     Debug.WriteLine(comment);
+                    commentBoxLabel.Text = "Your Comment:";
+                    commentBoxCanvas.Visibility = Visibility.Visible;
                     commentBox.Visibility = Visibility.Visible;
                     commentBox.Text = comment;
                 }
@@ -531,7 +533,8 @@ namespace Choreoh
             handPointX = handPosition.X + hand.ActualWidth / 2;
             timelineMenuOpenedPosition = handPosition;
 
-            commentBox.Visibility = Visibility.Visible;
+            commentBoxLabel.Text = "Say Your Comment:";
+            commentBoxCanvas.Visibility = Visibility.Visible;
             annotating = true;
             commentToSave = commentBox.Text;
         }
@@ -1008,7 +1011,7 @@ namespace Choreoh
             commentToSave = "";
             comment = "";
             annotating = false;
-            commentBox.Visibility = Visibility.Collapsed;
+            commentBoxCanvas.Visibility = Visibility.Collapsed;
             showAllSegments();
         }
         private void saveCommentButton_Clicked(object sender, EventArgs e)
@@ -1027,7 +1030,7 @@ namespace Choreoh
             comment = "";
             annotating = false;
             commentBox.Text = "";
-            commentBox.Visibility = Visibility.Hidden;
+            commentBoxCanvas.Visibility = Visibility.Hidden;
             renderComment(selectedSegment);
             waveform.deselectSegment();
             commentButtonCanvas.Visibility = Visibility.Collapsed;
@@ -1035,7 +1038,7 @@ namespace Choreoh
 
             Canvas.SetZIndex(segmentCanvas, oldDanceSegmentIndex);
             blackBack.Visibility = Visibility.Collapsed;
-            commentBox.Visibility = Visibility.Hidden;
+            commentBoxCanvas.Visibility = Visibility.Hidden;
             commentBox.Text = "";
         }
 
