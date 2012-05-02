@@ -448,6 +448,7 @@ namespace Choreoh
                     commentBoxLabel.Text = "Your Comment:";
                     commentBoxCanvas.Visibility = Visibility.Visible;
                     commentBox.Visibility = Visibility.Visible;
+                    Canvas.SetZIndex(commentBox, Canvas.GetZIndex(commentBoxCanvas) + 1);
                     commentBox.Text = comment;
                 }
             }
