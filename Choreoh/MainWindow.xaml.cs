@@ -1036,7 +1036,7 @@ namespace Choreoh
             comment = "";
             annotating = false;
             commentBox.Text = "";
-            commentBoxCanvas.Visibility = Visibility.Hidden;
+            commentBoxCanvas.Visibility = Visibility.Collapsed;
             renderComment(selectedSegment);
             waveform.deselectSegment();
             commentButtonCanvas.Visibility = Visibility.Collapsed;
@@ -1044,7 +1044,7 @@ namespace Choreoh
 
             Canvas.SetZIndex(segmentCanvas, oldDanceSegmentIndex);
             blackBack.Visibility = Visibility.Collapsed;
-            commentBoxCanvas.Visibility = Visibility.Hidden;
+            commentBoxCanvas.Visibility = Visibility.Collapsed;
             commentBox.Text = "";
         }
 
