@@ -63,11 +63,6 @@
                 <local:HoverButton x:Name="cancelSegmentButton"         Text="Cancel" Canvas.Left="700" Canvas.Top="480" Style="{StaticResource UIButton}"          Click="cancelSegmentButton_Clicked"/>
             </Canvas>
             <Canvas x:Name="commentButtonCanvas" Visibility="Collapsed">
-                <Image Source="/Choreoh;component/img/ui/audio-input-microphone.png" Height="32" Canvas.Top="8" Canvas.Left="8"/>
-                <TextBox Name="commentBoxLabel" FontSize="24" Height="32" Canvas.Top="8" Canvas.Left="52" BorderThickness="0">Comment:</TextBox>
-                <TextBox Name="commentBox" Canvas.Top="48" FontSize="24" Height="202" Width="400" FontFamily="..\img\ui\#Nevis"  TextWrapping="Wrap" Background="White" Panel.ZIndex="9999999">
-
-                </TextBox>
                 <local:HoverButton x:Name="saveCommentButton"       Text="Save" Canvas.Left="500" Canvas.Top="480" Style="{StaticResource UIButton}"  Click="saveCommentButton_Clicked"/>
                 <local:HoverButton x:Name="cancelCommentButton"     Text="Cancel" Canvas.Left="700" Canvas.Top="480" Style="{StaticResource UIButton}"  Click="cancelCommentButton_Clicked"/>      
             </Canvas>
@@ -80,6 +75,13 @@
             </Canvas>
             <Canvas Name="segmentCanvas" Width="1800" Height="160" Canvas.Top="610"></Canvas>
 
+            <Canvas Name="commentBoxCanvas" Canvas.Top="75" Canvas.Left="300" Height="250" Width="400" Panel.ZIndex="5000" Visibility="Hidden" Background="White">
+              <Image Source="/Choreoh;component/img/ui/audio-input-microphone.png" Height="32" Canvas.Top="8" Canvas.Left="8"/>
+                <TextBox Name="commentBoxLabel" FontSize="24" Height="32" Canvas.Top="8" Canvas.Left="52" BorderThickness="0">Comment:</TextBox>
+                <TextBox Name="commentBox" Canvas.Top="48" FontSize="24" Height="202" Width="400" FontFamily="..\img\ui\#Nevis"  TextWrapping="Wrap" Background="White" Panel.ZIndex="9999999">
+
+                </TextBox>
+            </Canvas>
             <Border Canvas.Left="235" Canvas.Top="10" Height="420" Width="550" Background="White" BorderBrush="#676767" BorderThickness="1" CornerRadius="2"/>
             <Canvas Name="recordingCanvas" Canvas.Top="20" Canvas.Left="245" Height="400" Width="530"  Visibility="Hidden" Background="White">
                 <my:KinectColorViewer Canvas.Left ="0" Width="530" Height="400" Name="recordingColorViewer" Kinect="{Binding ElementName=kinectSensorChooser1, Path=Kinect}" Panel.ZIndex="100"></my:KinectColorViewer>
