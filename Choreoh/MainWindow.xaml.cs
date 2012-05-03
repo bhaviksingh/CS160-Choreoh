@@ -442,13 +442,13 @@ namespace Choreoh
                 onlyShowThisSegment((HoverButton)sender);
                 segmentButtonCanvas.Visibility = Visibility.Visible;
                 String comment;
-                if(routine.comments.TryGetValue(selectedSegment, out comment))
+                routine.comments.TryGetValue(selectedSegment, out comment);
+             //   if(routine.comments.TryGetValue(selectedSegment, out comment))
                 {
-                    Debug.WriteLine(comment);
+                    Debug.WriteLine(comment);   
                     commentBoxLabel.Text = "Your Comment:";
                     commentBoxCanvas.Visibility = Visibility.Visible;
                     commentBox.Visibility = Visibility.Visible;
-                    Canvas.SetZIndex(commentBox, Canvas.GetZIndex(commentBoxCanvas) + 1);
                     commentBox.Text = comment;
                 }
             }
@@ -508,11 +508,14 @@ namespace Choreoh
         }
         private void deleteSegmentButton_Clicked(object sender, EventArgs e)
         {
+
+            commentBoxCanvas.Visibility = Visibility.Collapsed;
             deleteSegment();
             fixSegmentIndices();
         }
         private void cancelSegmentButton_Clicked(object sender, EventArgs e)
         {
+            commentBoxCanvas.Visibility = Visibility.Collapsed;
             cancelActionButton_Clicked(sender, e);
             waveform.selectStart(0);
             waveform.selectEnd(1);
@@ -604,6 +607,8 @@ namespace Choreoh
         #region playSegment
         private void playSegment()
         {
+
+            commentBoxCanvas.Visibility = Visibility.Collapsed;
             // play the segment
             if (isPlaying)
             {
