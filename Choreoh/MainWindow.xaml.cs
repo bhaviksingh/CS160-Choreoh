@@ -447,8 +447,10 @@ namespace Choreoh
                 {
                     Debug.WriteLine(comment);   
                     commentBoxLabel.Text = "Your Comment:";
+                    Canvas.SetZIndex(commentBoxCanvas, Canvas.GetZIndex(blackBack));
                     commentBoxCanvas.Visibility = Visibility.Visible;
-                    commentBox.Visibility = Visibility.Visible;
+
+                    //commentBox.Visibility = Visibility.Visible;
                     commentBox.Text = comment;
                 }
             }
@@ -483,8 +485,8 @@ namespace Choreoh
             showAllSegments();
             blackBack.Visibility = Visibility.Collapsed;
             //segmentButtonCanvas.Visibility = Visibility.Collapsed;
-            commentBox.Visibility = Visibility.Hidden;
-            commentBox.Text = "";
+            //commentBox.Visibility = Visibility.Hidden;
+            //commentBox.Text = "";
         }
         #endregion
 
@@ -538,7 +540,7 @@ namespace Choreoh
             timelineMenuOpenedPosition = handPosition;
 
             commentBoxLabel.Text = "Say Your Comment:";
-            commentBoxCanvas.Visibility = Visibility.Visible;
+            //commentBoxCanvas.Visibility = Visibility.Visible;
             annotating = true;
             commentToSave = commentBox.Text;
         }

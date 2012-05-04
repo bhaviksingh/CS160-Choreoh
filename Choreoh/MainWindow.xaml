@@ -75,10 +75,10 @@
             </Canvas>
             <Canvas Name="segmentCanvas" Width="1800" Height="160" Canvas.Top="610"></Canvas>
 
-            <Canvas Name="commentBoxCanvas" Canvas.Top="75" Canvas.Left="300" Height="250" Width="400" Panel.ZIndex="5000" Visibility="Hidden" Background="White">
+            <Canvas Name="commentBoxCanvas" Canvas.Top="75" Canvas.Left="300" Height="250" Width="400" Visibility="Collapsed" Background="White">
               <Image Source="/Choreoh;component/img/ui/audio-input-microphone.png" Height="32" Canvas.Top="8" Canvas.Left="8"/>
                 <TextBox Name="commentBoxLabel" FontSize="24" Height="32" Canvas.Top="8" Canvas.Left="52" BorderThickness="0">Comment:</TextBox>
-                <TextBox Name="commentBox" Canvas.Top="48" FontSize="24" Height="202" Width="400" FontFamily="..\img\ui\#Nevis"  TextWrapping="Wrap" Background="White" Panel.ZIndex="9999999">
+                <TextBox Name="commentBox" Canvas.Top="48" FontSize="24" Height="202" Width="400" FontFamily="..\img\ui\#Nevis"  TextWrapping="Wrap" Background="White">
 
                 </TextBox>
             </Canvas>
