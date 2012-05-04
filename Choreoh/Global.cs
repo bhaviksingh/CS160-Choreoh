@@ -80,7 +80,7 @@ namespace Choreoh
                 }
                 return;
             }
-            if ((Math.Abs(lastJoint.Position.Z - firstJoint.Position.Z) > .20) &&
+            if ((Math.Abs(lastJoint.Position.Z - firstJoint.Position.Z) > .15) &&
                 Math.Abs(lastJoint.Position.X - firstJoint.Position.X) < .18 &&
                 Math.Abs(lastJoint.Position.Y - firstJoint.Position.Y) < .18)
             {

@@ -162,7 +162,9 @@ namespace Choreoh
         private void buttonUpdater(Joint handJoint)
         {
             hand.SetPosition(handJoint);
-
+            if (beforeRecordCanvas.Visibility == Visibility.Visible ||
+                afterRecordCanvas.Visibility == Visibility.Visible)
+                return;
             foreach (HoverButton hb in buttonList)
             {
                 if (blackBack.Visibility == Visibility.Visible)
@@ -173,7 +175,12 @@ namespace Choreoh
                 hb.Check(hand);
             }
 
-
+            if (commentButtonCanvas.Visibility == Visibility.Visible ||
+                    segmentButtonCanvas.Visibility == Visibility.Visible ||
+                    beforeRecordCanvas.Visibility == Visibility.Visible ||
+                    afterRecordCanvas.Visibility == Visibility.Visible)
+                return;
+            
             foreach (HoverButton hb in segmentList)
             {
                 hb.Check(hand);
@@ -447,7 +454,7 @@ namespace Choreoh
                 {
                     Debug.WriteLine(comment);   
                     commentBoxLabel.Text = "Your Comment:";
-                    Canvas.SetZIndex(commentBoxCanvas, Canvas.GetZIndex(blackBack));
+                    Canvas.SetZIndex(commentBoxCanvas, Canvas.GetZIndex(blackBack) + 1);
                     commentBoxCanvas.Visibility = Visibility.Visible;
 
                     //commentBox.Visibility = Visibility.Visible;
@@ -493,12 +500,16 @@ namespace Choreoh
         #region play comment delete cancel segment buttons
         private void playSelectedSegmentButton_Clicked(object sender, EventArgs e)
         {
+            if (segmentButtonCanvas.Visibility == Visibility.Collapsed)
+                return;
             blackBack.Visibility = Visibility.Collapsed;
             playSegment();
             fixSegmentIndices();
         }
         private void addCommentSegmentButton_Clicked(object sender, EventArgs e)
         {
+            if (segmentButtonCanvas.Visibility == Visibility.Collapsed)
+                return;
             commentSegment();
             Canvas.SetZIndex(segmentButtonCanvas, oldButtonZIndex);
             segmentButtonCanvas.Visibility = Visibility.Collapsed;

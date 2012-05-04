@@ -95,6 +95,7 @@ namespace Choreoh
         public DanceSegment addDanceSegment(int startFrame)
         {
             var segment = new DanceSegment(this);
+            segments.Remove(startFrame);
             segments.Add(startFrame, segment);
             return segment;
         }
